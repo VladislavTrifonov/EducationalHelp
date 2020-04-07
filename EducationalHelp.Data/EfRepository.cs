@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Core;
+using EducationalHelp.Data.Exceptions;
 
 namespace EducationalHelp.Data
 {
@@ -36,7 +37,7 @@ namespace EducationalHelp.Data
             }
             catch (DbUpdateException ex)
             {
-                throw new Exception(null, ex);
+                throw new DataException(null, ex);
             }
         }
 
@@ -62,7 +63,7 @@ namespace EducationalHelp.Data
             }
             catch (DbUpdateException ex)
             {
-                throw new Exception(null, ex);
+                throw new DataException(null, ex);
             }
         }
 
@@ -80,7 +81,7 @@ namespace EducationalHelp.Data
             }
             catch (DbUpdateException ex)
             {
-                throw new Exception(null, ex);
+                throw new DataException(null, ex);
             }
         }
     }
