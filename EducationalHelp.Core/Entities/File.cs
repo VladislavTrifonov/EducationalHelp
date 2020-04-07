@@ -8,21 +8,21 @@ namespace EducationalHelp.Core.Entities
     {
         public bool IsStoredLocal { get; private set; }
 
-        private System.IO.FileInfo _fileInfo; 
-        public System.IO.FileInfo FileInfo
+        private string _pathToFile; 
+        public string PathToFile
         {
             get
             {
                 if (!IsStoredLocal)
                     throw new InvalidOperationException("FileInfo not set, you should store local file to use this");
                 else
-                    return _fileInfo;
+                    return _pathToFile;
             }
             set
             {
                 if (value != null)
                 {
-                    _fileInfo = value;
+                    _pathToFile = value;
                     IsStoredLocal = true;
                 }
                 else
