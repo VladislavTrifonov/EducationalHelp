@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
+import store from './store/index'
 import App from './App.vue';
 import MainPageComponent from './components/MainPageComponent.vue'
 import SubjectsPageComponent from './components/SubjectsPageComponent.vue'
@@ -12,6 +14,7 @@ Vue.config.productionTip = true;
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
+Vue.use(Vuex)
 
 const routes = [
     { path: '/', component: MainPageComponent },
@@ -26,5 +29,6 @@ const router = new VueRouter((
 
 new Vue({
     render: h => h(App),
-    router: router
+    router: router,
+    store: store
 }).$mount('#app');

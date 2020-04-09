@@ -52,8 +52,13 @@
     <Folder Include="dist\" />
     <Folder Include="public\" />
     <Folder Include="src\" />
+    <Folder Include="src\api\models\" />
     <Folder Include="src\assets\" />
     <Folder Include="src\components\" />
+    <Folder Include="src\store\" />
+    <Folder Include="src\api\" />
+    <Folder Include="src\store\modules\" />
+    <Folder Include="src\store\modules\subjects\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\main.ts" />
@@ -62,6 +67,26 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="babel.config.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\api\models\Subject.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\api\SubjectsAPI.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\store\index.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\store\modules\subjects\subjects.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\store\rootstate.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\store\modules\subjects\state.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>
