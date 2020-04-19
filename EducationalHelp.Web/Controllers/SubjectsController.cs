@@ -22,10 +22,8 @@ namespace EducationalHelp.Web.Controllers
         [HttpGet]
         public IActionResult GetSubjectById(Guid id)
         {
-            if (id == Guid.Empty)
-                return BadRequest($"{id} is Guid.Empty");
-
-            return new ObjectResult(_subjectsService.GetSubject(id));
+            var subject = _subjectsService.GetSubject(id);
+            return new ObjectResult(subject);
         }
 
 

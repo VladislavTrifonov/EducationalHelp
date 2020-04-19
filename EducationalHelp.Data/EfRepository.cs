@@ -44,7 +44,7 @@ namespace EducationalHelp.Data
         public T GetById(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException(nameof(id));
+                throw new DataException("Guid is empty");
 
             return AllData.Where(c => c.Id == id).FirstOrDefault();
         }

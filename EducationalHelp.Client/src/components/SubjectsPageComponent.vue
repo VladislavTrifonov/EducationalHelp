@@ -37,7 +37,6 @@
     export default class SubjectsPageComponent extends Vue {
 
         public subjects!: Array<Subject>;
-        public fields: Array<any>; // in render only
 
         get Subjects() {
             return this.$store.state.subjects.all;
@@ -49,18 +48,7 @@
 
         constructor() {
             super();
-            this.fields = [
-                {
-                    key: 'name',
-                    sortable: true,
-                    label: "Название предмета"
-                },
-                {
-                    key: 'teacher',
-                    sortable: true,
-                    label: "Преподаватель"
-                }
-            ];
+            
         }
 
         
