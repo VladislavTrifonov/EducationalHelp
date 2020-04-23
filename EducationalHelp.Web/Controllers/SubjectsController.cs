@@ -49,6 +49,26 @@ namespace EducationalHelp.Web.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult UpdateSubject([FromBody]SubjectAddModel subject, [FromQuery]Guid id)
+        {
+            Subject resolvedSubject;
+            try
+            {
+                resolvedSubject = _subjectsService.GetSubject(id);
+            }
+            catch (ServiceException)
+            {
+                return NotFound();
+            }
+            resolvedSubject.Name = subject.Name;
+            resolvedSubject.Description = subject.Description;
+            resolvedSubject.Teacher = subject.Teacher;
+
+            _subjectsService.UpdateSubject(resolvedSubject);
+            return Ok();
 
         }
 

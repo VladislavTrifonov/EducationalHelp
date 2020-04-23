@@ -19,7 +19,7 @@ namespace EducationalHelp.Web.Filters
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            if (!((context.Result as ObjectResult).Value is ValidationResult))
+            if (!((context.Result as ObjectResult)?.Value is ValidationResult))
                 return;
 
             var errorObject = new ErrorModel

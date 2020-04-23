@@ -15,7 +15,6 @@ namespace EducationalHelp.Services.Subjects
         public SubjectsService(IRepository<Subject> subjectsRepository)
         {
             _subjectsRepository = subjectsRepository;
-            _subjectsRepository.AutoSave = true;
         }
 
         public List<Subject> GetAllSubjects()
