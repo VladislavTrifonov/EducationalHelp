@@ -48,7 +48,7 @@ namespace EducationalHelp.Web.Controllers
                 return new ObjectResult(exp.ValidationResult);
             }
 
-            return Ok();
+            return Ok(subjEntity);
         }
 
         [HttpPost]
@@ -68,8 +68,23 @@ namespace EducationalHelp.Web.Controllers
             resolvedSubject.Teacher = subject.Teacher;
 
             _subjectsService.UpdateSubject(resolvedSubject);
-            return Ok();
+            return Ok(resolvedSubject);
 
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteSubject(Guid id)
+        {
+            try
+            {
+                _subjectsService.DeleteSubject(id);
+            }
+            catch (ServiceException)
+            {
+                return NotFound();
+            }
+
+            return Ok();
         }
 
 
