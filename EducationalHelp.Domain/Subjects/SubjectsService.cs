@@ -31,15 +31,11 @@ namespace EducationalHelp.Services.Subjects
             return subject;
         }
 
-        public Subject CreateSubject(string name, string description = null, string teacher = null)
+        public Subject CreateSubject(Subject subject)
         {
-            var subject = new Subject
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Description = description,
-                Teacher = teacher
-            };
+            var resultOfValidation = subject.Validate();
+            if (!resultOfValidation.Success)
+                throw new ValidationException("Subject entity is invalid!") { ValidationResult = resultOfValidation };
 
             _subjectsRepository.Insert(subject);
 

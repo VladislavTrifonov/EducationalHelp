@@ -12,15 +12,15 @@ namespace EducationalHelp.Data
     {
         public static void MappingAllData(ModelBuilder builder)
         {
-            var types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDataMapper<>)).Count() != 0);
+            var types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(DataMapper<>));
 
             foreach (var type in types)
             {
                 var t = Activator.CreateInstance(type);
                 var type_t = t.GetType();
                 
-                // IDataMapper<T> - it variable saves T
-                var genericParameterInInterface = type_t.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDataMapper<>)).First().GenericTypeArguments.First();
+                // DataMapper<T> - it variable saves T
+                var genericParameterInInterface = type_t.BaseType.GenericTypeArguments.First();
                 
                 // Call builder.Entity<T>(), result id EntityTypeBuilder<T>
                 var typeBuilder = builder.GetType().GetMethods().Where(t => t.Name == nameof(builder.Entity) && t.IsGenericMethod).First()

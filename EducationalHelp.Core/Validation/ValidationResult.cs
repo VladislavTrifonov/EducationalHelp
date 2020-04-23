@@ -10,7 +10,7 @@ namespace EducationalHelp.Core.Validation
     {
         public static ValidationResult NoErrors { get; } = new ValidationResult(null);
 
-        public bool Success => ErrorCount != 0;
+        public bool Success => ErrorCount == 0;
         public int ErrorCount => ListOfErrors.Count();
         public IEnumerable<ValidationError> ListOfErrors { get; private set; }
 

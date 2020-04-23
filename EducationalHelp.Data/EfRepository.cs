@@ -74,6 +74,7 @@ namespace EducationalHelp.Data
 
             try
             {
+                newEntity.UpdatedAt = DateTime.Now;
                 _context.Update(newEntity);
 
                 if (AutoSave)

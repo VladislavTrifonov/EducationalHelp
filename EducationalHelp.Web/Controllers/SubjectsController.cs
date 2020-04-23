@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Services.Subjects;
 using EducationalHelp.Web.Models.Subjects;
+using EducationalHelp.Services.Exceptions;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -31,7 +32,24 @@ namespace EducationalHelp.Web.Controllers
         [HttpPost]
         public IActionResult CreateSubject(SubjectAddModel subject)
         {
-          
+            var subjEntity = new Subject
+            {
+                Name = subject.Name,
+                Teacher = subject.Teacher,
+                Description = subject.Description
+            };
+            
+            try
+            {
+                _subjectsService.CreateSubject(subjEntity);
+            }
+            catch (ValidationException exp)
+            {
+                return new ObjectResult(exp.ValidationResult);
+            }
+
+            return Ok();
+
         }
 
 

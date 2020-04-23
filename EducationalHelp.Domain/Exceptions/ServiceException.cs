@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EducationalHelp.Services.Exceptions
 {
-    internal class ServiceException : Exception
+    public class ServiceException : Exception
     {
         public ServiceException()
         {

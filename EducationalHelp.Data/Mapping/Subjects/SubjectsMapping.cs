@@ -7,12 +7,11 @@ using System.Text;
 
 namespace EducationalHelp.Data.Mapping.Subjects
 {
-    internal class SubjectsMapping : IDataMapper<Subject>
+    internal class SubjectsMapping : DataMapper<Subject>
     {
-        public void Map(EntityTypeBuilder<Subject> builder)
+        public override void Map(EntityTypeBuilder<Subject> builder)
         {
             builder.ToTable("Subjects");
-            builder.HasKey(t => t.Id);
             builder.Property(t => t.Name).HasMaxLength(50).IsRequired();
             builder.Property(t => t.Description);
             builder.Property(t => t.Teacher).HasMaxLength(50);
@@ -20,6 +19,7 @@ namespace EducationalHelp.Data.Mapping.Subjects
             builder.HasOne(t => t.Program).WithOne().HasForeignKey<Subject>(t => t.ProgramId).IsRequired(false);
             builder.HasOne(t => t.ValuationTools).WithOne().HasForeignKey<Subject>(t => t.ValuationToolsId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(t => t.Books).WithOne(t => t.Subject).HasForeignKey(t => t.SubjectId).OnDelete(DeleteBehavior.Cascade);
+            base.Map(builder);
         }
     }
 }
