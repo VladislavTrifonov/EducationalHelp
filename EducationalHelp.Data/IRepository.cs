@@ -9,11 +9,6 @@ namespace EducationalHelp.Data
     public interface IRepository<T> where T : BaseEntity
     {
         /// <summary>
-        /// Automatically save data after updating it
-        /// </summary>
-        bool AutoSave { get; set; }
-
-        /// <summary>
         /// Contains all data of repository
         /// </summary>
         IQueryable<T> AllData { get; }
