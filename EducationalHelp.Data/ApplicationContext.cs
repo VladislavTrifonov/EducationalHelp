@@ -1,4 +1,5 @@
 ﻿using EducationalHelp.Core.Entities;
+using EducationalHelp.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace EducationalHelp.Data
     {
         public DbSet<Subject> Subjects { get; }
 
+       
+
         public ApplicationContext([NotNull] DbContextOptions options) : base(options)
         {
             Database.EnsureDeleted();
@@ -22,8 +25,7 @@ namespace EducationalHelp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             EfMapManager.MappingAllData(modelBuilder);
-
-
+            DevSeed.Seed(modelBuilder);
         }
     }
 }
