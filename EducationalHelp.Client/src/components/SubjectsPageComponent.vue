@@ -10,7 +10,7 @@
                 </b-tr>
             </b-thead>
             <b-tbody>
-                <b-tr v-for="(subject, i) in Subjects" :key="subject.id">
+                <b-tr v-for="(subject, i) in subjects" :key="subject.id">
                     <b-td>{{i}}</b-td>
                     <b-td>
                         <router-link :to="LinkToSubject(subject)">{{subject.name}}</router-link>
@@ -24,7 +24,8 @@
 
 <script lang="ts">
     import 'bootstrap-vue'
-    import { Component, Prop, Vue } from 'vue-property-decorator';
+    import Vue from 'vue';
+    import { Component, Prop } from 'vue-property-decorator';
     import Subject from '@/api/models/Subject';
     import Store from '@/store/index';
     import { mapState, mapActions } from 'vuex';
@@ -33,25 +34,28 @@
 
     @Component({
 
+
     })
     export default class SubjectsPageComponent extends Vue {
 
-        public subjects!: Array<Subject>;
 
-        get Subjects() {
+        public LinkToSubject(subject: Subject): String {
+            return this.$router.resolve({ name: "subjectView", params: { "id": subject.id } }).href;
+        }
+
+        get subjects(): Array<Subject> {
             return this.$store.state.subjects.all;
         }
 
-        public LinkToSubject(subject: Subject): String {
-            return this.$route.path + '/' + subject.name;
+        mounted() {
+            this.$store.dispatch("subjects/fetchSubjects");
         }
 
         constructor() {
             super();
-            
         }
 
-        
+
     }
 
 </script>

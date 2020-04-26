@@ -56,7 +56,8 @@ namespace EducationalHelp.Web
             {
                 options.UseSqlServer(Configuration.GetConnectionString("default"));
             });
-            
+
+            services.AddCors();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -82,6 +83,9 @@ namespace EducationalHelp.Web
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            if (env.IsDevelopment())
+                app.UseCors(builder => builder.AllowAnyOrigin());
 
             app.UseMvc(options =>
             {

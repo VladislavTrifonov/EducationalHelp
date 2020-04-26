@@ -11,8 +11,10 @@
     "name": ""
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bootstrap-vue": "^2.9.0",
     "vue": "2.5.17",
+    "vue-axios": "^2.1.5",
     "vue-class-component": "6.0.0",
     "vue-devtools": "^5.1.3",
     "vue-property-decorator": "7.0.0",

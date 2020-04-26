@@ -29,6 +29,13 @@ namespace EducationalHelp.Web.Controllers
             return new ObjectResult(subject);
         }
 
+        [HttpGet]
+        public IActionResult GetAllSubjects()
+        {
+            var subjects = _subjectsService.GetAllSubjects();
+            return new ObjectResult(subjects);
+        }
+
         [HttpPost]
         public IActionResult CreateSubject(SubjectAddModel subject)
         {
