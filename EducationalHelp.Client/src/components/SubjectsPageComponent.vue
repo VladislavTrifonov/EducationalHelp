@@ -47,7 +47,7 @@
             return this.$store.state.subjects.all;
         }
 
-        mounted() {
+        created() {
             this.$store.dispatch("subjects/fetchSubjects");
         }
 

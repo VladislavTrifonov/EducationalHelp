@@ -4,9 +4,9 @@
             <Navigation />
         </div>
         <div class="container p-3">
-            <div class="row">
+            <transition name="fade">
                 <router-view></router-view>
-            </div>
+            </transition>
         </div>
     </div>
 </template>

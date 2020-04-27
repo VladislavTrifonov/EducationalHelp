@@ -29,12 +29,18 @@ const mutations: MutationTree<SubjectsState> = {
 };
 
 const actions: ActionTree<SubjectsState, RootState> = {
-    fetchSubjects: async (state, rootstate) => {
-        state.commit('addSubjects', await state.state.api.getAllSubjects());
+    fetchSubjects: (state, rootstate) => {
+        return state.state.api.getAllSubjects().then(result => {
+            state.commit("addSubjects", result);
+        });
     },
     
-    fetchSubject: async (state, id) => {
-        state.commit("addSubject", await state.state.api.getSubject(id));
+    fetchSubject: (state, id) => {
+        let promise = state.state.api.getSubject(id);
+        promise.then(result => {
+            state.commit("addSubject", result);
+        });
+        return promise;
     },
 };
 

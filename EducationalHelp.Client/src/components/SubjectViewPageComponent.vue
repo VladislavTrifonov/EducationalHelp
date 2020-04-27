@@ -40,17 +40,23 @@
     @Component({})
     export default class SubjectViewPageComponent extends Vue {
 
-        get Model(): Subject | undefined {
-            let subject = this.$store.getters["subjects/getSubject"](this.$route.params.id);
-            if (subject == undefined) {
-                this.$router.push({ name: "error404", params: { id: this.$route.params.id } });
-                return;
-            }
-            return subject;
+        private subjectModel: Subject = new Subject();
+
+        get Model(): Subject {
+            return this.subjectModel;
         }
 
-        mounted() {
-            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id);
+        set Model(value: Subject) {
+            this.subjectModel = value;
+        }
+
+        created() {
+            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id).
+                then(result => {
+                    this.Model = result;
+                }, reject => {
+                    this.$router.push({ name: "error404", params: { id: this.$route.params.id }});
+                });
 
         }
 
