@@ -19,6 +19,13 @@
                 </b-tr>
             </b-tbody>
         </b-table-simple>
+        <table-grid :keys="keys" :items="subjects">
+            <template v-slot:rowContent="props">
+                <b-td>{{props.index}}</b-td>
+                <b-td>{{props.item.name}}</b-td>
+                <b-td>{{props.item.teacher}}</b-td>
+            </template>
+        </table-grid>
     </div>
 </template>
 
@@ -27,13 +34,16 @@
     import Vue from 'vue';
     import { Component, Prop } from 'vue-property-decorator';
     import Subject from '@/api/models/Subject';
+    import TableGrid from './system/TableGrid.vue';
     import Store from '@/store/index';
     import { mapState, mapActions } from 'vuex';
     import SubjectsState from '@/store/modules/subjects/state';
     import { Dictionary } from 'vue-router/types/router';
 
     @Component({
-
+        components: {
+            'table-grid': TableGrid
+        }
 
     })
     export default class SubjectsPageComponent extends Vue {
@@ -45,6 +55,14 @@
 
         get subjects(): Array<Subject> {
             return this.$store.state.subjects.all;
+        }
+
+        get keys(): any {
+            return [
+                { head: "#" },
+                { head: "Название" },
+                { head: "Преподаватель" },
+            ];
         }
 
         created() {
