@@ -1,28 +1,13 @@
 ﻿<template>
     <div class="col-12">
-        <b-table-simple hover caption-top responsive>
-            <caption>Список предметов:</caption>
-            <b-thead head-variant="dark">
-                <b-tr>
-                    <b-th># (п/п)</b-th>
-                    <b-th>Предмет</b-th>
-                    <b-th>Преподаватель</b-th>
-                </b-tr>
-            </b-thead>
-            <b-tbody>
-                <b-tr v-for="(subject, i) in subjects" :key="subject.id">
-                    <b-td>{{i}}</b-td>
-                    <b-td>
-                        <router-link :to="LinkToSubject(subject)">{{subject.name}}</router-link>
-                    </b-td>
-                    <b-td>{{subject.teacher}}</b-td>
-                </b-tr>
-            </b-tbody>
-        </b-table-simple>
-        <table-grid :keys="keys" :items="subjects">
+        <table-grid :keys="keys" :items="subjects" header="Список предметов" v-on:update-trigger="onTableUpdate">
             <template v-slot:rowContent="props">
-                <b-td>{{props.index}}</b-td>
-                <b-td>{{props.item.name}}</b-td>
+                <b-td>{{props.index + 1}}</b-td>
+                <b-td>
+                    <router-link :to="LinkToSubject(props.item)">
+                        {{props.item.name}}
+                    </router-link>
+                </b-td>
                 <b-td>{{props.item.teacher}}</b-td>
             </template>
         </table-grid>
@@ -60,13 +45,20 @@
         get keys(): any {
             return [
                 { head: "#" },
-                { head: "Название" },
+                { head: "Предмет" },
                 { head: "Преподаватель" },
             ];
         }
 
         created() {
             this.$store.dispatch("subjects/fetchSubjects");
+        }
+
+        onTableUpdate(): void {
+            this.$store.commit("subjects/addSubject", {
+                name: "test", 
+                teacher: "Test2"
+            });
         }
 
         constructor() {

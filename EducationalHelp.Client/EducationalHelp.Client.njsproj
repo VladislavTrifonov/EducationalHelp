@@ -50,6 +50,7 @@
     <Content Include="src\components\SubjectViewPageComponent.vue">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="src\components\system\TableGrid.vue" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -61,6 +62,7 @@
     <Folder Include="src\api\models\" />
     <Folder Include="src\assets\" />
     <Folder Include="src\components\" />
+    <Folder Include="src\components\system\" />
     <Folder Include="src\store\" />
     <Folder Include="src\api\" />
     <Folder Include="src\store\modules\" />
