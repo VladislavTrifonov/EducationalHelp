@@ -47,6 +47,7 @@ namespace EducationalHelp.Web
             services.AddControllers(options =>
             {
                 options.Filters.Add(new ValidationFilter());
+                options.Filters.Add(new BindModelErrorsFilter());
             });
             services.AddMvc(options =>
             {
@@ -74,9 +75,9 @@ namespace EducationalHelp.Web
 
 
 
-            //if (env.IsDevelopment())
-            //    app.UseDeveloperExceptionPage();
-            //else
+            if (env.IsDevelopment())
+                app.UseDeveloperExceptionPage();
+            else
                 app.UseExceptionHandler("/error");
             
 

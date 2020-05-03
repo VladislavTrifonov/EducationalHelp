@@ -14,7 +14,9 @@ export default class SubjectsAPI {
             .then(response => {
                 subjects = response.data;
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                console.log("Error in API:");
+            });
         return subjects;
     }
 

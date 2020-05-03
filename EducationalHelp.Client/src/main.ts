@@ -19,6 +19,8 @@ Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
+axios.interceptors.response.use(response => { return response; }, error => { console.log('interceptor'); return Promise.reject(error); });
+
 const routes = [
     { name: 'homePage', path: '/', component: MainPageComponent },
     { name: 'error404', path: '/error.404', component: Error404PageComponent },

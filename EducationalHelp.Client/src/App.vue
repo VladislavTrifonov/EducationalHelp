@@ -1,12 +1,18 @@
-<template>
+﻿<template>
     <div class="container-fluid">
         <div class="container-fluid">
             <Navigation />
         </div>
         <div class="container p-3">
-            <transition name="fade">
+            <div class="row">
+                <div class="alert alert-danger">
+                    <b-icon-exclamation-octagon-fill></b-icon-exclamation-octagon-fill> Возникли проблемы с интернет-подключением к серверу.
+                    <b-link>Обновить страницу...</b-link>
+                </div>
+            </div>
+            <div class="row">
                 <router-view></router-view>
-            </transition>
+            </div>
         </div>
     </div>
 </template>

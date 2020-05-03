@@ -1,4 +1,5 @@
 ﻿using EducationalHelp.Core.Validation;
+using EducationalHelp.Web.Extensions;
 using EducationalHelp.Web.Models.System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,8 +25,9 @@ namespace EducationalHelp.Web.Filters
 
             var errorObject = new ErrorModel
             {
-                ErrorCode = "SC1",
-                ErrorType = "Validation",
+                ErrorCode = (context.Controller as ControllerBase)?.GetFrontendName() + "/" + context.HttpContext.TraceIdentifier
+                                                                                                                    ?? "undefined",
+                ErrorType = "validation",
                 Details = context.Result
             };
             context.Result = new UnprocessableEntityObjectResult(errorObject);
