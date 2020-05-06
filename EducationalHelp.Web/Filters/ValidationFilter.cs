@@ -30,7 +30,7 @@ namespace EducationalHelp.Web.Filters
                 ErrorType = "validation",
                 Details = context.Result
             };
-            context.Result = new UnprocessableEntityObjectResult(errorObject);
+            context.Result = new BadRequestObjectResult(errorObject);
         }
     }
 }
