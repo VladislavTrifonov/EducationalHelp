@@ -86,6 +86,9 @@
     <TypeScriptCompile Include="src\store\index.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\store\modules\ErrorProcessing.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\store\modules\subjects\subjects.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

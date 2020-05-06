@@ -24,6 +24,7 @@
     import { mapState, mapActions } from 'vuex';
     import SubjectsState from '@/store/modules/subjects/state';
     import { Dictionary } from 'vue-router/types/router';
+    import { Response, ErrorTypes, IErrorDetails, IValidationDetails, IValidationError } from '@/store/modules/ErrorProcessing';
 
     @Component({
         components: {
@@ -51,7 +52,11 @@
         }
 
         created() {
-            this.$store.dispatch("subjects/fetchSubjects");
+            this.$store.dispatch("subjects/fetchSubjects").then(error => {
+                error.process((details: IErrorDetails<IValidationDetails>) => {
+                    console.log(details);
+                });
+            });
         }
 
         onTableUpdate(): void {

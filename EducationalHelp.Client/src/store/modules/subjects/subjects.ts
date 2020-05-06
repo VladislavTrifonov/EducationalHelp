@@ -2,6 +2,7 @@ import { GetterTree } from 'vuex';
 import { MutationTree } from 'vuex';
 import { ActionTree } from 'vuex';
 import { Module } from 'vuex';
+import { Response } from '../ErrorProcessing';
 import SubjectsState from './state';
 import RootState from '../../rootstate';
 import Subject from '../../../api/models/Subject';
@@ -25,22 +26,23 @@ const mutations: MutationTree<SubjectsState> = {
 
     addSubject: (state, subject: Subject) => {
         state.all.push(subject);
+        console.log(subject);
     }
 };
 
 const actions: ActionTree<SubjectsState, RootState> = {
     fetchSubjects: (state, rootstate) => {
-        return state.state.api.getAllSubjects().then(result => {
+        return Response.fromPromise(state.state.api.getAllSubjects(), result => {
             state.commit("addSubjects", result);
         });
     },
     
     fetchSubject: (state, id) => {
-        let promise = state.state.api.getSubject(id);
-        promise.then(result => {
-            state.commit("addSubject", result);
+        return Response.fromPromise(state.state.api.getSubject(id),
+            response => {
+                state.commit("addSubject", response);
         });
-        return promise;
+        
     },
 };
 

@@ -36,6 +36,7 @@
     import Vue from 'vue';
     import { Component } from 'vue-property-decorator';
     import Subject from '../api/models/Subject';
+    import { IErrorDetails, IValidationDetails, Response } from '../store/modules/ErrorProcessing';
 
     @Component({})
     export default class SubjectViewPageComponent extends Vue {
@@ -43,19 +44,23 @@
         private subjectModel: Subject = new Subject();
 
         get Model(): Subject {
-            return this.subjectModel;
+            return this.$store.getters['subjects/getSubject'](this.$route.params.id);
         }
 
         set Model(value: Subject) {
             this.subjectModel = value;
         }
 
+        constructor() {
+            super();
+        }
+
         created() {
-            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id).
-                then(result => {
-                    this.Model = result;
-                }, reject => {
-                    this.$router.push({ name: "error404", params: { id: this.$route.params.id }});
+            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id). 
+                then((error: Response) => {
+                    error.process((details) => {
+                        console.log(details);
+                    });
                 });
 
         }
