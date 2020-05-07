@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import axios from 'axios';
+import axios from '@/axiosconf';
 import Vuex from 'vuex';
 import store from './store/index'
 import App from './App.vue';

@@ -1,5 +1,5 @@
 import Subject from './models/Subject';
-import axios from 'axios';
+import axios from '@/axiosconf';
 
 export default class SubjectsAPI {
     constructor() {
@@ -10,19 +10,18 @@ export default class SubjectsAPI {
 
     async getAllSubjects(): Promise<Array<Subject>> {
         var subjects = new Array<Subject>();
-        await axios.get("https://localhost:5001/Subjects/GetAllSubjects")
+        await axios.get("Subjects/GetAllSubjects")
             .then(response => {
                 subjects = response.data;
             })
             .catch(error => {
-                console.log("Error in API:");
             });
         return subjects;
     }
 
     async getSubject(guid: String): Promise<Subject> {
         return new Promise<Subject>((resolve, reject) => {
-            axios.get("https://localhost:5001/Subjects/GetSubjectById", {
+            axios.get("Subjects/GetSubjectById", {
                 params: {
                     id: guid
                 }

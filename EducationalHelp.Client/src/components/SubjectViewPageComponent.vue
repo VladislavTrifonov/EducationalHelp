@@ -41,14 +41,8 @@
     @Component({})
     export default class SubjectViewPageComponent extends Vue {
 
-        private subjectModel: Subject = new Subject();
-
         get Model(): Subject {
             return this.$store.getters['subjects/getSubject'](this.$route.params.id);
-        }
-
-        set Model(value: Subject) {
-            this.subjectModel = value;
         }
 
         constructor() {
@@ -56,19 +50,20 @@
         }
 
         created() {
-            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id). 
-                then((error: Response) => {
-                    error.process((details) => {
-                        console.log(details);
-                    });
-                });
-
+            this.fetchSubject();
         }
 
         beforeRouteUpdate(to: any, from: any, next: any) {
-            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id);
-
+            this.fetchSubject();
             next();
+        }
+
+        fetchSubject() {
+            this.$store.dispatch("subjects/fetchSubject", this.$route.params.id).
+                then((error: Response) => {
+                    error.process((details) => {
+                    });
+                });
         }
     }
 

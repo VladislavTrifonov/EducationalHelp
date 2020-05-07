@@ -34,6 +34,7 @@
     <Content Include="libman.json" />
     <Content Include="public\favicon.ico" />
     <Content Include="public\index.html" />
+    <Content Include="public\preloader.gif" />
     <Content Include="src\App.vue" />
     <Content Include="src\components\Error404PageComponent.vue">
       <SubType>Code</SubType>
@@ -50,6 +51,12 @@
     <Content Include="src\components\SubjectViewPageComponent.vue">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="src\components\system\LoadProgress.vue">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\components\system\NetworkError.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\system\TableGrid.vue" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
@@ -61,6 +68,7 @@
     <Folder Include="src\" />
     <Folder Include="src\api\models\" />
     <Folder Include="src\assets\" />
+    <Folder Include="src\assets\images\" />
     <Folder Include="src\components\" />
     <Folder Include="src\components\system\" />
     <Folder Include="src\store\" />
@@ -81,6 +89,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\api\SubjectsAPI.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\axiosconf.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\store\index.ts">
