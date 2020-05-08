@@ -85,8 +85,11 @@ namespace EducationalHelp.Web
 
             app.UseRouting();
 
-            if (env.IsDevelopment())
-                app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => {
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
 
             app.UseMvc(options =>
             {

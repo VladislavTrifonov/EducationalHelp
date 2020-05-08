@@ -58,7 +58,7 @@ namespace EducationalHelp.Web.Controllers
             return Ok(subjEntity);
         }
 
-        [HttpPost]
+        [HttpPut]
         public IActionResult UpdateSubject([FromBody]SubjectAddModel subject, [FromQuery]Guid id)
         {
             Subject resolvedSubject;
