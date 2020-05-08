@@ -41,8 +41,13 @@ const actions: ActionTree<SubjectsState, RootState> = {
             response => {
                 state.commit("addSubject", response);
         });
-        
     },
+
+    addSubject: (state, subject) => {
+        return Response.fromPromise(state.state.api.addSubject(subject), response => {
+            state.commit("addSubject", response);
+        });
+    }
 };
 
 export class SubjectsModule implements Module<SubjectsState, RootState> {

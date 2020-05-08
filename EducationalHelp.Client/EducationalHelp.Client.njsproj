@@ -36,6 +36,9 @@
     <Content Include="public\index.html" />
     <Content Include="public\preloader.gif" />
     <Content Include="src\App.vue" />
+    <Content Include="src\components\AddSubjectComponent.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\Error404PageComponent.vue">
       <SubType>Code</SubType>
     </Content>

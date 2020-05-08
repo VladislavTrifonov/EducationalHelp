@@ -19,7 +19,7 @@ export default class SubjectsAPI {
         return subjects;
     }
 
-    async getSubject(guid: String): Promise<Subject> {
+    getSubject(guid: String): Promise<Subject> {
         return new Promise<Subject>((resolve, reject) => {
             axios.get("Subjects/GetSubjectById", {
                 params: {
@@ -30,6 +30,18 @@ export default class SubjectsAPI {
             }).catch(error => {
                 reject(error);
             })
+        });
+    }
+
+    addSubject(model: Subject): Promise<Subject> {
+        return new Promise<Subject>((resolve, reject) => {
+            axios.post("Subjects/CreateSubject", model, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => resolve(response.data))
+                .catch(error => reject(error));
         });
     }
 }

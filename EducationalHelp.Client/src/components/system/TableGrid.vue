@@ -72,6 +72,10 @@
 
             clickRefreshButton() {
                 this.$emit('update-trigger');
+            }, 
+
+            clickAddButton() {
+                this.$emit('add-trigger');
             }
         }
     }
