@@ -17,14 +17,10 @@
 <script lang="ts">
     import 'bootstrap-vue'
     import Vue from 'vue';
-    import { Component, Prop } from 'vue-property-decorator';
+    import { Component } from 'vue-property-decorator';
     import Subject from '@/api/models/Subject';
     import TableGrid from './system/TableGrid.vue';
-    import Store from '@/store/index';
-    import { mapState, mapActions } from 'vuex';
-    import SubjectsState from '@/store/modules/subjects/state';
-    import { Dictionary } from 'vue-router/types/router';
-    import { Response, ErrorTypes, IErrorDetails, IValidationDetails, IValidationError } from '@/store/modules/ErrorProcessing';
+    import { Response } from '@/store/modules/ErrorProcessing';
 
     @Component({
         components: {
@@ -52,18 +48,16 @@
         }
 
         created() {
-            this.$store.dispatch("subjects/fetchSubjects").then(error => {
-                error.process((details: IErrorDetails<IValidationDetails>) => {
-                    console.log(details);
-                });
+            this.fetchSubjects();   
+        }
+
+        fetchSubjects() {
+            this.$store.dispatch("subjects/fetchSubjects").then((error: Response) => {
             });
         }
 
         onTableUpdate(): void {
-            this.$store.commit("subjects/addSubject", {
-                name: "test", 
-                teacher: "Test2"
-            });
+            this.fetchSubjects();
         }
 
         constructor() {

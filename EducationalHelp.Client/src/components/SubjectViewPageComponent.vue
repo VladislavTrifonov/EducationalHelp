@@ -36,7 +36,7 @@
     import Vue from 'vue';
     import { Component } from 'vue-property-decorator';
     import Subject from '../api/models/Subject';
-    import { IErrorDetails, IValidationDetails, Response } from '../store/modules/ErrorProcessing';
+    import { Response } from '../store/modules/ErrorProcessing';
 
     @Component({})
     export default class SubjectViewPageComponent extends Vue {

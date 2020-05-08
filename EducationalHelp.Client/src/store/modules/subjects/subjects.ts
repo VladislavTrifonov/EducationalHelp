@@ -26,7 +26,6 @@ const mutations: MutationTree<SubjectsState> = {
 
     addSubject: (state, subject: Subject) => {
         state.all.push(subject);
-        console.log(subject);
     }
 };
 
