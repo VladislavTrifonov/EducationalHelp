@@ -28,7 +28,7 @@ namespace EducationalHelp.Web.Filters
                 ErrorCode = (context.Controller as ControllerBase)?.GetFrontendName() + "/" + context.HttpContext.TraceIdentifier
                                                                                                                     ?? "undefined",
                 ErrorType = "validation",
-                Details = context.Result
+                Details = ((ObjectResult)context.Result).Value
             };
             context.Result = new BadRequestObjectResult(errorObject);
         }
