@@ -6,8 +6,6 @@ export default class SubjectsAPI {
             
     }
 
-    
-
     async getAllSubjects(): Promise<Array<Subject>> {
         var subjects = new Array<Subject>();
         await axios.get("Subjects/GetAllSubjects")
@@ -40,8 +38,13 @@ export default class SubjectsAPI {
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => resolve(response.data))
-                .catch(error => reject(error));
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                reject(error);
+            });
+                
         });
     }
 }

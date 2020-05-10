@@ -73,7 +73,7 @@ export interface IErrorDetails<T> {
 export interface IValidationDetails {
     success: boolean;
     errorCount: number;
-    listOfErrors: Array<IValidationError>; 
+    listOfErrors: Array<IValidationError>;
 }
 
 export interface IValidationError {

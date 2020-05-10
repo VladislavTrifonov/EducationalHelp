@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 const instance = axios.create({
     baseURL: 'https://localhost:5001',
+    validateStatus: (status) => status >= 200 && status < 300,
 });
 
 instance.interceptors.request.use(request => {
@@ -15,10 +16,15 @@ instance.interceptors.response.use(response => {
         processing.onResponseResolved(response);
     return response;
 }, error => {
-    if (error.message.includes("Network")) {
-        if (processing.onNetworkError != null)
-            processing.onNetworkError(error);
-    }
+        if (error.message.includes("Network")) {
+            if (processing.onNetworkError != null)
+                processing.onNetworkError(error);
+        }
+        else {
+            if (processing.onResponseResolved != null)
+                processing.onResponseResolved(error);
+        }
+    return Promise.reject(error);
 });
 
 export interface IRequestFunction {
