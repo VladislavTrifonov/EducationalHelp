@@ -18,7 +18,6 @@ namespace EducationalHelp.Data.Mapping.Subjects
             builder.HasOne(t => t.Annotation).WithOne().HasForeignKey<Subject>(t => t.AnnotationId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(t => t.Program).WithOne().HasForeignKey<Subject>(t => t.ProgramId).IsRequired(false);
             builder.HasOne(t => t.ValuationTools).WithOne().HasForeignKey<Subject>(t => t.ValuationToolsId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasMany(t => t.Books).WithOne(t => t.Subject).HasForeignKey(t => t.SubjectId).OnDelete(DeleteBehavior.Cascade);
             base.Map(builder);
         }
     }

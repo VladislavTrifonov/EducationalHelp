@@ -26,6 +26,11 @@ const mutations: MutationTree<SubjectsState> = {
 
     addSubject: (state, subject: Subject) => {
         state.all.push(subject);
+    }, 
+
+    deleteSubject: (state, subject: Subject) => {
+        let idx = state.all.findIndex(i => i.id == subject.id);
+        state.all.splice(idx, 1);
     }
 };
 
@@ -46,6 +51,19 @@ const actions: ActionTree<SubjectsState, RootState> = {
     addSubject: (state, subject) => {
         return Response.fromPromise(state.state.api.addSubject(subject), response => {
             state.commit("addSubject", response);
+        });
+    },
+
+    updateSubject: (state, subject: Subject) => {
+        return Response.fromPromise(state.state.api.updateSubject(subject, subject.id), response => {
+            state.commit("deleteSubject", subject);
+            state.commit("addSubject", response);
+        });
+    },
+
+    deleteSubject: (state, subject: Subject) => {
+        return Response.fromPromise(state.state.api.deleteSubject(subject.id), response => {
+            state.commit("deleteSubject", subject);
         });
     }
 };

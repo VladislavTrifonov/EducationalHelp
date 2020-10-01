@@ -47,4 +47,36 @@ export default class SubjectsAPI {
                 
         });
     }
+
+    updateSubject(model: Subject, id: string): Promise<Subject> {
+        return new Promise<Subject>((resolve, reject) => {
+            axios.put("Subjects/UpdateSubject", model, {
+                params: {
+                    'id': id
+                }
+            })
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    deleteSubject(id: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            axios.delete("Subjects/DeleteSubject", {
+                params: {
+                    'id': id
+                }
+            })
+            .then(response => {
+                resolve();
+            })
+            .catch(error => {
+                reject(error);
+            });
+        });
+    }
 }

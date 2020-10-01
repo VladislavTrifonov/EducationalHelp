@@ -22,7 +22,7 @@ Vue.use(Vuex)
 
 const routes = [
     { name: 'homePage', path: '/', component: MainPageComponent },
-    { name: 'error404', path: '/error.404', component: Error404PageComponent },
+    { name: 'error404', path: '*', component: Error404PageComponent },
     { name: 'subjectsList', path: '/subjects', component: SubjectsPageComponent },
     { name: 'subjectView', path: '/subjects/view.:id', component: SubjectViewPageComponent }
 ];
