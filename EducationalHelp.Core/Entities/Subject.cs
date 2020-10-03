@@ -20,6 +20,13 @@ namespace EducationalHelp.Core.Entities
         public virtual File ValuationTools { get; set; }
         public Guid? ValuationToolsId { get; set; }
 
+        public virtual ICollection<Lesson> Lessons { get; set; }
+
+
+        public Subject()
+        {
+            Lessons = new HashSet<Lesson>();
+        }
 
         public override ValidationResult Validate()
         {

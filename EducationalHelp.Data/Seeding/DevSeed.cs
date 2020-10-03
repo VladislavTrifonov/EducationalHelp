@@ -10,6 +10,10 @@ namespace EducationalHelp.Data.Seeding
     {
         public static void Seed(ModelBuilder builder)
         {
+            var testLessons = new List<Lesson>();
+            testLessons.Add(new Lesson() { Id = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE"), SubjectId = new Guid("FE3E3D54-E538-47AF-914B-F7B621F395F5"), DateStart = DateTime.Now, DateEnd = DateTime.Now.AddDays(3), Description = "Test", Homework = "nichego", IsVisited = false, Label = "edu", Notes = "nothing", SelfMark = Mark.Satisfactory, Title = "test lesson"});
+
+
             var subjects = new List<Subject>()
             {
                 new Subject() { Id = new Guid("FE3E3D54-E538-47AF-914B-F7B621F395F5"), Name="Алгоритмы и алгоритмические языки", Teacher="Горюнов Ю.Ю.", Description="алгоритмы"},
@@ -20,7 +24,9 @@ namespace EducationalHelp.Data.Seeding
             };
 
             builder.Entity<Subject>().HasData(subjects);
-            
+            builder.Entity<Lesson>().HasData(testLessons);
+
+
         }
     }
 }

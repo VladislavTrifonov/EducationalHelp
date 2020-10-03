@@ -23,7 +23,7 @@ namespace EducationalHelp.Data
                 var genericParameterInInterface = type_t.BaseType.GenericTypeArguments.First();
                 
                 // Call builder.Entity<T>(), result id EntityTypeBuilder<T>
-                var typeBuilder = builder.GetType().GetMethods().Where(t => t.Name == nameof(builder.Entity) && t.IsGenericMethod).First()
+                var typeBuilder = builder.GetType().GetMethods().First(t => t.Name == nameof(builder.Entity) && t.IsGenericMethod)
                     .MakeGenericMethod(genericParameterInInterface).Invoke(builder, null);
 
                 // Call Map(EntityTypeBuilder<T>) method
