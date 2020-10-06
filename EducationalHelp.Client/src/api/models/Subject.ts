@@ -1,8 +1,11 @@
+import Lesson from "@/api/models/Lesson";
+
 export default class Subject {
     id: string;
     name: string;
     description: string;
     teacher: string;
+    lessons: Array<Lesson>;
 
     createdAt!: Date;
     deletedAt!: Date;
@@ -10,5 +13,6 @@ export default class Subject {
 
     constructor() {
         this.id = this.name = this.description = this.teacher = "";
+        this.lessons = new Array<Lesson>();
     }
 }

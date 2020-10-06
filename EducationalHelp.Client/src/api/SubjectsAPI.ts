@@ -8,7 +8,7 @@ export default class SubjectsAPI {
 
     async getAllSubjects(): Promise<Array<Subject>> {
         var subjects = new Array<Subject>();
-        await axios.get("Subjects/GetAllSubjects")
+        await axios.get("api/subjects")
             .then(response => {
                 subjects = response.data;
             })
@@ -19,11 +19,7 @@ export default class SubjectsAPI {
 
     getSubject(guid: String): Promise<Subject> {
         return new Promise<Subject>((resolve, reject) => {
-            axios.get("Subjects/GetSubjectById", {
-                params: {
-                    id: guid
-                }
-            }).then(response => {
+            axios.get("api/subjects/" + guid).then(response => {
                 resolve(response.data);
             }).catch(error => {
                 reject(error);
@@ -33,7 +29,7 @@ export default class SubjectsAPI {
 
     addSubject(model: Subject): Promise<Subject> {
         return new Promise<Subject>((resolve, reject) => {
-            axios.post("Subjects/CreateSubject", model, {
+            axios.post("api/subjects", model, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -50,11 +46,7 @@ export default class SubjectsAPI {
 
     updateSubject(model: Subject, id: string): Promise<Subject> {
         return new Promise<Subject>((resolve, reject) => {
-            axios.put("Subjects/UpdateSubject", model, {
-                params: {
-                    'id': id
-                }
-            })
+            axios.put("api/subjects/" + id, model)
             .then(response => {
                 resolve(response.data);
             })
@@ -66,11 +58,7 @@ export default class SubjectsAPI {
 
     deleteSubject(id: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            axios.delete("Subjects/DeleteSubject", {
-                params: {
-                    'id': id
-                }
-            })
+            axios.delete("api/subjects/" + id)
             .then(response => {
                 resolve();
             })
