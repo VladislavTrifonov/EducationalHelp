@@ -1,28 +1,35 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using EducationalHelp.Data;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Services.Exceptions;
+using EducationalHelp.Services.Lessons;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationalHelp.Services.Subjects
 {
     public class SubjectsService
     {
-        private IRepository<Subject> _subjectsRepository;
+        private readonly IRepository<Subject> _subjectsRepository;
+        private readonly LessonsService _lessonsService;
 
-        public SubjectsService(IRepository<Subject> subjectsRepository)
+        public SubjectsService(IRepository<Subject> subjectsRepository, LessonsService lessonsService)
         {
             _subjectsRepository = subjectsRepository;
+            _lessonsService = lessonsService;
         }
 
         public List<Subject> GetAllSubjects()
-            => _subjectsRepository.AllData.ToList();
+            => _subjectsRepository.AllData.Include(s => s.Lessons).ToList();
 
         public Subject GetSubject(Guid id)
         {
             var subject = _subjectsRepository.GetById(id);
+            var lessons = _lessonsService.GetLessonsBySubjectId(id);
+
+            if (lessons.Count() != 0)
+                subject.Lessons = lessons;
 
             if (subject == null)
                 throw new ServiceException($"Subject with id {id} was not found");

@@ -2,6 +2,7 @@
 {
     public enum Mark
     {
+        None, 
         Excellent,
         Good,
         Satisfactory,

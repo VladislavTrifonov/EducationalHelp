@@ -15,8 +15,8 @@ namespace EducationalHelp.Core.Entities
             {
                 if (!IsStoredLocal)
                     throw new InvalidOperationException("FileInfo not set, you should store local file to use this");
-                else
-                    return _pathToFile;
+
+                return _pathToFile;
             }
             set
             {

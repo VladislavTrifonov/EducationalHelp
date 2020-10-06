@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace EducationalHelp.Core.Entities
 {
@@ -21,6 +22,8 @@ namespace EducationalHelp.Core.Entities
         public string Notes { get; set; }
 
         public Guid SubjectId { get; set; }
+
+        [JsonIgnore]
         public virtual Subject Subject { get; set; }
     }
 }

@@ -23,14 +23,9 @@ namespace EducationalHelp.Web.Filters
             if (context.ModelState.IsValid)
                 return;
 
-            var listOfErrors = new List<ValidationError>();
-            foreach (var error in context.ModelState)
-            {
-                foreach (var itemError in error.Value.Errors)
-                {
-                    listOfErrors.Add(new ValidationError(itemError.ErrorMessage, error.Key));
-                }
-            }
+            var listOfErrors = from error in context.ModelState
+                from itemError in error.Value.Errors
+                select new ValidationError(itemError.ErrorMessage, error.Key);
 
             var validationResult = new ValidationResult(listOfErrors);
             var errorModel = new ErrorModel()
