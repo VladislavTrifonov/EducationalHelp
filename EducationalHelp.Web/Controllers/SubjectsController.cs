@@ -11,32 +11,32 @@ using EducationalHelp.Services.Exceptions;
 
 namespace EducationalHelp.Web.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("api")]
     [ApiController]
     public class SubjectsController : ControllerBase
     {
-        private SubjectsService _subjectsService;
+        private readonly SubjectsService _subjectsService;
 
         public SubjectsController(SubjectsService subjectsService)
         {
             _subjectsService = subjectsService;
         }
 
-        [HttpGet]
+        [HttpGet("subjects/{id}")]
         public IActionResult GetSubjectById(Guid id)
         {
             var subject = _subjectsService.GetSubject(id);
             return new ObjectResult(subject);
         }
 
-        [HttpGet]
+        [HttpGet("subjects")]
         public IActionResult GetAllSubjects()
         {
             var subjects = _subjectsService.GetAllSubjects();
             return new ObjectResult(subjects);
         }
 
-        [HttpPost]
+        [HttpPost("subjects")]
         public IActionResult CreateSubject(SubjectAddModel subject)
         {
             var subjEntity = new Subject
@@ -58,8 +58,8 @@ namespace EducationalHelp.Web.Controllers
             return Ok(subjEntity);
         }
 
-        [HttpPut]
-        public IActionResult UpdateSubject([FromBody]SubjectAddModel subject, [FromQuery]Guid id)
+        [HttpPut("subjects/{id}")]
+        public IActionResult UpdateSubject([FromBody]SubjectAddModel subject, [FromRoute]Guid id)
         {
             Subject resolvedSubject;
             try
@@ -79,7 +79,7 @@ namespace EducationalHelp.Web.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete("subjects/{id}")]
         public IActionResult DeleteSubject(Guid id)
         {
             try
