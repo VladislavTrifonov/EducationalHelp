@@ -37,6 +37,32 @@
             <b-tab title="Учебная литература">
 
             </b-tab>
+            <b-tab title="Занятия">
+              <ul class="lessons">
+                <li class="lesson" v-for="lesson in Model.lessons" :key="lesson.id">
+                  <div class="lesson__block">
+                    <div class="lesson__left">
+                      <a href="#!" class="lesson__header">
+                        <h4 class="lesson__header-h4">
+                          {{lesson.title}}
+                        </h4>
+                      </a>
+                      <p class="lesson__description">{{lesson.description}}</p>
+                    </div>
+                    <div class="lesson__right">
+                      <span class="lesson__gray">
+                        Начало: {{lesson.dateStart}}
+                      </span>
+                      <br>
+                      <span class="lesson__gray">
+                        Конец: {{lesson.dateEnd}}
+                      </span>
+                    </div>
+                  </div>
+                  <hr>
+                </li>
+              </ul>
+            </b-tab>
             
         </b-tabs>
         <b-modal id="editSubjectModal" @ok="onEditModalOk">
@@ -63,6 +89,8 @@
     import Subject from '../api/models/Subject';
     import AddSubject from '@/components/AddSubjectComponent.vue';
     import { Response } from '../store/modules/ErrorProcessing';
+    import LessonAPI from "@/api/LessonAPI";
+    import Lesson from "@/api/models/Lesson";
 
     @Component({
         components: {
@@ -134,4 +162,22 @@
 </script>
 
 <style scoped>
+li {
+  list-style-type: none;
+}
+
+ul {
+  margin-left: 0; /* Отступ слева в браузере IE и Opera */
+  padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+
+.lesson__block {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.lesson__gray {
+  color: gray;
+}
 </style>
