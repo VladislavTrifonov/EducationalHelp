@@ -12,16 +12,9 @@
     </b-container>
 </template>
 
-<script>
-    export default {
-        props: ['model', 'validationStates'],
-        methods: {
-            getValidationState: function (propertyName) {
-                return this.validationStates.filter(s => s.propertyName.toLowerCase() == propertyName).length == 0 ? null : false; 
-            }
-        }
-    }
+<script src="./index.js">
+
 </script>
 
-<style scoped>
+<style scoped src="./index.css">
 </style>

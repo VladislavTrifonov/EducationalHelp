@@ -19,7 +19,7 @@
     import Vue from 'vue';
     import { processing } from './axiosconf';
     import { Component } from 'vue-property-decorator';
-    import Navigation from './components/Navigation.vue';
+    import Navigation from './components/Navigation/index.vue';
     import NetworkError from './components/system/NetworkError.vue';
     import LoadProgress from './components/system/LoadProgress.vue'
 

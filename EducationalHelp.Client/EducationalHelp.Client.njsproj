@@ -97,7 +97,7 @@
     <TypeScriptCompile Include="src\axiosconf.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\store\index.ts">
+    <TypeScriptCompile Include="src\store\index.js">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\store\modules\ErrorProcessing.ts">
