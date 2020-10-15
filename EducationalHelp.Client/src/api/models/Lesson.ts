@@ -3,8 +3,8 @@ export default class Lesson {
     title!: string;
     label!: string;
     description!: string;
-    dateStart?: Date;
-    dateEnd?: Date;
+    dateStart?: string;
+    dateEnd?: string;
     isVisited!: boolean;
     selfMark!: number;
     homework!: string;

@@ -19,4 +19,10 @@ export default class LessonsListComponent extends Vue {
     constructor() {
         super();
     }
+
+    getTimeOfWaiting(date: string): string {
+        let days = (new Date(date).getTime() - new Date().getTime()) / 86400000; // получаем разность в между датами в мс! и делим на 86400 * 10^4
+        let hours = Math.floor((days % 1) * 24); // days % 1 - возвращает дробную часть days, умножаем на 24 -> получаем кол-во оставшихся часов
+        return Math.floor(days).toString() + " дн. и " + hours.toString() + " час.";
+    }
 }
