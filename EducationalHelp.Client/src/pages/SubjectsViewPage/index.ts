@@ -3,12 +3,12 @@ import { Component } from 'vue-property-decorator';
 import Subject from '../../api/models/Subject';
 import AddSubject from '@/pages/AddSubjectPage/index.vue';
 import { Response } from '../../store/modules/ErrorProcessing';
-import LessonAPI from "@/api/LessonAPI";
-import Lesson from "@/api/models/Lesson";
+import LessonsListComponent from "@/pages/SubjectsViewPage/components/LessonsList/index.vue";
 
 @Component({
     components: {
-        'add-subject': AddSubject
+        'add-subject': AddSubject,
+        'lessons-list': LessonsListComponent
     }
 })
 export default class SubjectViewPageComponent extends Vue {

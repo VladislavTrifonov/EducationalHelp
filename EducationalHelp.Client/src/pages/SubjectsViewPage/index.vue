@@ -38,30 +38,8 @@
 
             </b-tab>
             <b-tab title="Занятия">
-              <ul class="lessons">
-                <li class="lesson" v-for="lesson in Model.lessons" :key="lesson.id">
-                  <div class="lesson__block">
-                    <div class="lesson__left">
-                      <a href="#!" class="lesson__header">
-                        <h4 class="lesson__header-h4">
-                          {{lesson.title}}
-                        </h4>
-                      </a>
-                      <p class="lesson__description">{{lesson.description}}</p>
-                    </div>
-                    <div class="lesson__right">
-                      <span class="lesson__gray">
-                        Начало: {{lesson.dateStart}}
-                      </span>
-                      <br>
-                      <span class="lesson__gray">
-                        Конец: {{lesson.dateEnd}}
-                      </span>
-                    </div>
-                  </div>
-                  <hr>
-                </li>
-              </ul>
+              <lessons-list :p_lessons="Model.lessons">
+              </lessons-list>
             </b-tab>
 
         </b-tabs>
