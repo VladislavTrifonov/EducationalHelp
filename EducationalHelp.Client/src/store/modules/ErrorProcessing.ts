@@ -13,12 +13,11 @@ export class Response {
     }
 
     public static fromPromise(promise: Promise<any>, onSuccess: (response: any) => void): Promise<Response> {
-        return new Promise<Response>((resolve, _) => {
+        return new Promise<Response>((_, reject) => {
             promise.then(response => {
                 onSuccess(response);
-                resolve(new Response(true, null));
             }, error => {
-                    resolve(new Response(false, error.response.data));
+                    reject(new Response(false, error.response.data));
             });
         });
     }

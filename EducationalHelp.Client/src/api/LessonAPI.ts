@@ -8,7 +8,7 @@ export default class LessonAPI {
     }
 
     async getAllLessons(subjectId:string): Promise<Array<Lesson>> {
-        var lessons = new Array<Lesson>();
+        let lessons = new Array<Lesson>();
         await axios.get("api/subjects/"+ subjectId +"/lessons")
             .then(response => {
                 lessons = response.data;
@@ -16,5 +16,17 @@ export default class LessonAPI {
             .catch(error => {
             });
         return lessons;
+    }
+
+    getLessonById(subjectId: string, lessonId: string): Promise<Lesson> {
+        return new Promise<Lesson>((resolve, reject) => {
+          axios.get("api/subjects/" + subjectId + "/lessons/" + lessonId)
+              .then(response => {
+                  resolve(response.data);
+              })
+              .catch((error) => {
+                  reject(error);
+              });
+        });
     }
 }
