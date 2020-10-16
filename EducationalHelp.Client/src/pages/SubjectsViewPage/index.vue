@@ -9,10 +9,7 @@
                 <b-button size="sm" variant="light" @click="onDeleteClick()"><b-icon-trash></b-icon-trash> Удалить</b-button>
             </b-button-group>
         </div>
-        <div class="container">
-                <span class="small lead"><i>Создано</i> {{Model.createdAt}}</span>, 
-                <span class="small lead"><i>Обновлено</i> {{Model.updatedAt}}</span>
-        </div>
+        <created-updated-info :entity="Model"></created-updated-info>
         <b-tabs content-class="mt-3">
             <b-tab title="Информация" active>
                 <div class="container">

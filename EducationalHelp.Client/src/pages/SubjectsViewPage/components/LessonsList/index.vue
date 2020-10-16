@@ -4,11 +4,11 @@
       <li class="lesson" v-for="lesson in lessons" :key="lesson.id">
         <div class="lesson__block">
           <div class="lesson__left">
-            <a href="#!" class="lesson__header">
+            <router-link  :to="{name: 'lessonView', params: { subjectId: lesson.subjectId, lessonId: lesson.id }}" class="lesson__header">
               <h4 class="lesson__header-h4">
                 {{lesson.title}}
               </h4>
-            </a>
+            </router-link>
             <p class="lesson__description">{{lesson.description}}</p>
           </div>
           <div class="lesson__right">
@@ -19,7 +19,7 @@
                 Началось <b>{{new Date(lesson.dateStart).toTimeString()}}</b>,<br> закончится через <b>{{getTimeOfWaiting(lesson.dateEnd)}}</b>
               </span>
               <span class="lesson__gray" v-else>
-                Завершено
+                Завершено {{lesson.dateEnd}}
               </span>
           </div>
         </div>

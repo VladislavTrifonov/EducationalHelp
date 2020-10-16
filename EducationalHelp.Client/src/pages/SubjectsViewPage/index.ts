@@ -4,11 +4,13 @@ import Subject from '../../api/models/Subject';
 import AddSubject from '@/pages/AddSubjectPage/index.vue';
 import { Response } from '../../store/modules/ErrorProcessing';
 import LessonsListComponent from "@/pages/SubjectsViewPage/components/LessonsList/index.vue";
+import CreatedUpdatedInfo from "@/components/CreatedUpdatedInfo/index.vue";
 
 @Component({
     components: {
         'add-subject': AddSubject,
-        'lessons-list': LessonsListComponent
+        'lessons-list': LessonsListComponent,
+        'created-updated-info': CreatedUpdatedInfo
     }
 })
 export default class SubjectViewPageComponent extends Vue {
