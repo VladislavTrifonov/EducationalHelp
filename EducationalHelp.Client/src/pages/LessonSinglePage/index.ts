@@ -5,11 +5,13 @@ import { Response } from "@/store/modules/ErrorProcessing";
 import LessonAPI from "@/api/LessonAPI";
 import CreatedUpdatedInfo from "@/components/CreatedUpdatedInfo/index.vue";
 import Grading from "@/pages/LessonSinglePage/components/Grading/index.vue";
+import Contents from "@/pages/LessonSinglePage/components/Contents/index.vue";
 
 @Component({
     components: {
         'created-updated-info': CreatedUpdatedInfo,
-        'grading': Grading
+        'grading': Grading,
+        'contents': Contents
     }
 })
 export default class LessonSinglePage extends Vue {

@@ -27,7 +27,7 @@
 
     <b-tabs content-class="pt-3" class="pt-3">
       <b-tab title="Содержание занятия" active>
-
+        <contents :lesson="lesson"></contents>
       </b-tab>
       <b-tab title="Выполнение самостоятельных заданий">
 
