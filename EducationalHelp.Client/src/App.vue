@@ -64,4 +64,21 @@
 </script> 
 
 <style>
+.interactive-element {
+  position: relative;
+  cursor: pointer;
+  padding-right: 7px;
+}
+
+.interactive-element::after {
+  background-image: url("https://img.icons8.com/fluent-systems-filled/24/000000/pencil.png");
+  background-position: left center;
+  background-repeat: no-repeat;
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  margin-left: 4px;
+}
 </style>
