@@ -20,3 +20,12 @@ export default class Lesson {
 
     }
 }
+
+export enum Marks {
+    None,
+    Excellent,
+    Good,
+    Satisfactory,
+    Unsatisfactory,
+    Poor
+}
