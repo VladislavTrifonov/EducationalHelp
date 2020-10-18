@@ -7,12 +7,14 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // @ts-ignore
 import CKEditor from '@ckeditor/ckeditor5-vue';
 import Lesson from "@/api/models/Lesson";
+import DateTime from "@/components/system/DateTime.vue";
 
 
 @Component({
     components: {
       'created-updated-info': CreatedUpdatedInfo,
-      'ckeditor': CKEditor.component
+      'ckeditor': CKEditor.component,
+      'date-time': DateTime
     }
 })
 export default class LessonHeader extends Vue {

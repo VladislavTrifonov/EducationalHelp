@@ -32,8 +32,8 @@
             </div>
             <div class="col col-md-auto">
               <div v-if="!headEditing">
-                <p class="mb-0">Начало занятия: {{lesson.dateStart}}</p>
-                <p>Конец занятия: {{lesson.dateEnd}}</p>
+                <p class="mb-0">Начало занятия: <date-time :date-time-string="lesson.dateStart"></date-time></p>
+                <p>Конец занятия: <date-time :date-time-string="lesson.dateEnd"></date-time></p>
               </div>
               <div class="col col-md-auto" v-else>
                 <div class="mb-4">
