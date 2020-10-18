@@ -6,21 +6,24 @@ import LessonAPI from "@/api/LessonAPI";
 import CreatedUpdatedInfo from "@/components/CreatedUpdatedInfo/index.vue";
 import Grading from "@/pages/LessonSinglePage/components/Grading/index.vue";
 import Contents from "@/pages/LessonSinglePage/components/Contents/index.vue";
+import LessonHeader from "@/pages/LessonSinglePage/components/LessonHeader/index.vue";
 
 @Component({
     components: {
         'created-updated-info': CreatedUpdatedInfo,
+        'lesson-header': LessonHeader,
         'grading': Grading,
         'contents': Contents
     }
 })
 export default class LessonSinglePage extends Vue {
     public lesson: Lesson;
+    public notesEditing: boolean;
     private lessonApi: LessonAPI;
 
     constructor() {
         super();
-
+        this.notesEditing = false;
         this.lesson = new Lesson();
         this.lessonApi = new LessonAPI();
     }

@@ -1,31 +1,8 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div class="row justify-content-between">
-              <div class="col col-md-auto">
-                <h5 class="card-title interactive-element">
-                  {{lesson.title}}
-                  <span class="badge badge-secondary">
-                  {{lesson.label}}
-                </span>
-                </h5>
-                <p class="card-text interactive-element">{{lesson.description}}</p>
-                <created-updated-info :entity="lesson"></created-updated-info>
-              </div>
-              <div class="col col-md-auto pt-4">
-                <p class="mb-0">Начало занятия: <span class="interactive-element">{{lesson.dateStart}}</span></p>
-                <p>Конец занятия: <span class="interactive-element">{{lesson.dateEnd}}</span></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <lesson-header :lesson="lesson"></lesson-header>
 
-    <b-tabs content-class="pt-3" class="pt-3">
+     <b-tabs content-class="pt-3" class="pt-3">
       <b-tab title="Содержание занятия" active>
         <contents :lesson="lesson"></contents>
       </b-tab>
@@ -38,8 +15,16 @@
     </b-tabs>
     <hr>
     <div class="pt-3">
-      <b>Заметки: </b>
-      <p class="lead">Тут будут заметки...</p>
+      <b class="interactive-element" @click="notesEditing = !notesEditing">Заметки: </b>
+      <p class="lead" v-html="lesson.notes" v-if="!notesEditing"></p>
+      <div v-else>
+        <b-form-textarea placeholder="Введите свои заметки здесь..." rows="3" max-rows="10" v-model="lesson.notes"></b-form-textarea>
+        <div class="row justify-content-center">
+          <div class="col col-md-auto">
+            <b-button variant="success" @click="notesEditing = !notesEditing">Сохранить</b-button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
