@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!editMark">
-      <div v-html="lesson.homework">
+      <div class="mb-5" v-html="lesson.homework">
       </div>
       <div class="row">
         <div class="col">
