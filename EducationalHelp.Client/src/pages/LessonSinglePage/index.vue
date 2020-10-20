@@ -7,7 +7,7 @@
         <contents :lesson="lesson"></contents>
       </b-tab>
       <b-tab title="Выполнение самостоятельных заданий">
-
+        <homework></homework>
       </b-tab>
       <b-tab title="Оценивание (итоги)">
         <grading :lesson="lesson"></grading>
