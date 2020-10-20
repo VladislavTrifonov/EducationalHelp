@@ -37,7 +37,7 @@
           <p class="lead">Загруженные файлы:</p>
           <b-list-group>
             <transition-group name="fade" tag="p">
-              <b-list-group-item v-for="(file, i) in files" variant="secondary" :key="i">
+              <b-list-group-item v-for="(file, i) in files" variant="secondary" :key="'f' + i">
                 <div class="row justify-content-between">
                   <div class="col col-md-auto">
                     {{file.name}} ({{getFileSize(file.size)}})
