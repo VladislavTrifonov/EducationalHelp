@@ -33,17 +33,16 @@ export default class LessonHeader extends Vue {
         super();
     }
 
-    // Необходимо использовать watch за входящ. параметром lesson, т.к. он приходит асинхронно (не в момент загрузки компонента)
-    @Watch("lesson")
-    initalizeDateAndTime() {
-        // @ts-ignore
-        let splittedDateStart = this.lesson.dateStart.split("T");
-        this.startDate = splittedDateStart[0];
-        this.startTime = splittedDateStart[1];
-        // @ts-ignore
-        let splittedDateEnd = this.lesson.dateEnd.split("T");
-        this.endDate = splittedDateEnd[0];
-        this.endTime = splittedDateEnd[1];
+    mounted() {
+        if (this.lesson.dateStart != undefined && this.lesson.dateEnd != undefined) {
+            let splittedDateStart = this.lesson.dateStart.split("T");
+            this.startDate = splittedDateStart[0];
+            this.startTime = splittedDateStart[1];
+
+            let splittedDateEnd = this.lesson.dateEnd.split("T");
+            this.endDate = splittedDateEnd[0];
+            this.endTime = splittedDateEnd[1];
+        }
     }
 
     @Watch("startDate")

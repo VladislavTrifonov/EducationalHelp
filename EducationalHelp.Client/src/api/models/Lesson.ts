@@ -14,8 +14,8 @@ export default class Lesson {
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt!: Date;
-
-
+    static Empty: Lesson = new Lesson();
+    
     constructor() {
 
     }

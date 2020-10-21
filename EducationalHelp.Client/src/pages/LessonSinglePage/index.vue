@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="isLessonLoaded">
     <lesson-header :lesson="lesson"></lesson-header>
 
      <b-tabs content-class="pt-3" class="pt-3">
@@ -26,7 +26,20 @@
         </div>
       </div>
     </div>
-
+    <transition name="fade">
+      <b-toast toaster="b-toaster-bottom-center" no-auto-hide no-close-button v-bind:visible="isSaveBtnShow">
+        <div class="container">
+          <div class="text-sm-center text-secondary">
+            У вас есть несохраненные изменения, которые могут быть утеряны.
+            <div class="row justify-content-center pt-1">
+              <div class="col col-md-auto">
+                <b-button variant="success" @click="saveBtnClick">Сохранить</b-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </b-toast>
+    </transition>
   </div>
 </template>
 

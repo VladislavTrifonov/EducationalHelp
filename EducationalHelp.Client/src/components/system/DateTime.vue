@@ -9,7 +9,7 @@ name: "DateTime",
   computed: {
     getDate: function() {
       let date = new Date(this.dateTimeString.split("T")[0]);
-      return date.getDate() + "." + date.getMonth() + "." + date.getFullYear();
+      return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
     },
     getTime: function() {
       return this.dateTimeString.split("T")[1]

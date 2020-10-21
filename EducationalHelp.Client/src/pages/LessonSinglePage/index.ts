@@ -1,5 +1,5 @@
 import {Component, Watch} from "vue-property-decorator";
-import Vue from "vue";
+import Vue, {WatchOptions} from "vue";
 import Lesson from "@/api/models/Lesson";
 import { Response } from "@/store/modules/ErrorProcessing";
 import LessonAPI from "@/api/LessonAPI";
@@ -22,11 +22,13 @@ export default class LessonSinglePage extends Vue {
     public lesson: Lesson;
     public notesEditing: boolean;
     private lessonApi: LessonAPI;
+    public isSaveBtnShow: boolean;
 
     constructor() {
         super();
         this.notesEditing = false;
-        this.lesson = new Lesson();
+        this.isSaveBtnShow = false;
+        this.lesson = Lesson.Empty;
         this.lessonApi = new LessonAPI();
     }
 
@@ -47,12 +49,43 @@ export default class LessonSinglePage extends Vue {
         });
     }
 
-    @Watch('lesson.selfMark')
-    @Watch('lesson.isVisited')
-    onLessonChanged(value: Lesson, oldValue: Lesson) {
-        console.log("new value -> old value")
-        console.log(value)
-        console.log(oldValue)
+    get isLessonLoaded(): boolean {
+        return this.lesson != Lesson.Empty;
     }
 
+    @Watch('lesson', {
+        deep: true // отслеживать изменения полей объекта
+    })
+    onLessonChanged(value: any, oldValue: any) {
+        // Пропустить первый вызов, когда только пришли данные от сервера (не является обновлением данных пользователем)
+        if (oldValue == Lesson.Empty)
+            return;
+
+        if (!this.isSaveBtnShow) {
+            this.isSaveBtnShow = true;
+        }
+    }
+
+    // Обновление информации о Lesson на сервер
+    saveBtnClick() {
+        if (this.lesson == null)
+            return;
+
+        this.isSaveBtnShow = false;
+        let response = Response.fromPromise(this.lessonApi.updateLesson(this.$route.params.subjectId, this.$route.params.lessonId, this.lesson), (response) => {
+           this.lesson = response;
+           this.$bvToast.toast('Сохранение успешно выполнено', {
+               variant: "success",
+               autoHideDelay: 5000,
+               isStatus: true,
+               toaster: 'b-toaster-bottom-left'
+           })
+        }).catch((error: Response) => {
+            error.process(() => {
+                this.isSaveBtnShow = true;
+                alert("Упс.. что-то пошло не так, смотрите консоль")
+                console.log(error)
+            })
+        });
+    }
 }

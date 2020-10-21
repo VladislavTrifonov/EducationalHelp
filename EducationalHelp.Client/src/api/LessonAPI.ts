@@ -29,4 +29,16 @@ export default class LessonAPI {
               });
         });
     }
+
+    updateLesson(subjectId: string, lessonId: string, lesson: Lesson): Promise<Lesson> {
+        return new Promise<Lesson>((resolve, reject) => {
+           axios.put("api/subjects/" + subjectId + "/lessons/" + lessonId, lesson)
+               .then(response => {
+                   resolve(response.data);
+               })
+               .catch(error => {
+                   reject(error);
+               });
+        });
+    }
 }
