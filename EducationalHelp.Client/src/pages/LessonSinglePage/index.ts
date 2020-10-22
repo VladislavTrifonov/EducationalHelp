@@ -134,6 +134,8 @@ export default class LessonSinglePage extends Vue {
             .then(value => {
                 if (value) {
                     let response = Response.fromPromise(this.lessonApi.deleteLesson(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
+                        this.$store.dispatch("subjects/fetchSubjects");
+                        console.log('subjid: ', this.$route.params.subjectId)
                         this.$router.push({
                             name: 'subjectView',
                             params: {

@@ -2,12 +2,15 @@
   <div class="container">
     <div class="row justify-content-end mb-3">
       <div class="col col-md-auto">
-        <router-link :to="{name: 'lessonCreate', params: {subjectId: lessons[0].subjectId} }">
+        <router-link :to="{name: 'lessonCreate', params: {subjectId: this.$route.params.id} }">
           <b-button variant="success"><b-icon-plus-circle></b-icon-plus-circle> Добавить</b-button>
         </router-link>
       </div>
     </div>
     <ul class="lessons">
+      <li class="lesson" v-if="lessons.length == 0">
+        <i>Нет занятий для отображения. Нажмите на кнопку <b-icon-plus-circle></b-icon-plus-circle> Добавить, чтобы создать новое занятие.</i>
+      </li>
       <li class="lesson" v-for="lesson in lessons" :key="lesson.id">
         <div class="lesson__block">
           <div class="lesson__left">
