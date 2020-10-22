@@ -118,4 +118,36 @@ export default class LessonSinglePage extends Vue {
            })
         });
     }
+
+    deleteLesson() {
+        this.$bvModal.msgBoxConfirm('Вы действительно хотите удалить этот элемент?', {
+            title: 'Необходимо подтверждение',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Да',
+            cancelTitle: 'Нет',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+        })
+            .then(value => {
+                if (value) {
+                    let response = Response.fromPromise(this.lessonApi.deleteLesson(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
+                        this.$router.push({
+                            name: 'subjectView',
+                            params: {
+                                id: this.$route.params.subjectId
+                            }
+                        });
+                    }).catch((error: Response) => {
+                        error.process(() => {
+                            alert("Что-то пошлое не так")
+                            console.log(error)
+                        })
+                    })
+                }
+            });
+
+    }
 }

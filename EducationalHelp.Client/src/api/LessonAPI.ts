@@ -49,4 +49,12 @@ export default class LessonAPI {
                 .catch(error => reject(error));
         })
     }
+
+    deleteLesson(subjectId: string, lessonId: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            axios.delete('api/subjects/' + subjectId + '/lessons/' + lessonId).then(response => {
+                resolve(response.data)
+            }).catch(error => reject(error));
+        });
+    }
 }

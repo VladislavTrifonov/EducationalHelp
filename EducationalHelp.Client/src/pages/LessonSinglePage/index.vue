@@ -1,5 +1,10 @@
 <template>
   <div class="container" v-if="isLessonLoaded">
+    <div class="row justify-content-end mb-2" v-if="!isCreationMode">
+      <div class="col col-md-auto">
+        <b-button variant="outline-danger" @click="deleteLesson"><b-icon-trash-fill></b-icon-trash-fill> Удалить</b-button>
+      </div>
+    </div>
     <lesson-header :lesson="lesson" :editing="isCreationMode"></lesson-header>
 
      <b-tabs content-class="pt-3" class="pt-3">
