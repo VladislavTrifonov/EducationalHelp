@@ -13,7 +13,12 @@ const routes = [
     { name: 'error404', path: '*', component: Error404PageComponent },
     { name: 'subjectsList', path: '/subjects', component: SubjectsPageComponent },
     { name: 'subjectView', path: '/subjects/v-:id', component: SubjectViewPageComponent },
-    { name: 'lessonView', path: '/subjects/:subjectId-l-:lessonId', component: LessonSinglePage }
+    { name: 'lessonView', path: '/subjects/:subjectId-l-:lessonId', component: LessonSinglePage, props: {
+        isCreationMode: false
+        } },
+    { name: 'lessonCreate', path: '/subjects/:subjectId/createLesson', component: LessonSinglePage, props: {
+            isCreationMode: true
+    }}
 
 ];
 

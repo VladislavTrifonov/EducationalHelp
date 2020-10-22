@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="container">
+    <div class="row justify-content-end mb-3">
+      <div class="col col-md-auto">
+        <router-link :to="{name: 'lessonCreate', params: {subjectId: lessons[0].subjectId} }">
+          <b-button variant="success"><b-icon-plus-circle></b-icon-plus-circle> Добавить</b-button>
+        </router-link>
+      </div>
+    </div>
     <ul class="lessons">
       <li class="lesson" v-for="lesson in lessons" :key="lesson.id">
         <div class="lesson__block">
@@ -9,7 +16,7 @@
                 {{lesson.title}}
               </h4>
             </router-link>
-            <p class="lesson__description">{{lesson.description}}</p>
+            <p class="lesson__description" v-html="lesson.description"></p>
           </div>
           <div class="lesson__right">
               <span class="lesson__green" v-if="new Date(lesson.dateStart).getTime() > Date.now()">

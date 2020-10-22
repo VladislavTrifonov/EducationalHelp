@@ -41,4 +41,12 @@ export default class LessonAPI {
                });
         });
     }
+
+    createLesson(subjectId: string, lesson: Lesson): Promise<Lesson> {
+        return new Promise<Lesson>((resolve, reject) => {
+            axios.post("api/subjects/" + subjectId + "/lessons", lesson)
+                .then(response => resolve(response.data))
+                .catch(error => reject(error));
+        })
+    }
 }

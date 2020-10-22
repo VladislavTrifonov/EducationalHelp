@@ -28,7 +28,7 @@
                   <ckeditor :editor="editor" class="ckeditor-size" v-model="lesson.description" :config="{language: 'ru'}"></ckeditor>
                 </div>
               </div>
-              <created-updated-info :entity="lesson"></created-updated-info>
+              <created-updated-info :entity="lesson" v-if="!editing"></created-updated-info>
             </div>
             <div class="col col-md-auto">
               <div v-if="!headEditing">
@@ -59,7 +59,7 @@
                   </b-input-group>
                 </div>
               </div>
-              <div class="row justify-content-end">
+              <div class="row justify-content-end" v-if="!editing">
                 <b-button v-if="!headEditing" variant="outline-primary" @click="headEditing = !headEditing"><b-icon-pencil-square></b-icon-pencil-square> Редактировать шапку</b-button>
                 <b-button v-else variant="outline-success btn-save" @click="headEditing = !headEditing"><b-icon-check></b-icon-check> Сохранить</b-button>
               </div>

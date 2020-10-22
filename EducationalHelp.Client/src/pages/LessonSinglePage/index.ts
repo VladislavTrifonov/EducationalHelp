@@ -1,4 +1,4 @@
-import {Component, Watch} from "vue-property-decorator";
+import {Component, Prop, Watch} from "vue-property-decorator";
 import Vue, {WatchOptions} from "vue";
 import Lesson from "@/api/models/Lesson";
 import { Response } from "@/store/modules/ErrorProcessing";
@@ -23,21 +23,34 @@ export default class LessonSinglePage extends Vue {
     public notesEditing: boolean;
     private lessonApi: LessonAPI;
     public isSaveBtnShow: boolean;
+    @Prop({
+        default: () => false
+    })
+    public isCreationMode!: boolean;
 
     constructor() {
         super();
-        this.notesEditing = false;
+        this.notesEditing = this.isCreationMode;
         this.isSaveBtnShow = false;
         this.lesson = Lesson.Empty;
         this.lessonApi = new LessonAPI();
     }
 
     mounted() {
-        this.fetchLesson();
+        if (this.$route.params.lessonId != null)
+            this.fetchLesson(); // загрузка уже существующего Lesson
+        else
+            this.lesson = new Lesson(); // создание нового Lesson
+    }
+
+    @Watch('isCreationMode')
+    updateNotesEditing() {
+        this.notesEditing = this.isCreationMode
     }
 
     // Получение данных по API для необходимого занятия
     fetchLesson() {
+        this.lesson = Lesson.Empty;
         let response = Response.fromPromise(this.lessonApi.getLessonById(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
            this.lesson = response;
            console.log(response);
@@ -58,7 +71,7 @@ export default class LessonSinglePage extends Vue {
     })
     onLessonChanged(value: any, oldValue: any) {
         // Пропустить первый вызов, когда только пришли данные от сервера (не является обновлением данных пользователем)
-        if (oldValue == Lesson.Empty)
+        if (oldValue == Lesson.Empty || this.isCreationMode)
             return;
 
         if (!this.isSaveBtnShow) {
@@ -86,6 +99,23 @@ export default class LessonSinglePage extends Vue {
                 alert("Упс.. что-то пошло не так, смотрите консоль")
                 console.log(error)
             })
+        });
+    }
+
+    createLesson() {
+        let response = Response.fromPromise(this.lessonApi.createLesson(this.$route.params.subjectId, this.lesson), (response) => {
+            this.$router.push({
+                name: 'lessonView',
+                params: {
+                    subjectId: this.$route.params.subjectId,
+                    lessonId: response.id
+                }
+            })
+        }).catch((error: Response) => {
+           error.process(() => {
+               alert('Что-то пошло не так')
+               console.log(error)
+           })
         });
     }
 }

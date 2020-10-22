@@ -1,27 +1,28 @@
 <template>
   <div class="container" v-if="isLessonLoaded">
-    <lesson-header :lesson="lesson"></lesson-header>
+    <lesson-header :lesson="lesson" :editing="isCreationMode"></lesson-header>
 
      <b-tabs content-class="pt-3" class="pt-3">
       <b-tab title="Содержание занятия" active>
-        <contents :lesson="lesson"></contents>
+        <contents :lesson="lesson" :editing="isCreationMode"></contents>
       </b-tab>
-      <b-tab title="Выполнение самостоятельных заданий">
+      <b-tab title="Выполнение самостоятельных заданий" v-if="!isCreationMode">
         <homework></homework>
       </b-tab>
       <b-tab title="Оценивание (итоги)">
-        <grading :lesson="lesson"></grading>
+        <grading :lesson="lesson" :editing="isCreationMode"></grading>
       </b-tab>
     </b-tabs>
     <hr>
     <div class="pt-3">
-      <b class="interactive-element" @click="notesEditing = !notesEditing">Заметки: </b>
+      <b v-bind:class="{'interactive-element': !isCreationMode}" @click="notesEditing = !notesEditing">Заметки: </b>
       <p class="lead" v-html="lesson.notes" v-if="!notesEditing"></p>
       <div v-else>
         <b-form-textarea placeholder="Введите свои заметки здесь..." rows="3" max-rows="10" v-model="lesson.notes"></b-form-textarea>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center pt-3">
           <div class="col col-md-auto">
-            <b-button variant="success" @click="notesEditing = !notesEditing">Сохранить</b-button>
+            <b-button variant="success" @click="notesEditing = !notesEditing" v-if="!isCreationMode">Сохранить</b-button>
+            <b-button variant="success" @click="createLesson" v-else>Создать</b-button>
           </div>
         </div>
       </div>

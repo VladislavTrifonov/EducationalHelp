@@ -1,16 +1,23 @@
 import Vue from 'vue';
-import {Component} from "vue-property-decorator";
-import {Marks} from "@/api/models/Lesson";
+import {Component, Prop, Watch} from "vue-property-decorator";
+import Lesson, {Marks} from "@/api/models/Lesson";
 
-@Component({
-    props: ['lesson']
-})
+@Component({})
 export default class Grading extends Vue {
-    public markEditing: boolean = false;
+    public markEditing!: boolean;
     public marks: any;
+
+    @Prop({type: Object as () => Lesson})
+    public lesson!: Lesson;
+
+    @Prop({
+        default: () => false
+    })
+    public editing!: boolean;
 
     constructor() {
         super();
+        this.markEditing = this.editing;
         this.marks = [
             {value: Marks.None, text: "Нет"},
             {value: Marks.Excellent, text: "Отлично (5)"},
@@ -21,8 +28,13 @@ export default class Grading extends Vue {
         ]
     }
 
+    @Watch('editing')
+    updateMarkEditing() {
+        this.markEditing = this.editing
+    }
+
     get markName(): string {
-        return this.marks.filter((m: any) => m.value == this.$props.lesson.selfMark)[0].text;
+        return this.marks.filter((m: any) => m.value == this.lesson.selfMark)[0].text;
     }
 
     setMark() {

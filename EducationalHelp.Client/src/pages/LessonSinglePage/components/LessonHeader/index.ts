@@ -18,11 +18,16 @@ import DateTime from "@/components/system/DateTime.vue";
     }
 })
 export default class LessonHeader extends Vue {
-    public headEditing: boolean = false;
+    public headEditing!: boolean;
     public editor: any = ClassicEditor;
 
     @Prop({type: Object as () => Lesson})
     public lesson!: Lesson;
+
+    @Prop({
+        default: () => false
+    })
+    public editing!: boolean;
 
     public startDate: string = '';
     public startTime: string = '';
@@ -31,9 +36,17 @@ export default class LessonHeader extends Vue {
 
     constructor() {
         super();
+        this.headEditing = this.editing;
+    }
+
+    @Watch('editing')
+    updateHeadEditing()
+    {
+        this.headEditing = this.editing
     }
 
     mounted() {
+
         if (this.lesson.dateStart != undefined && this.lesson.dateEnd != undefined) {
             let splittedDateStart = this.lesson.dateStart.split("T");
             this.startDate = splittedDateStart[0];

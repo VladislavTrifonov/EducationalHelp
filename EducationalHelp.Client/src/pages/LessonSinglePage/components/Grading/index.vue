@@ -35,7 +35,7 @@
                 <b-input-group>
                   <b-form-select :options="marks" v-model="lesson.selfMark"></b-form-select>
                   <b-input-group-append>
-                    <b-button variant="success" @click="setMark">Ок</b-button>
+                    <b-button variant="success" @click="setMark" v-if="!editing">Ок</b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-col>

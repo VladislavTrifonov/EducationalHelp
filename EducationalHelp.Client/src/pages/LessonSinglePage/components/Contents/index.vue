@@ -11,7 +11,7 @@
     </div>
     <div v-else>
       <ckeditor :editor="editor" v-model="lesson.homework" :config="{language: 'ru'}"></ckeditor>
-      <b-button variant="success" class="mt-3" @click="setHomework">Сохранить</b-button>
+      <b-button variant="success" class="mt-3" @click="setHomework" v-if="!editing">Сохранить</b-button>
     </div>
   </div>
 </template>
