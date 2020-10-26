@@ -1,35 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EducationalHelp.Core.Entities
 {
     public class File : BaseEntity
     {
-        public bool IsStoredLocal { get; private set; }
+        public string OriginalName { get; set; }
+        public string FullPath { get; set; }
 
-        private string _pathToFile; 
-        public string PathToFile
+        [JsonIgnore]
+        public ICollection<LessonFiles> LessonFiles { get; set; }
+
+        public File()
         {
-            get
-            {
-                if (!IsStoredLocal)
-                    throw new InvalidOperationException("FileInfo not set, you should store local file to use this");
-
-                return _pathToFile;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _pathToFile = value;
-                    IsStoredLocal = true;
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-            }
+            LessonFiles = new HashSet<LessonFiles>();
         }
     }
 }

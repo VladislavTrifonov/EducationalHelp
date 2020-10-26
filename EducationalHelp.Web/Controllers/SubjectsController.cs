@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Services.Subjects;
 using EducationalHelp.Web.Models.Subjects;
 using EducationalHelp.Services.Exceptions;
+using EducationalHelp.Services.Files;
 using EducationalHelp.Services.Lessons;
 using EducationalHelp.Web.Models.Lessons;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -16,11 +20,15 @@ namespace EducationalHelp.Web.Controllers
     {
         private readonly SubjectsService _subjectsService;
         private readonly LessonsService _lessonsService;
+        private readonly FilesService _filesService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SubjectsController(SubjectsService subjectsService, LessonsService lessonsService)
+        public SubjectsController(SubjectsService subjectsService, LessonsService lessonsService, FilesService filesService, IWebHostEnvironment webHostEnvironment)
         {
             _subjectsService = subjectsService;
             _lessonsService = lessonsService;
+            _filesService = filesService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("subjects/{id}")]
@@ -192,6 +200,30 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 _lessonsService.DeleteLesson(lessonId);
+                return Ok();
+            }
+            catch (ServiceException)
+            {
+                return NotFound($"Lesson with id {lessonId} wasn't found");
+            }
+        }
+
+        [HttpPost("subjects/{_}/lessons/{lessonId}/files")]
+        public async Task<IActionResult> LoadFiles([FromRoute]Guid lessonId, [FromForm]IFormFileCollection files)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+
+                foreach (var formFile in files)
+                {
+                    var (file, fs) = _filesService.CreateNewFile(formFile.FileName, _webHostEnvironment.WebRootPath);
+                    await formFile.CopyToAsync(fs);
+                    await fs.DisposeAsync();
+                    _filesService.AddFileToLesson(lesson.Id,file.Id);
+
+                }
+
                 return Ok();
             }
             catch (ServiceException)

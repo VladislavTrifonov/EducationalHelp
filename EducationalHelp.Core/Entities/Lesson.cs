@@ -25,5 +25,13 @@ namespace EducationalHelp.Core.Entities
 
         [JsonIgnore]
         public virtual Subject Subject { get; set; }
+
+        [JsonIgnore]
+        public ICollection<LessonFiles> LessonFiles { get; set; }
+
+        public Lesson()
+        {
+            LessonFiles = new HashSet<LessonFiles>();
+        }
     }
 }

@@ -20,5 +20,9 @@
     <ProjectReference Include="..\EducationalHelp.Domain\EducationalHelp.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 
 </Project>

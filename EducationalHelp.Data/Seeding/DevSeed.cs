@@ -1,8 +1,10 @@
-﻿using EducationalHelp.Core.Entities;
+﻿using File = EducationalHelp.Core.Entities.File;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using EducationalHelp.Core.Entities;
 
 namespace EducationalHelp.Data.Seeding
 {
@@ -13,6 +15,19 @@ namespace EducationalHelp.Data.Seeding
             var testLessons = new List<Lesson>();
             testLessons.Add(new Lesson() { Id = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE"), SubjectId = new Guid("FE3E3D54-E538-47AF-914B-F7B621F395F5"), DateStart = DateTime.Now, DateEnd = DateTime.Now.AddDays(3), Description = "Test", Homework = "nichego", IsVisited = false, Label = "edu", Notes = "nothing", SelfMark = Mark.Satisfactory, Title = "test lesson"});
 
+            var testFile = new File()
+            {
+                Id = new Guid("ABB1F22F-4046-4088-BF0E-983976EA930F"),
+                OriginalName = "testfile.txt",
+                FullPath = Path.Combine("D:", Path.GetRandomFileName())
+            };
+
+            var lessonFile = new LessonFiles()
+            {
+                Id = new Guid("70EBE8AF-7070-40A3-9CEA-01F0F2219752"),
+                FileId = new Guid("ABB1F22F-4046-4088-BF0E-983976EA930F"),
+                LessonId = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE")
+            };
 
             var subjects = new List<Subject>()
             {
@@ -25,6 +40,9 @@ namespace EducationalHelp.Data.Seeding
 
             builder.Entity<Subject>().HasData(subjects);
             builder.Entity<Lesson>().HasData(testLessons);
+            builder.Entity<File>().HasData(testFile);
+
+            builder.Entity<LessonFiles>().HasData(lessonFile);
 
 
         }
