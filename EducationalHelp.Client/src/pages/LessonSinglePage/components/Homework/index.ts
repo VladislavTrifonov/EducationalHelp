@@ -5,6 +5,7 @@ import Lesson from "@/api/models/Lesson";
 import FileModel from "@/api/models/FileModel";
 import {Response} from "@/store/modules/ErrorProcessing"
 import LessonAPI from "@/api/LessonAPI";
+import FileAPI from "@/api/FileAPI";
 
 @Component({
     components: {
@@ -14,6 +15,8 @@ import LessonAPI from "@/api/LessonAPI";
 export default class Homework extends Vue {
     public files: Array<File> = new Array<File>();
     public lessonApi: LessonAPI;
+    public fileApi: FileAPI;
+    public btnUploadDisabled: boolean;
 
     @Prop({type: Object as () => Lesson})
     public lesson!: Lesson;
@@ -24,6 +27,8 @@ export default class Homework extends Vue {
         super();
 
         this.lessonApi = new LessonAPI();
+        this.fileApi = new FileAPI();
+        this.btnUploadDisabled = false;
     }
 
     formatNames(files: Array<File>) {
@@ -54,12 +59,39 @@ export default class Homework extends Vue {
     }
 
     uploadFiles() {
+        this.btnUploadDisabled = true;
         let promise = Response.fromPromise(this.lessonApi.uploadLessonFiles(this.lesson.subjectId, this.lesson.id, this.files), (response) => {
             this.$emit('reload-files-needed')
             this.files = new Array<File>();
+            this.btnUploadDisabled = false;
         }).catch(error => {
             console.log(error);
+            this.btnUploadDisabled = false;
         })
+    }
+
+    removeFile(id: string) {
+        this.$bvModal.msgBoxConfirm('Вы действительно хотите удалить этот элемент?', {
+            title: 'Необходимо подтверждение',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Да',
+            cancelTitle: 'Нет',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+        })
+        .then(value => {
+            if (value) {
+                Response.fromPromise(this.fileApi.deleteFile(id), (response) => {
+                    this.$emit('reload-files-needed')
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+        });
     }
 
 }

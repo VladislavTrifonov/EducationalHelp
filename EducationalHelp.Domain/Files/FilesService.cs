@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Data;
+using EducationalHelp.Services.Exceptions;
 using File = EducationalHelp.Core.Entities.File;
 
 namespace EducationalHelp.Services.Files
@@ -71,6 +72,15 @@ namespace EducationalHelp.Services.Files
             return (f, fs);
         }
 
+        public File GetFileModelById(Guid fileId)
+        {
+            var f = _files.GetById(fileId);
+            if (f == null)
+                throw new ServiceException($"File with id {fileId} wasn't found");
+
+            return f;
+        }
+
         public void AttachFileToLesson(Guid lessonId, Guid fileId)
         {
             var model = new LessonFiles()
@@ -80,6 +90,17 @@ namespace EducationalHelp.Services.Files
             };
 
             _lessonFiles.Insert(model);
+        }
+
+        public void DeleteFile(Guid fileId)
+        {
+            var f = GetFileModelById(fileId);
+            if (System.IO.File.Exists(f.FullPath))
+            {
+                System.IO.File.Delete(f.FullPath);
+            }
+
+            _files.Delete(f);
         }
 
 

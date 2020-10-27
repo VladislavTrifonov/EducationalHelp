@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Services.Files;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,21 @@ namespace EducationalHelp.Web.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpDelete("api/files/{id}")]
+        public IActionResult DeleteFile(Guid id)
+        {
+            try
+            {
+                _filesService.DeleteFile(id);
+                return Ok();
+            }
+            catch (ServiceException)
+            {
+                return NotFound(id);
+            }
+            
         }
 
     }

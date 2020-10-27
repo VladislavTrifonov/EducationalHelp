@@ -215,6 +215,7 @@ namespace EducationalHelp.Web.Controllers
             }
         }
 
+        [DisableRequestSizeLimit]
         [HttpPost("subjects/{_}/lessons/{lessonId}/files")]
         public async Task<IActionResult> LoadFiles([FromRoute]Guid lessonId, [FromForm]IFormFileCollection files)
         {
