@@ -10,10 +10,6 @@ namespace EducationalHelp.Data
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<Subject> Subjects { get; }
-
-       
-
         public ApplicationContext([NotNull] DbContextOptions options) : base(options)
         {
             Database.EnsureDeleted();
@@ -21,6 +17,10 @@ namespace EducationalHelp.Data
 
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

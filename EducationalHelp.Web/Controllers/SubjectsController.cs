@@ -3,11 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EducationalHelp.Core.Entities;
+using EducationalHelp.Data;
 using EducationalHelp.Services.Subjects;
 using EducationalHelp.Web.Models.Subjects;
 using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Services.Files;
 using EducationalHelp.Services.Lessons;
+using File = EducationalHelp.Core.Entities.File;
 using EducationalHelp.Web.Models.Lessons;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +25,10 @@ namespace EducationalHelp.Web.Controllers
         private readonly FilesService _filesService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SubjectsController(SubjectsService subjectsService, LessonsService lessonsService, FilesService filesService, IWebHostEnvironment webHostEnvironment)
+        public SubjectsController(SubjectsService subjectsService,
+            LessonsService lessonsService,
+            FilesService filesService,
+            IWebHostEnvironment webHostEnvironment)
         {
             _subjectsService = subjectsService;
             _lessonsService = lessonsService;
@@ -217,10 +222,10 @@ namespace EducationalHelp.Web.Controllers
 
                 foreach (var formFile in files)
                 {
-                    var (file, fs) = _filesService.CreateNewFile(formFile.FileName, _webHostEnvironment.WebRootPath);
+                    var (file, fs) = _filesService.CreateNewFile(formFile.FileName, _webHostEnvironment.WebRootPath, formFile.Length);
                     await formFile.CopyToAsync(fs);
                     await fs.DisposeAsync();
-                    _filesService.AddFileToLesson(lesson.Id,file.Id);
+                    _filesService.AttachFileToLesson(lesson.Id,file.Id);
 
                 }
 
@@ -229,6 +234,26 @@ namespace EducationalHelp.Web.Controllers
             catch (ServiceException)
             {
                 return NotFound($"Lesson with id {lessonId} wasn't found");
+            }
+        }
+
+        [HttpGet("subjects/{_}/lessons/{lessonId}/files")]
+        public IActionResult GetAllFilesByLessonId(Guid lessonId)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var files = lesson.LessonFiles.Select(lf => lf.File).ToArray();
+                if (files.Length == 0)
+                {
+                    return NoContent();
+                }
+
+                return new OkObjectResult(files); 
+            }
+            catch (ServiceException)
+            {
+                return NotFound(lessonId);
             }
         }
     }

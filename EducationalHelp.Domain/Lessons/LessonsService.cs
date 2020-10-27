@@ -4,6 +4,7 @@ using System.Linq;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Data;
 using EducationalHelp.Services.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationalHelp.Services.Lessons
 {
@@ -59,6 +60,11 @@ namespace EducationalHelp.Services.Lessons
                 throw new ArgumentNullException(nameof(newLesson));
 
             _lessonRepository.Update(newLesson);
+        }
+
+        public bool IsExist(Guid id)
+        {
+            return _lessonRepository.AllData.Any(l => l.Id == id);
         }
     }
 }

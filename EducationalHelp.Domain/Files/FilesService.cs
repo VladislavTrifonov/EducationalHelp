@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace EducationalHelp.Services.Files
             _lessonFiles = lessonFiles;
         }
 
-        public (File, FileStream) CreateNewFile(string fileName, string rootPath)
+        public (File, FileStream) CreateNewFile(string fileName, string rootPath, long length)
         {
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
             {
@@ -30,6 +31,11 @@ namespace EducationalHelp.Services.Files
             if (string.IsNullOrEmpty(rootPath) || string.IsNullOrWhiteSpace(rootPath))
             {
                 throw new ArgumentException(nameof(rootPath));
+            }
+
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), $"Length of file should be above 0.");
             }
 
             if (!Directory.Exists(rootPath))
@@ -49,7 +55,8 @@ namespace EducationalHelp.Services.Files
             var fileModel = new File()
             {
                 FullPath = fullFilePath,
-                OriginalName = fileName
+                OriginalName = fileName,
+                Length = length
             };
 
             _files.Insert(fileModel);
@@ -64,7 +71,7 @@ namespace EducationalHelp.Services.Files
             return (f, fs);
         }
 
-        public void AddFileToLesson(Guid lessonId, Guid fileId)
+        public void AttachFileToLesson(Guid lessonId, Guid fileId)
         {
             var model = new LessonFiles()
             {

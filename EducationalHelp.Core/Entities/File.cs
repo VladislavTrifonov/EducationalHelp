@@ -6,10 +6,14 @@ namespace EducationalHelp.Core.Entities
     public class File : BaseEntity
     {
         public string OriginalName { get; set; }
-        public string FullPath { get; set; }
 
         [JsonIgnore]
-        public ICollection<LessonFiles> LessonFiles { get; set; }
+        public string FullPath { get; set; }
+
+        public long Length { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<LessonFiles> LessonFiles { get; set; }
 
         public File()
         {

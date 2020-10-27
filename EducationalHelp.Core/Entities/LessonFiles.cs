@@ -7,8 +7,9 @@ namespace EducationalHelp.Core.Entities
     public class LessonFiles : BaseEntity
     {
         public Guid LessonId { get; set; }
-        public Lesson Lesson { get; set; }
+        public virtual Lesson Lesson { get; set; }
+
         public Guid FileId { get; set; }
-        public File File { get; set; }
+        public virtual File File { get; set; }
     }
 }
