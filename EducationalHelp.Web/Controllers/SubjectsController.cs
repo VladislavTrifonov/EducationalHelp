@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using File = EducationalHelp.Core.Entities.File;
 using EducationalHelp.Web.Models.Lessons;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -243,7 +245,21 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
-                var files = lesson.LessonFiles.Select(lf => lf.File).ToArray();
+                var files = lesson.LessonFiles.Select(lf => new 
+                {
+                    lf.File.Id,
+                    lf.File.OriginalName,
+                    lf.File.Length,
+                    lf.File.CreatedAt,
+                    lf.File.UpdatedAt,
+                    lf.File.DeletedAt,
+                    LinkToDownload = this.Url.Link("downloadFile", new
+                    {
+                        fileId = lf.File.Id
+                    })
+                }).ToArray();
+                
+
                 if (files.Length == 0)
                 {
                     return NoContent();

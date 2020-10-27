@@ -20,7 +20,8 @@ namespace EducationalHelp.Web.Controllers
             _filesService = filesService;
         }
 
-        [HttpGet("viewFile/{fileId}")]
+        [Route("downloadFile/{fileId}", Name = "downloadFile")]
+        [HttpGet]
         public IActionResult ViewFile(Guid fileId)
         {
             try
