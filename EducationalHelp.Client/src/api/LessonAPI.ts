@@ -57,4 +57,29 @@ export default class LessonAPI {
             }).catch(error => reject(error));
         });
     }
+
+    getListOfFiles(subjectId: string, lessonId: string): Promise<Array<File>> {
+        return new Promise((resolve, reject) => {
+            axios.get("api/subjects/" + subjectId + "/lessons/" + lessonId + "/files").then(response => {
+                resolve(response.data)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }
+
+    uploadLessonFiles(subjectId: string, lessonId: string, files: Array<File>): Promise<Array<File>> {
+        return new Promise((resolve, reject) => {
+           let fd = new FormData();
+           for (let i = 0; i < files.length; i++) {
+               fd.append("files", files[i]);
+           }
+           axios.post("api/subjects/" + subjectId + "/lessons/" + lessonId + "/files", fd).then(response => {
+               resolve(response.data)
+           }).catch(error => {
+               reject(error)
+           })
+
+        });
+    }
 }

@@ -12,7 +12,7 @@
         <contents :lesson="lesson" :editing="isCreationMode"></contents>
       </b-tab>
       <b-tab title="Выполнение самостоятельных заданий" v-if="!isCreationMode">
-        <homework></homework>
+        <homework :lesson="lesson" :lesson_files="files" v-on:reload-files-needed="loadFiles"></homework>
       </b-tab>
       <b-tab title="Оценивание (итоги)">
         <grading :lesson="lesson" :editing="isCreationMode"></grading>

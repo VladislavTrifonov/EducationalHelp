@@ -5,13 +5,13 @@
     <div class="mb-4">
       <h4>Раннее прикрепленные файлы</h4>
       <b-list-group>
-        <b-list-group-item>
+        <b-list-group-item v-for="(file, idx) in lesson_files" :key="file.id">
           <div class="row justify-content-between">
             <div class="col col-md-auto">
-              Дз_1.rar (2 MBytes) / <a href="#!">Удалить</a>
+              {{file.originalName}} ({{getFileSize(file.length)}}) / <a :href="file.linkToDownload" target="_blank">Скачать</a> / <a href="#!">Удалить</a>
             </div>
             <div class="col col-md-auto">
-              <span class="text-secondary">Загружен 24.9.2020 в 15:35:00</span>
+              <span class="text-secondary">Загружен  <date-time :date-time-string="file.createdAt"></date-time></span>
             </div>
           </div>
 

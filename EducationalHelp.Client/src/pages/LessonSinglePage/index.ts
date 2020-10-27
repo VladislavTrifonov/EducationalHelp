@@ -8,6 +8,7 @@ import Grading from "@/pages/LessonSinglePage/components/Grading/index.vue";
 import Contents from "@/pages/LessonSinglePage/components/Contents/index.vue";
 import LessonHeader from "@/pages/LessonSinglePage/components/LessonHeader/index.vue";
 import Homework from "@/pages/LessonSinglePage/components/Homework/index.vue";
+import FileModel from "@/api/models/FileModel";
 
 @Component({
     components: {
@@ -20,6 +21,7 @@ import Homework from "@/pages/LessonSinglePage/components/Homework/index.vue";
 })
 export default class LessonSinglePage extends Vue {
     public lesson: Lesson;
+    public files: Array<FileModel>;
     public notesEditing: boolean;
     private lessonApi: LessonAPI;
     public isSaveBtnShow: boolean;
@@ -34,6 +36,7 @@ export default class LessonSinglePage extends Vue {
         this.isSaveBtnShow = false;
         this.lesson = Lesson.Empty;
         this.lessonApi = new LessonAPI();
+        this.files = new Array<FileModel>();
     }
 
     mounted() {
@@ -53,12 +56,20 @@ export default class LessonSinglePage extends Vue {
         this.lesson = Lesson.Empty;
         let response = Response.fromPromise(this.lessonApi.getLessonById(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
            this.lesson = response;
-           console.log(response);
+           this.loadFiles()
         }).catch((error: Response) => {
            error.process(() => {
                alert("Упс, что-то пошло не так... Информация для разработчиков в консоли.");
                console.log(error);
            });
+        });
+    }
+
+    loadFiles() {
+        let fileResponse = Response.fromPromise(this.lessonApi.getListOfFiles(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
+            this.files = response;
+        }).catch((error: Response) => {
+
         });
     }
 

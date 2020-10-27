@@ -1,12 +1,29 @@
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import {Component, Prop, Watch} from 'vue-property-decorator';
+import DateTime from "@/components/system/DateTime.vue";
+import Lesson from "@/api/models/Lesson";
+import FileModel from "@/api/models/FileModel";
+import {Response} from "@/store/modules/ErrorProcessing"
+import LessonAPI from "@/api/LessonAPI";
 
-@Component({})
+@Component({
+    components: {
+        'date-time': DateTime
+    }
+})
 export default class Homework extends Vue {
     public files: Array<File> = new Array<File>();
+    public lessonApi: LessonAPI;
 
+    @Prop({type: Object as () => Lesson})
+    public lesson!: Lesson;
+
+    @Prop()
+    public lesson_files!: Array<FileModel>;
     constructor() {
         super();
+
+        this.lessonApi = new LessonAPI();
     }
 
     formatNames(files: Array<File>) {
@@ -37,7 +54,12 @@ export default class Homework extends Vue {
     }
 
     uploadFiles() {
-
+        let promise = Response.fromPromise(this.lessonApi.uploadLessonFiles(this.lesson.subjectId, this.lesson.id, this.files), (response) => {
+            this.$emit('reload-files-needed')
+            this.files = new Array<File>();
+        }).catch(error => {
+            console.log(error);
+        })
     }
 
 }
