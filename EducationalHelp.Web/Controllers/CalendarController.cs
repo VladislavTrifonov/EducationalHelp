@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EducationalHelp.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class CalendarController : ControllerBase
     {
@@ -20,30 +20,31 @@ namespace EducationalHelp.Web.Controllers
             _calendarLessonsService = calendarLessonsService;
         }
 
-        [HttpGet("api/calendar/events/{year}")]
-        public IActionResult GetEventsOnYear([FromRoute]int year)
+        [HttpGet("calendar/events")]
+        public IActionResult GetEventsOnPeriod(DateTime dateStart, DateTime dateEnd)
         {
-            if (year < 1 || year > 9999)
+            if (dateEnd < dateStart)
             {
-                return BadRequest(year);
+                return BadRequest("End date can't be earlier than start date");
             }
 
             var lessonEvents =
                 _calendarLessonsService
-                    .GetLessonsBetweenDays(new DateTime(year, 1, 1), CalendarLessonsService.CalendarDaysInYear)
+                    .GetLessonsBetweenDays(dateStart, dateEnd)
                     .Select(l => new CalendarLessonsViewModel()
                     {
                         Id = l.Id,
                         Name = l.Title,
                         DateStart = l.DateStart,
                         DateEnd = l.DateEnd,
-                        Label = l.Label
+                        Label = l.Label,
+                        SubjectId = l.SubjectId
 
                     });
 
             if (!lessonEvents.Any())
             {
-                return NotFound(year);
+                return NotFound();
             }
 
             return new OkObjectResult(lessonEvents);

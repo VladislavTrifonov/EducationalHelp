@@ -23,18 +23,15 @@ namespace EducationalHelp.Services.Lessons
         }
 
         /// <summary>
-        /// Получает занятия, запланированные в промежутке [startDate - days, startDate + days]
+        /// Получает занятия, запланированные в промежутке [startDate, endDate]
         /// </summary>
         /// <param name="startDate">Стартовая дата</param>
-        /// <param name="days">Количество дней</param>
+        /// <param name="endDate">Конечная дата</param>
         /// <returns></returns>
-        public IEnumerable<Lesson> GetLessonsBetweenDays(DateTime startDate, uint days)
+        public IEnumerable<Lesson> GetLessonsBetweenDays(DateTime startDate, DateTime endDate)
         {
-            var leftBoundary = startDate.Subtract(TimeSpan.FromDays(days)); // левая граница промежутка
-            var rightBoundary = startDate.AddDays(days); // правая граница промежутка
-
             var lessons = _lessonRepository.AllData
-                .Where(l => l.DateStart <= rightBoundary && l.DateStart >= leftBoundary);
+                .Where(l => l.DateStart <= endDate && l.DateStart >= startDate);
 
             return lessons;
         }
