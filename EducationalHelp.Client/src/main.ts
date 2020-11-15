@@ -7,6 +7,7 @@ import store from './store/index'
 import App from './App.vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import router from '@/router.ts';
+import 'vuetify/dist/vuetify.min.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 //@ts-ignore
