@@ -8,6 +8,7 @@
       <b-navbar-nav style="cursor: pointer">
         <router-link class="nav-link" tag="li" active-class="active" to="/" exact>Главная</router-link>
         <router-link class="nav-link" tag="li" active-class="active" to="/subjects">Предметы</router-link>
+        <router-link class="nav-link" tag="li" active-class="active" to="/calendar">Календарь событий</router-link>
       </b-navbar-nav >
     </b-collapse>
   </b-navbar>

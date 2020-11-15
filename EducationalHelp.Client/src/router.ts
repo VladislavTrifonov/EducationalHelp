@@ -5,6 +5,7 @@ import Error404PageComponent from "@/pages/Error404Page/index.vue";
 import SubjectsPageComponent from "@/pages/SubjectsPage/index.vue";
 import SubjectViewPageComponent from "@/pages/SubjectsViewPage/index.vue";
 import LessonSinglePage from "@/pages/LessonSinglePage/index.vue";
+import CalendarPage from "@/pages/CalendarPage/index.vue";
 
 Vue.use(VueRouter)
 
@@ -18,7 +19,8 @@ const routes = [
         } },
     { name: 'lessonCreate', path: '/subjects/:subjectId/createLesson', component: LessonSinglePage, props: {
             isCreationMode: true
-    }}
+    }},
+    { name: 'calendarView', path: '/calendar', component: CalendarPage }
 
 ];
 

@@ -9,7 +9,8 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import router from '@/router.ts';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+//@ts-ignore
+import vuetify from '@/plugins/vuetify'
 Vue.config.productionTip = true;
 
 Vue.use(BootstrapVue)
@@ -19,6 +20,8 @@ Vue.use(Vuex)
 
 
 new Vue({
+    //@ts-ignore
+    vuetify,
     render: h => h(App),
     router: router,
     store: store
