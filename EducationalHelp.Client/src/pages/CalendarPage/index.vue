@@ -3,6 +3,11 @@
     <v-app>
       <v-row class="fill-height">
         <v-col>
+          <v-row>
+            <v-col cols="auto">
+              <a href="https://localhost:5001/calendar/ics"><v-btn outlined>Экспортировать в .ics</v-btn></a>
+            </v-col>
+          </v-row>
           <v-sheet height="64">
             <v-toolbar
                 flat
@@ -104,7 +109,7 @@
                     :color="selectedEvent.color"
                     dark
                 >
-                  <v-toolbar-title>{{selectedEvent.name}} ({{selectedEvent.label}})</v-toolbar-title>
+                  <v-toolbar-title>{{selectedEvent.summary}}</v-toolbar-title>
                   <v-spacer></v-spacer>
                   <v-btn
                       icon
@@ -114,13 +119,13 @@
                   </v-btn>
                 </v-toolbar>
                 <v-card-actions>
-                  <router-link :to="{name: 'lessonView', params: {subjectId: selectedEvent.subjectId, lessonId: selectedEvent.id}}">
+
                     <v-btn
                         text
                         color="primary">
                       Перейти к источнику события
                     </v-btn>
-                  </router-link>
+
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -249,6 +254,7 @@ export default {
     },
 
     convertToEventObject(v) {
+      v.name = v.summary
       v.start = new Date(v.dateStart)
       v.end = new Date(v.dateEnd)
       v.color = 'blue'

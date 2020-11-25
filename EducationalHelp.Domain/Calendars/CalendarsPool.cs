@@ -9,11 +9,11 @@ namespace EducationalHelp.Services.Calendars
     /// <summary>
     /// Управляет коллекцией календарей, выполняя действия над ними, как над одним.
     /// </summary>
-    public class CalendarsManager : AbstractCalendar
+    public class CalendarsPool : AbstractCalendar
     {
         private readonly IEnumerable<AbstractCalendar> _calendars;
 
-        public CalendarsManager(IEnumerable<AbstractCalendar> calendars)
+        public CalendarsPool(IEnumerable<AbstractCalendar> calendars)
         {
             if (calendars == null)
                 throw new ArgumentNullException(nameof(calendars), "Calendars is null");

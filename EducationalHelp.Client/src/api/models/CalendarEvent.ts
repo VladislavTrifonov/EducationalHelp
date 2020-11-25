@@ -1,10 +1,10 @@
 export default class CalendarEvent {
-    id!: string;
-    name!: string;
-    label!: string;
+    type!: string;
+    summary!: string;
+    description!: string;
     dateStart!: Date;
     dateEnd!: Date;
-    type!: string;
+    eventObject!: Object;
 
     constructor() {
     }

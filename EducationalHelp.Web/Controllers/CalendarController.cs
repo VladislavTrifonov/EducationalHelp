@@ -13,12 +13,12 @@ namespace EducationalHelp.Web.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-        private readonly CalendarsManager _calendarsManager;
+        private readonly CalendarsPool _calendarsPool;
 
         public CalendarController(CalendarLessonsService calendarLessonsService)
         {
             var calendars = new List<AbstractCalendar>() { calendarLessonsService };
-            _calendarsManager = new CalendarsManager(calendars);
+            _calendarsPool = new CalendarsPool(calendars);
         }
 
         [HttpGet("api/calendar/events")]
@@ -29,7 +29,7 @@ namespace EducationalHelp.Web.Controllers
                 return BadRequest("End date can't be earlier than start date");
             }
 
-            var events = _calendarsManager.GetEventsBetweenDays(dateStart, dateEnd);
+            var events = _calendarsPool.GetEventsBetweenDays(dateStart, dateEnd);
             if (!events.Any())
             {
                 return NoContent();
@@ -41,7 +41,7 @@ namespace EducationalHelp.Web.Controllers
         [HttpGet("calendar/ics")]
         public IActionResult GetIcs()
         {
-            byte[] calendarBytes = _calendarsManager.GetIcalRepresentation();
+            byte[] calendarBytes = _calendarsPool.GetIcalRepresentation();
             return File(calendarBytes, "text/calendar", "calendar.ics");
         }
 
