@@ -63,8 +63,8 @@ namespace EducationalHelp.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterType<ApplicationContext>().As<DbContext>().SingleInstance();
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationContext>().As<DbContext>().InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).SingleInstance();
             builder.RegisterModule(new ServicesAutofacModule());
         }
 
