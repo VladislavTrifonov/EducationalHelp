@@ -120,23 +120,18 @@ namespace EducationalHelp.Web.Controllers
             return Ok(lessons);
         }
 
-        [HttpGet("subjects/{subjectId}/lessons/{lessonId}")]
-        public IActionResult GetLessonById(Guid subjectId, Guid lessonId)
+        [HttpGet("subjects/lessons/{lessonId}")]
+        public IActionResult GetLessonById(Guid lessonId)
         {
             try
             {
-                var subject = _subjectsService.GetSubject(subjectId);
-                var lesson = subject.Lessons.FirstOrDefault(l => l.Id == lessonId);
-                if (lesson == null)
-                {
-                    return NotFound($"Lesson with id {lessonId} of subject with id {subjectId} was not found");
-                }
+                var lesson = _lessonsService.GetLessonById(lessonId);
 
                 return Ok(lesson);
             }
-            catch (ServiceException)
+            catch (ServiceException e)
             {
-                return NotFound($"Subject with id {subjectId} was not found");
+                return NotFound(e.Message);
             }
         }
 
@@ -168,17 +163,12 @@ namespace EducationalHelp.Web.Controllers
             return Ok(lessonEntity);
         }
 
-        [HttpPut("subjects/{subjectId}/lessons/{lessonId}")]
-        public IActionResult UpdateLesson([FromRoute]Guid subjectId, [FromRoute]Guid lessonId, [FromBody]LessonAddModel lessonModel)
+        [HttpPut("subjects/lessons/{lessonId}")]
+        public IActionResult UpdateLesson([FromRoute]Guid lessonId, [FromBody]LessonAddModel lessonModel)
         {
             try
             {
-                var subject = _subjectsService.GetSubject(subjectId);
-                var lesson = subject.Lessons.FirstOrDefault(l => l.Id == lessonId);
-                if (lesson == null)
-                {
-                    return NotFound($"Lesson with id {lessonId} was not found");
-                }
+                var lesson = _lessonsService.GetLessonById(lessonId);
 
                 lesson.Title = lessonModel.Title;
                 lesson.Label = lessonModel.Label;
@@ -187,21 +177,20 @@ namespace EducationalHelp.Web.Controllers
                 lesson.DateStart = lessonModel.DateStart;
                 lesson.Homework = lessonModel.Homework;
                 lesson.Notes = lessonModel.Notes;
-                lesson.SubjectId = subjectId;
                 lesson.SelfMark = lessonModel.SelfMark;
                 lesson.IsVisited = lessonModel.IsVisited;
 
                 _lessonsService.UpdateLesson(lesson);
                 return Ok(lesson);
             }
-            catch (ServiceException)
+            catch (ServiceException e)
             {
-                return NotFound($"Subject with id {subjectId} wasn't found");
+                return NotFound(e.Message);
             }
 
         }
 
-        [HttpDelete("subjects/{_}/lessons/{lessonId}")]
+        [HttpDelete("subjects/lessons/{lessonId}")]
         public IActionResult DeleteLesson(Guid lessonId)
         {
             try
@@ -216,7 +205,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [DisableRequestSizeLimit]
-        [HttpPost("subjects/{_}/lessons/{lessonId}/files")]
+        [HttpPost("subjects/lessons/{lessonId}/files")]
         public async Task<IActionResult> LoadFiles([FromRoute]Guid lessonId, [FromForm]IFormFileCollection files)
         {
             try
@@ -240,7 +229,7 @@ namespace EducationalHelp.Web.Controllers
             }
         }
 
-        [HttpGet("subjects/{_}/lessons/{lessonId}/files")]
+        [HttpGet("subjects/lessons/{lessonId}/files")]
         public IActionResult GetAllFilesByLessonId(Guid lessonId)
         {
             try
