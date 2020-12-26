@@ -60,7 +60,7 @@ export default class Homework extends Vue {
 
     uploadFiles() {
         this.btnUploadDisabled = true;
-        let promise = Response.fromPromise(this.lessonApi.uploadLessonFiles(this.lesson.subjectId, this.lesson.id, this.files), (response) => {
+        let promise = Response.fromPromise(this.lessonApi.uploadLessonFiles(this.lesson.id, this.files), (response) => {
             this.$emit('reload-files-needed')
             this.files = new Array<File>();
             this.btnUploadDisabled = false;

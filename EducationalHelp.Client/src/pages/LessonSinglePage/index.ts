@@ -54,7 +54,7 @@ export default class LessonSinglePage extends Vue {
     // Получение данных по API для необходимого занятия
     fetchLesson() {
         this.lesson = Lesson.Empty;
-        let response = Response.fromPromise(this.lessonApi.getLessonById(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
+        let response = Response.fromPromise(this.lessonApi.getLessonById(this.$route.params.lessonId), (response) => {
            this.lesson = response;
            this.loadFiles()
         }).catch((error: Response) => {
@@ -66,7 +66,7 @@ export default class LessonSinglePage extends Vue {
     }
 
     loadFiles() {
-        let fileResponse = Response.fromPromise(this.lessonApi.getListOfFiles(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
+        let fileResponse = Response.fromPromise(this.lessonApi.getListOfFiles(this.$route.params.lessonId), (response) => {
             this.files = response;
         }).catch((error: Response) => {
 
@@ -96,7 +96,7 @@ export default class LessonSinglePage extends Vue {
             return;
 
         this.isSaveBtnShow = false;
-        let response = Response.fromPromise(this.lessonApi.updateLesson(this.$route.params.subjectId, this.$route.params.lessonId, this.lesson), (response) => {
+        let response = Response.fromPromise(this.lessonApi.updateLesson(this.$route.params.lessonId, this.lesson), (response) => {
            this.lesson = response;
            this.$bvToast.toast('Сохранение успешно выполнено', {
                variant: "success",
@@ -144,7 +144,7 @@ export default class LessonSinglePage extends Vue {
         })
             .then(value => {
                 if (value) {
-                    let response = Response.fromPromise(this.lessonApi.deleteLesson(this.$route.params.subjectId, this.$route.params.lessonId), (response) => {
+                    let response = Response.fromPromise(this.lessonApi.deleteLesson(this.$route.params.lessonId), (response) => {
                         this.$store.dispatch("subjects/fetchSubjects");
                         console.log('subjid: ', this.$route.params.subjectId)
                         this.$router.push({
