@@ -9,6 +9,9 @@ import Contents from "@/pages/LessonSinglePage/components/Contents/index.vue";
 import LessonHeader from "@/pages/LessonSinglePage/components/LessonHeader/index.vue";
 import Homework from "@/pages/LessonSinglePage/components/Homework/index.vue";
 import FileModel from "@/api/models/FileModel";
+import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
+import {IBreadcrumb} from "@/components/Breadcrumbs/index.ts";
+import {bc_lessonView} from "@/breadcrumbs";
 
 @Component({
     components: {
@@ -16,7 +19,8 @@ import FileModel from "@/api/models/FileModel";
         'lesson-header': LessonHeader,
         'grading': Grading,
         'contents': Contents,
-        'homework': Homework
+        'homework': Homework,
+        'breadcrumbs': BreadcrumbsComponent
     }
 })
 export default class LessonSinglePage extends Vue {
@@ -29,6 +33,7 @@ export default class LessonSinglePage extends Vue {
         default: () => false
     })
     public isCreationMode!: boolean;
+    private breadcrumbs!: Array<IBreadcrumb>;
 
     constructor() {
         super();
@@ -56,6 +61,8 @@ export default class LessonSinglePage extends Vue {
         this.lesson = Lesson.Empty;
         let response = Response.fromPromise(this.lessonApi.getLessonById(this.$route.params.lessonId), (response) => {
            this.lesson = response;
+           this.breadcrumbs = bc_lessonView({id: this.lesson.subjectId, name: response.subject.name}, {id: this.lesson.id, name: this.lesson.title});
+           this.breadcrumbs[this.breadcrumbs.length - 1].link = false
            this.loadFiles()
         }).catch((error: Response) => {
            error.process(() => {

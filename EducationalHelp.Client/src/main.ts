@@ -19,7 +19,6 @@ Vue.use(IconsPlugin)
 Vue.use(CKEditor)
 Vue.use(Vuex)
 
-
 new Vue({
     //@ts-ignore
     vuetify,

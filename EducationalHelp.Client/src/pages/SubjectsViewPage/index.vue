@@ -1,5 +1,6 @@
 ﻿<template>
-    <div class="col-12">
+    <div class="col-12" v-if="Model != null">
+      <breadcrumbs :breadcrumbs="breadcrumbs"></breadcrumbs>
         <div class="row">
             <h3>
                 {{Model.name}}
@@ -10,6 +11,7 @@
             </b-button-group>
         </div>
         <created-updated-info :entity="Model"></created-updated-info>
+      <router-view></router-view>
         <b-tabs content-class="mt-3">
             <b-tab title="Информация" active>
                 <div class="container">

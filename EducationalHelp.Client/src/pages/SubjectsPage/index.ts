@@ -5,11 +5,15 @@ import Subject from '@/api/models/Subject';
 import TableGrid from '../../components/system/TableGrid.vue';
 import { Response, IErrorDetails, IValidationDetails, IValidationError } from '@/store/modules/ErrorProcessing';
 import AddSubjectComponent from '../AddSubjectPage/index.vue';
+import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
+import { IBreadcrumb } from "@/components/Breadcrumbs/index.ts";
+import {bc_subjectsList} from "@/breadcrumbs";
 
 @Component({
     components: {
         'table-grid': TableGrid,
-        'add-subject': AddSubjectComponent
+        'add-subject': AddSubjectComponent,
+        'breadcrumbs': BreadcrumbsComponent
     }
 
 })
@@ -23,12 +27,19 @@ export default class SubjectsPageComponent extends Vue {
         this.validationState = new Array<IValidationError>();
     }
 
+
     public LinkToSubject(subject: Subject): String {
         return this.$router.resolve({ name: "subjectView", params: { "id": subject.id } }).href;
     }
 
     get validationErrors(): Array<IValidationError> {
         return this.validationState;
+    }
+
+    get breadcrumbs(): Array<IBreadcrumb> {
+        let bcrumbs = bc_subjectsList();
+        bcrumbs[bcrumbs.length - 1].link = false;
+        return bcrumbs;
     }
 
     get subjects(): Array<Subject> {
@@ -45,6 +56,9 @@ export default class SubjectsPageComponent extends Vue {
 
     get newSubjectModel(): Subject {
         return this.addModel;
+    }
+
+    mounted() {
     }
 
     created() {

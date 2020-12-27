@@ -1,5 +1,6 @@
 <template>
   <div data-app style="width: 100%">
+    <breadcrumbs-component :breadcrumbs="breadcrumbs"></breadcrumbs-component>
     <v-app>
       <v-row class="fill-height">
         <v-col>
@@ -139,12 +140,16 @@
 <script lang="js" >
 import {Response} from "@/store/modules/ErrorProcessing";
 import CalendarAPI from "@/api/CalendarAPI";
+import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
+import {bc_calendar} from "@/breadcrumbs";
 
 export default {
+  components: {BreadcrumbsComponent},
   data: () => ({
     api: new CalendarAPI(),
     focus: '',
     type: 'month',
+    breadcrumbs: [],
     typeToLabel: {
       month: 'Месяц',
       week: 'Неделя',
@@ -162,6 +167,8 @@ export default {
   }),
   mounted () {
     this.$refs.calendar.checkChange()
+    this.breadcrumbs = bc_calendar()
+    this.breadcrumbs[this.breadcrumbs.length - 1].link = false
   },
   methods: {
     viewDay ({ date }) {

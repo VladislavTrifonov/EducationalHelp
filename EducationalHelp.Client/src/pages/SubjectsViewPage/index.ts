@@ -1,16 +1,20 @@
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import {Component, Watch} from 'vue-property-decorator';
 import Subject from '../../api/models/Subject';
 import AddSubject from '@/pages/AddSubjectPage/index.vue';
 import { Response } from '../../store/modules/ErrorProcessing';
 import LessonsListComponent from "@/pages/SubjectsViewPage/components/LessonsList/index.vue";
 import CreatedUpdatedInfo from "@/components/CreatedUpdatedInfo/index.vue";
+import {IBreadcrumb} from "@/components/Breadcrumbs/index.ts";
+import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
+import {bc_subjectView} from "@/breadcrumbs";
 
 @Component({
     components: {
         'add-subject': AddSubject,
         'lessons-list': LessonsListComponent,
-        'created-updated-info': CreatedUpdatedInfo
+        'created-updated-info': CreatedUpdatedInfo,
+        'breadcrumbs': BreadcrumbsComponent
     }
 })
 export default class SubjectViewPageComponent extends Vue {
@@ -23,6 +27,10 @@ export default class SubjectViewPageComponent extends Vue {
         super();
     }
 
+    mounted() {
+
+    }
+
     created() {
         this.fetchSubject();
     }
@@ -30,6 +38,12 @@ export default class SubjectViewPageComponent extends Vue {
     beforeRouteUpdate(to: any, from: any, next: any) {
         this.fetchSubject();
         next();
+    }
+
+    get breadcrumbs(): Array<IBreadcrumb> {
+        let bcrumbs = bc_subjectView({id: this.Model.id, name: this.Model.name});
+        bcrumbs[bcrumbs.length - 1].link = false;
+        return bcrumbs;
     }
 
     fetchSubject() {
