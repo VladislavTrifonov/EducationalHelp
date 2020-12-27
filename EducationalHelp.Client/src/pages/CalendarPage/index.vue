@@ -119,13 +119,13 @@
                   </v-btn>
                 </v-toolbar>
                 <v-card-actions>
-
+                  <router-link v-if="selectedEvent.eventObject != null" :to="{ name: 'lessonView', params: { lessonId: selectedEvent.eventObject.id } }">
                     <v-btn
                         text
                         color="primary">
                       Перейти к источнику события
                     </v-btn>
-
+                  </router-link>
                 </v-card-actions>
               </v-card>
             </v-menu>
