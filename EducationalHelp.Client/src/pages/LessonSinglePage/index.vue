@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="isLessonLoaded">
     <breadcrumbs :breadcrumbs="breadcrumbs" v-if="!isCreationMode"></breadcrumbs>
-    <a @click="$router.go(-1)" href="#!"><b-icon-chevron-left></b-icon-chevron-left> Вернуться назад</a>
+    <a @click="$router.go(-1)" href="#!" v-if="isCreationMode"><b-icon-chevron-left></b-icon-chevron-left> Вернуться назад</a>
     <div class="row justify-content-end mb-2" v-if="!isCreationMode">
       <div class="col col-md-auto">
         <b-button variant="outline-danger" @click="deleteLesson"><b-icon-trash-fill></b-icon-trash-fill> Удалить</b-button>

@@ -65,16 +65,21 @@ namespace EducationalHelp.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<ApplicationContext>().As<DbContext>().InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).SingleInstance();
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
             builder.RegisterModule(new ServicesAutofacModule());
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
-
+            if (env.IsDevelopment() && Configuration["SeedDatabase"]  == "true")
+            {
+                RemoveAndCreateDatabase();
+            }
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -96,6 +101,13 @@ namespace EducationalHelp.Web
             {
                 options.MapRoute("default", "{controller}/{action}");
             });
+        }
+
+        private void RemoveAndCreateDatabase()
+        {
+            var dbContext = AutofacContainer.Resolve<DbContext>();
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureCreated();
         }
     }
 }

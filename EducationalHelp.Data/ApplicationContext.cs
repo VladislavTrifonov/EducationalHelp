@@ -12,8 +12,6 @@ namespace EducationalHelp.Data
     {
         public ApplicationContext([NotNull] DbContextOptions options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
 
         }
 
