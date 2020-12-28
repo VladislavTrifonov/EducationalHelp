@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EducationalHelp.Core.Entities
@@ -14,6 +15,9 @@ namespace EducationalHelp.Core.Entities
 
         [JsonIgnore]
         public virtual ICollection<LessonFiles> LessonFiles { get; set; }
+
+        public Guid UserId { get; set; }
+        public virtual User User { get; set; }
 
         public File()
         {
