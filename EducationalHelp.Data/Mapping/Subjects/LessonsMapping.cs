@@ -20,6 +20,7 @@ namespace EducationalHelp.Data.Mapping.Subjects
             builder.Property(l => l.Homework);
             builder.Property(l => l.Notes);
             builder.HasOne(l => l.Subject).WithMany(s => s.Lessons).HasForeignKey(l => l.SubjectId);
+            builder.HasOne(l => l.User).WithOne().HasForeignKey<Lesson>(l => l.UserId).IsRequired().OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.ClientNoAction);
             base.Map(builder);
         }
     }
