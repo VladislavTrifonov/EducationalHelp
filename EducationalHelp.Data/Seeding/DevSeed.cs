@@ -38,11 +38,16 @@ namespace EducationalHelp.Data.Seeding
                 new Subject() { Id = new Guid("5EE8DB95-8284-40EE-9D36-8E172FD9B1FD"), Name="Программирование (2 семестр)", Teacher="Шибанов С.В.", Description="прогр-е"},
             };
 
+            var users = new List<User>()
+            {
+                new User() { Id = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"), Pseudonym = "Жмышенко Валерий" }
+            };
+
             builder.Entity<Subject>().HasData(subjects);
             builder.Entity<Lesson>().HasData(testLessons);
             builder.Entity<File>().HasData(testFile);
-
             builder.Entity<LessonFiles>().HasData(lessonFile);
+            builder.Entity<User>().HasData(users);
 
 
         }
