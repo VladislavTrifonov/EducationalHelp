@@ -13,6 +13,7 @@ namespace EducationalHelp.Data.Mapping.Profile
         {
             builder.ToTable("Users");
             builder.Property(u => u.Pseudonym).HasMaxLength(150).IsRequired();
+            builder.Property(u => u.PassHash).IsRequired();
             builder.HasOne(u => u.Avatar).WithOne().HasForeignKey<User>(u => u.AvatarId).IsRequired(false).OnDelete(DeleteBehavior.ClientNoAction);
             base.Map(builder);
         }

@@ -7,6 +7,7 @@ namespace EducationalHelp.Core.Entities
     public class User : BaseEntity
     {
         public string Pseudonym { get; set; }
+        public string PassHash { get; set; }
 
         public Guid? AvatarId { get; set; }
         public virtual File Avatar { get; set; }
