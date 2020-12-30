@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EducationalHelp.Core.Entities;
 using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Services.Profile;
 using EducationalHelp.Web.Models.Auth;
@@ -14,10 +15,12 @@ namespace EducationalHelp.Web.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly JwtAuthenticationService _authenticationService;
+        private readonly UserService _userService;
 
-        public AuthenticationController(JwtAuthenticationService authenticationService)
+        public AuthenticationController(JwtAuthenticationService authenticationService, UserService userService)
         {
             _authenticationService = authenticationService;
+            _userService = userService;
         }
 
         [HttpPost("api/auth/token")]
@@ -28,11 +31,7 @@ namespace EducationalHelp.Web.Controllers
                 var credentials = new UserCredentials(loginModel.Login, loginModel.Password);
                 var token = _authenticationService.CreateAccessToken(credentials);
 
-                return new ObjectResult(new
-                {
-                    access_token = token,
-                    user = loginModel.Login
-                });
+                return new ObjectResult(new AccessTokenOutputModel(token, credentials));
             }
             catch (ServiceException e)
             {
@@ -42,11 +41,27 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpPost("api/auth/register")]
-        public IActionResult Register()
+        public IActionResult Register([FromBody] RegisterViewModel registerModel)
         {
-            return NoContent();
-        }
+            try
+            {
+                var credentials = new UserCredentials(registerModel.Login, registerModel.Password);
+                var user = new User() 
+                { 
+                    Pseudonym = registerModel.Pseudonym
+                };
+                _authenticationService.UpdateCredentials(user, credentials);
+                _userService.AddUser(user);
 
+                var token = _authenticationService.CreateAccessToken(credentials);
+
+                return Ok(new AccessTokenOutputModel(token, credentials));
+            }
+            catch (ServiceException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
        
     }
 }

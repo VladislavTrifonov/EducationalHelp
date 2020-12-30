@@ -25,5 +25,10 @@ namespace EducationalHelp.Services.Profile
 
             return user;
         }
+
+        public void AddUser(User user)
+        {
+            _usersRepository.Insert(user);
+        }
     }
 }
