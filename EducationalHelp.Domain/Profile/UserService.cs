@@ -17,7 +17,7 @@ namespace EducationalHelp.Services.Profile
 
         public User GetUserByName(string pseudonym)
         {
-            var user = _usersRepository.AllData.FirstOrDefault(u => u.Pseudonym.Equals(pseudonym, StringComparison.InvariantCulture));
+            var user = _usersRepository.AllData.FirstOrDefault(u => u.Pseudonym == pseudonym);
             if (user == null)
             {
                 throw new ResourceNotFoundException($"User with pseudonym \"{pseudonym}\" wasn't found!");

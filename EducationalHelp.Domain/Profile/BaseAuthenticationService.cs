@@ -19,6 +19,23 @@ namespace EducationalHelp.Services.Profile
             _userService = userService; 
         }
 
+        public Guid GetUserIdFromClaims(IEnumerable<Claim> claims)
+        {
+            var identifierClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (identifierClaim == null)
+            {
+                string claimsSerialized = "";
+                foreach (var claim in claims)
+                {
+                    claimsSerialized += string.Format("{0}:{1}", claim.Type, claim.Value);
+                }
+                    
+                throw new ResourceNotFoundException($"User with claims ({claims.Count()}): \n{claimsSerialized}\n wasn't found!");
+            }
+
+            return new Guid(identifierClaim.Value);
+        }
+
         protected bool CheckCredentials(UserCredentials credentials)
         {
             var user = _userService.GetUserByName(credentials.Pseudonym);

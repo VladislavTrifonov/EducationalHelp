@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ using System.Reflection;
 using EducationalHelp.Services.Subjects;
 using EducationalHelp.Services;
 using EducationalHelp.Web.Filters;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using EducationalHelp.Services.Profile;
 
 namespace EducationalHelp.Web
 {
@@ -45,6 +48,25 @@ namespace EducationalHelp.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = JwtAuthenticationService.Issuer,
+
+                        ValidateAudience = true,
+                        ValidAudience = JwtAuthenticationService.Audience,
+
+                        ValidateLifetime = true,
+
+                        IssuerSigningKey = JwtAuthenticationService.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true
+                    };
+                });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add(new ValidationFilter());
@@ -90,6 +112,9 @@ namespace EducationalHelp.Web
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseCors(builder => {
                 builder.AllowAnyOrigin();
