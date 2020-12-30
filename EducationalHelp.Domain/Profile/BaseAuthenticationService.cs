@@ -12,7 +12,10 @@ namespace EducationalHelp.Services.Profile
 {
     public abstract class BaseAuthenticationService
     {
-        protected readonly UserService _userService; 
+        protected readonly UserService _userService;
+
+        private IEnumerable<Claim> _cachedClaims = default;
+        private Guid _cachedId = default;
 
         public BaseAuthenticationService(UserService userService)
         {
@@ -21,6 +24,11 @@ namespace EducationalHelp.Services.Profile
 
         public Guid GetUserIdFromClaims(IEnumerable<Claim> claims)
         {
+            if (ReferenceEquals(claims, _cachedClaims))
+            {
+                return _cachedId;
+            }
+
             var identifierClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (identifierClaim == null)
             {
@@ -32,8 +40,11 @@ namespace EducationalHelp.Services.Profile
                     
                 throw new ResourceNotFoundException($"User with claims ({claims.Count()}): \n{claimsSerialized}\n wasn't found!");
             }
+            var userId = new Guid(identifierClaim.Value);
 
-            return new Guid(identifierClaim.Value);
+            _cachedClaims = claims;
+            _cachedId = userId;
+            return userId;
         }
 
         public void UpdateCredentials(User user, UserCredentials credentials)
