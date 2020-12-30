@@ -15,12 +15,12 @@ namespace EducationalHelp.Services.Profile
             _usersRepository = usersRepository;
         }
 
-        public User GetUserByName(string pseudonym)
+        public User GetUserByName(string login)
         {
-            var user = _usersRepository.AllData.FirstOrDefault(u => u.Pseudonym == pseudonym);
+            var user = _usersRepository.AllData.FirstOrDefault(u => u.Login == login);
             if (user == null)
             {
-                throw new ResourceNotFoundException($"User with pseudonym \"{pseudonym}\" wasn't found!");
+                throw new ResourceNotFoundException($"User with pseudonym \"{login}\" wasn't found!");
             }
 
             return user;

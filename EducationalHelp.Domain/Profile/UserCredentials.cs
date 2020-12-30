@@ -6,12 +6,12 @@ namespace EducationalHelp.Services.Profile
 {
     public struct UserCredentials
     {
-        public string Pseudonym { get; set; }
+        public string Login { get; set; }
         public string Password { get; set; }
 
         public UserCredentials(string login, string password)
         {
-            Pseudonym = login;
+            Login = login;
             Password = password;
         }
     }

@@ -28,7 +28,7 @@ namespace EducationalHelp.Services.Profile
                 throw new ArgumentException(nameof(credentials));
             }
 
-            var user = _userService.GetUserByName(credentials.Pseudonym);
+            var user = _userService.GetUserByName(credentials.Login);
 
             var jwt = new JwtSecurityToken(
                 issuer: Issuer,

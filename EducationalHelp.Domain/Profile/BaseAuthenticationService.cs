@@ -38,7 +38,7 @@ namespace EducationalHelp.Services.Profile
 
         protected bool CheckCredentials(UserCredentials credentials)
         {
-            var user = _userService.GetUserByName(credentials.Pseudonym);
+            var user = _userService.GetUserByName(credentials.Login);
 
             var hashedPass = BaseAuthenticationService.GetSHA256(credentials.Password);
 
@@ -57,12 +57,12 @@ namespace EducationalHelp.Services.Profile
                 throw new ArgumentNullException(nameof(credentials.Password));
             }
 
-            if (String.IsNullOrEmpty(credentials.Pseudonym))
+            if (String.IsNullOrEmpty(credentials.Login))
             {
-                throw new ArgumentNullException(nameof(credentials.Pseudonym));
+                throw new ArgumentNullException(nameof(credentials.Login));
             }
 
-            user.Pseudonym = credentials.Pseudonym;
+            user.Pseudonym = credentials.Login;
             user.PassHash = GetSHA256(credentials.Password);
 
             return user;
@@ -72,7 +72,7 @@ namespace EducationalHelp.Services.Profile
         {
             return new Claim[]
             {
-                new Claim(ClaimTypes.Name, user.Pseudonym),
+                new Claim(ClaimTypes.Name, user.Login),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
            
