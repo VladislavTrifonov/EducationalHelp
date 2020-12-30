@@ -15,6 +15,8 @@ using EducationalHelp.Web.Models.Lessons;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Authorization;
+using EducationalHelp.Services.Profile;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -26,40 +28,52 @@ namespace EducationalHelp.Web.Controllers
         private readonly LessonsService _lessonsService;
         private readonly FilesService _filesService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly JwtAuthenticationService _authService;
 
         public SubjectsController(SubjectsService subjectsService,
             LessonsService lessonsService,
             FilesService filesService,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            JwtAuthenticationService authService)
         {
             _subjectsService = subjectsService;
             _lessonsService = lessonsService;
             _filesService = filesService;
             _webHostEnvironment = webHostEnvironment;
+            _authService = authService;
         }
 
         [HttpGet("subjects/{id}")]
+        [Authorize]
         public IActionResult GetSubjectById(Guid id)
         {
             var subject = _subjectsService.GetSubject(id);
+            if (subject.UserId != _authService.GetUserIdFromClaims(HttpContext.User.Claims))
+            {
+                return Forbid();
+            }
+
             return Ok(subject);
         }
 
         [HttpGet("subjects")]
+        [Authorize]
         public IActionResult GetAllSubjects()
         {
-            var subjects = _subjectsService.GetAllSubjects();
+            var subjects = _subjectsService.GetAllSubjects(_authService.GetUserIdFromClaims(HttpContext.User.Claims));
             return Ok(subjects);
         }
 
         [HttpPost("subjects")]
+        [Authorize]
         public IActionResult CreateSubject(SubjectAddModel subject)
         {
             var subjEntity = new Subject
             {
                 Name = subject.Name,
                 Teacher = subject.Teacher,
-                Description = subject.Description
+                Description = subject.Description,
+                UserId = _authService.GetUserIdFromClaims(HttpContext.User.Claims)
             };
             
             try
@@ -75,6 +89,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpPut("subjects/{id}")]
+        [Authorize]
         public IActionResult UpdateSubject([FromBody]SubjectAddModel subject, [FromRoute]Guid id)
         {
             Subject resolvedSubject;
@@ -86,6 +101,12 @@ namespace EducationalHelp.Web.Controllers
             {
                 return NotFound();
             }
+
+            if (resolvedSubject.UserId != _authService.GetUserIdFromClaims(HttpContext.User.Claims))
+            {
+                return Forbid();
+            }
+
             resolvedSubject.Name = subject.Name;
             resolvedSubject.Description = subject.Description;
             resolvedSubject.Teacher = subject.Teacher;
@@ -96,10 +117,16 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpDelete("subjects/{id}")]
+        [Authorize]
         public IActionResult DeleteSubject(Guid id)
         {
             try
             {
+                var subject = _subjectsService.GetSubject(id);
+                if (subject.UserId != _authService.GetUserIdFromClaims(HttpContext.User.Claims))
+                {
+                    return Forbid();
+                }
                 _subjectsService.DeleteSubject(id);
             }
             catch (ServiceException)

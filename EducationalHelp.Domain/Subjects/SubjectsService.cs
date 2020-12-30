@@ -20,8 +20,8 @@ namespace EducationalHelp.Services.Subjects
             _lessonsService = lessonsService;
         }
 
-        public List<Subject> GetAllSubjects()
-            => _subjectsRepository.AllData.Include(s => s.Lessons).ToList();
+        public List<Subject> GetAllSubjects(Guid userId)
+            => _subjectsRepository.AllData.Where(s => s.UserId == userId).ToList();
 
         public Subject GetSubject(Guid id)
         {

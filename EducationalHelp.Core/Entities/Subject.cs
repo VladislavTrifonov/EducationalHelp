@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 using EducationalHelp.Core.Validation;
 
 namespace EducationalHelp.Core.Entities
@@ -8,6 +9,7 @@ namespace EducationalHelp.Core.Entities
     public class Subject : BaseEntity
     {
         public Guid UserId { get; set; }
+        [JsonIgnore]
         public virtual User User { get; set; }
 
         public string Name { get; set; }

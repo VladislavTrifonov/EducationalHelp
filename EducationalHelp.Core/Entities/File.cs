@@ -17,6 +17,7 @@ namespace EducationalHelp.Core.Entities
         public virtual ICollection<LessonFiles> LessonFiles { get; set; }
 
         public Guid UserId { get; set; }
+        [JsonIgnore]
         public virtual User User { get; set; }
 
         public File()

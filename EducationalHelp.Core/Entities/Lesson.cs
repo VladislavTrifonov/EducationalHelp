@@ -8,6 +8,7 @@ namespace EducationalHelp.Core.Entities
     public class Lesson : BaseEntity
     {
         public Guid UserId { get; set; }
+        [JsonIgnore]
         public virtual User User { get; set; }
 
         public string Title { get; set; }
