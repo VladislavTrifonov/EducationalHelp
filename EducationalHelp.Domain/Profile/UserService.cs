@@ -26,6 +26,17 @@ namespace EducationalHelp.Services.Profile
             return user;
         }
 
+        public User GetUserById(Guid userId)
+        {
+            var user = _usersRepository.GetById(userId);
+            if (user == null)
+            {
+                throw new ResourceNotFoundException($"User with id \"{userId}\" wasn't found");
+            }
+
+            return user;
+        }
+
         public void AddUser(User user)
         {
             _usersRepository.Insert(user);
