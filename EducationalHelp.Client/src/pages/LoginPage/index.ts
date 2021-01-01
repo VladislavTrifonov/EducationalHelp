@@ -7,7 +7,15 @@ import {RawLocation} from "vue-router";
     name: 'LoginPage'
 })
 export default class LoginPage extends Vue {
-    private loginForm!: UserCredentials;
+    private loginForm: UserCredentials;
+    private registerForm: {
+        login: string,
+        pseudonym: string,
+        password: string,
+        passwordRepeat: string
+    };
+
+    private isLogin: boolean;
 
     @Prop()
     private redirected!: boolean;
@@ -17,19 +25,38 @@ export default class LoginPage extends Vue {
 
     constructor() {
         super();
+        this.isLogin = true;
         this.loginForm = new UserCredentials();
+        this.registerForm = {
+            login: "",
+            pseudonym: "",
+            password: "",
+            passwordRepeat: ""
+        };
     }
 
     onSubmit(e: any) {
-        e.preventDefault()
+        e.preventDefault();
         this.$store.dispatch("user/authorize", this.loginForm)
             .then(response => {
-                // @ts-ignore
-                this.$router.push(this.redirectRoute);
+                if (this.redirected) {
+                    // @ts-ignore
+                    this.$router.push(this.redirectRoute);
+                } else {
+                    this.$router.push({
+                        name: 'profileView'
+                    });
+                }
+
             })
             .catch((error:Response) => {
            console.log(error);
         });
+    }
+
+    onRegisterSubmit(e: any) {
+        e.preventDefault();
+
     }
 
 }
