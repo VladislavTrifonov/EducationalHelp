@@ -17,6 +17,9 @@ export default class LoginPage extends Vue {
         e.preventDefault()
         this.$store.dispatch("user/authorize", this.loginForm)
             .then(response => {
+                this.$router.push({
+                    name: 'profileView'
+                });
             })
             .catch((error:Response) => {
            console.log(error);

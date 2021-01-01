@@ -11,6 +11,11 @@
         <router-link class="nav-link" tag="li" active-class="active" to="/calendar">Календарь событий</router-link>
       </b-navbar-nav >
     </b-collapse>
+
+    <b-navbar-nav class="ml-auto" style="cursor: pointer">
+      <router-link v-if="!isAuthenticated" class="nav-link" tag="li" active-class="active" to="/login">Авторизация</router-link>
+      <router-link v-else class="nav-link" tag="li" active-class="class" to="/profile">{{user.pseudonym}}</router-link>
+    </b-navbar-nav>
   </b-navbar>
 </template>
 

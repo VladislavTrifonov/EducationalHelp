@@ -3,17 +3,29 @@ import RootState from "@/store/rootstate";
 import UserState from "@/store/modules/user/state";
 import { Response } from '../ErrorProcessing';
 import AccessToken from "@/api/models/AccessToken";
+import User from "@/api/models/User";
 
 
 const getters: GetterTree<UserState, RootState> = {
     getAccessToken: state => {
         return state.accessToken;
+    },
+    getProfileInformation: state => {
+        return state.user;
+    },
+    isAuthenticated: state => {
+        return state.isAuthenticated;
     }
 };
 
 const mutations: MutationTree<UserState> = {
     login: (state, token: AccessToken) => {
         state.accessToken = token;
+        state.isAuthenticated = true;
+    },
+
+    setProfileInformation: (state, user: User) => {
+        state.user = user;
     }
 };
 
@@ -21,6 +33,13 @@ const actions: ActionTree<UserState, RootState> = {
     authorize: (state, credentials) => {
         return Response.fromPromise(state.state.api.getAccessToken(credentials), token => {
             state.commit("login", token);
+            state.dispatch("loadProfileInformation");
+        });
+    },
+
+    loadProfileInformation: (state) => {
+        return Response.fromPromise(state.state.api.getProfileInformation(), user => {
+            state.commit("setProfileInformation", user);
         });
     }
 };

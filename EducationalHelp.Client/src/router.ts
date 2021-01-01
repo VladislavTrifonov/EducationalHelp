@@ -22,7 +22,8 @@ const routes = [
             isCreationMode: true
     }},
     { name: 'calendarView', path: '/calendar', component: CalendarPage },
-    { name: 'loginView', path: '/login', component: LoginPage }
+    { name: 'loginView', path: '/login', component: LoginPage },
+    { name: 'profileView', path: '/profile' }
 
 ];
 
