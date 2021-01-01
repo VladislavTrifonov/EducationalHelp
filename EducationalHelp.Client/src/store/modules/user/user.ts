@@ -25,6 +25,12 @@ const mutations: MutationTree<UserState> = {
         state.isAuthenticated = true;
     },
 
+    logout: (state) => {
+      state.accessToken = new AccessToken();
+      state.isAuthenticated = false;
+      state.user = new User();
+    },
+
     setProfileInformation: (state, user: User) => {
         state.user = user;
     }

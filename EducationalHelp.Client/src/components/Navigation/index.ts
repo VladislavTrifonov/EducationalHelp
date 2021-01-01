@@ -16,4 +16,12 @@ import {mapGetters} from "vuex";
 export default class Navigation extends Vue {
     isAuthenticated!: any;
     user!: any;
+
+    logOut(e: any) {
+        e.preventDefault();
+        this.$store.commit("user/logout");
+        this.$router.push({
+           name: 'homePage'
+        });
+    }
 }

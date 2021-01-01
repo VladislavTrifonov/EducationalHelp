@@ -14,7 +14,13 @@
 
     <b-navbar-nav class="ml-auto" style="cursor: pointer">
       <router-link v-if="!isAuthenticated" class="nav-link" tag="li" active-class="active" to="/login">Авторизация</router-link>
-      <router-link v-else class="nav-link" tag="li" active-class="class" to="/profile">{{user.pseudonym}}</router-link>
+      <b-nav-item-dropdown right v-else>
+        <template #button-content>
+          {{user.pseudonym}}
+        </template>
+        <b-dropdown-item><router-link to="/profile">Смотреть профиль</router-link></b-dropdown-item>
+        <b-dropdown-item><a href="#!" @click="logOut">Выйти</a></b-dropdown-item>
+      </b-nav-item-dropdown>
     </b-navbar-nav>
   </b-navbar>
 </template>
