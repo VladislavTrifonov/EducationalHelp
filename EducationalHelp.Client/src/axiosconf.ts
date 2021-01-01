@@ -1,8 +1,21 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import vue from './main'
 
 const instance = axios.create({
     baseURL: 'https://localhost:5001',
     validateStatus: (status) => status >= 200 && status < 300,
+});
+
+instance.interceptors.request.use(request => {
+    console.log("Debug: ");
+    console.log(request);
+
+    let token = vue.$store.getters["user/getAccessToken"];
+    if (token != null) {
+        request.headers["Authorization"] = "Bearer " + token;
+    }
+
+    return request;
 });
 
 instance.interceptors.request.use(request => {
