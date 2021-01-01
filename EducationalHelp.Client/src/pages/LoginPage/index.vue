@@ -1,6 +1,10 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-md-auto">
+      <b-alert v-if="redirected" show variant="info">
+        Вы были перенаправлены сюда с другой страницы, требующей авторизации. <br>
+        После авторизации Вы будете автоматически перенаправлены обратно.
+      </b-alert>
       <b-card title="Авторизация">
         <b-form @submit="onSubmit">
           <b-form-group

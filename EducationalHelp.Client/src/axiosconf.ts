@@ -18,6 +18,21 @@ instance.interceptors.request.use(request => {
     return request;
 });
 
+instance.interceptors.response.use(response => response, error => {
+    if (error.response.status == 401) {
+        vue.$router.push({
+            name: 'loginView',
+            params: {
+                redirected: true,
+                redirectRoute: {
+                    name: vue.$route.name,
+                    params: vue.$route.params
+                }
+            }
+        });
+    }
+});
+
 instance.interceptors.request.use(request => {
     if (processing.onRequestStart != null)
         processing.onRequestStart(request); 
