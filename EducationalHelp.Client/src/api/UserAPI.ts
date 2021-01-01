@@ -2,6 +2,7 @@ import AccessToken from './models/AccessToken';
 import axios from '@/axiosconf'
 import UserCredentials from "@/api/models/UserCredentials";
 import User from "@/api/models/User";
+import UserRegisterInfo from "@/api/models/UserRegisterInfo";
 
 export default class UserAPI {
     constructor() {
@@ -24,6 +25,16 @@ export default class UserAPI {
            }).catch(error => {
                reject(error);
            });
+        });
+    }
+
+    register(credentials: UserRegisterInfo): Promise<AccessToken> {
+        return new Promise((resolve, reject) => {
+            axios.post("api/auth/register", credentials).then(response => {
+                resolve(response.data)
+            }).catch(error => {
+                reject(error)
+            })
         });
     }
 }

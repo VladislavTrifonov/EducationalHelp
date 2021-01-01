@@ -4,6 +4,7 @@ import UserState from "@/store/modules/user/state";
 import { Response } from '../ErrorProcessing';
 import AccessToken from "@/api/models/AccessToken";
 import User from "@/api/models/User";
+import UserRegisterInfo from "@/api/models/UserRegisterInfo";
 
 
 const getters: GetterTree<UserState, RootState> = {
@@ -40,6 +41,13 @@ const actions: ActionTree<UserState, RootState> = {
     loadProfileInformation: (state) => {
         return Response.fromPromise(state.state.api.getProfileInformation(), user => {
             state.commit("setProfileInformation", user);
+        });
+    },
+
+    register: (state, credentials: UserRegisterInfo) => {
+        return Response.fromPromise(state.state.api.register(credentials), token => {
+            state.commit("login", token);
+            state.dispatch("loadProfileInformation");
         });
     }
 };

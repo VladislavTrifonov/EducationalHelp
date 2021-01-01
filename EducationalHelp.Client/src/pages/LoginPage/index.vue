@@ -82,7 +82,7 @@
               <b-form-input
                   id="input-2222"
                   type="password"
-                  v-model="registerForm.passwordRepeat"
+                  v-model="registerForm.confirmPassword"
                   required
               ></b-form-input>
             </b-form-group>
