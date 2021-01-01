@@ -12,7 +12,7 @@ instance.interceptors.request.use(request => {
 
     let token = vue.$store.getters["user/getAccessToken"];
     if (token != null) {
-        request.headers["Authorization"] = "Bearer " + token;
+        request.headers["Authorization"] = "Bearer " + token.accessToken;
     }
 
     return request;

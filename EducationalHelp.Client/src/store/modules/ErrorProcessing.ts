@@ -13,9 +13,10 @@ export class Response {
     }
 
     public static fromPromise(promise: Promise<any>, onSuccess: (response: any) => void): Promise<Response> {
-        return new Promise<Response>((_, reject) => {
+        return new Promise<Response>((resolve, reject) => {
             promise.then(response => {
                 onSuccess(response);
+                resolve(response);
             }, error => {
                     reject(new Response(false, error.response.data));
             });

@@ -5,12 +5,15 @@ import AccessToken from "@/api/models/AccessToken";
 export default class UserState {
     public api: UserAPI;
 
-    public isAuthenticated!: boolean;
-    public accessToken!: AccessToken;
-    public user!: User;
+    public isAuthenticated: boolean;
+    public accessToken: AccessToken;
+    public user: User;
 
     constructor() {
         this.api = new UserAPI();
+        this.accessToken = new AccessToken();
+        this.isAuthenticated = false;
+        this.user = new User();
     }
 
 }

@@ -6,7 +6,7 @@ import AccessToken from "@/api/models/AccessToken";
 
 
 const getters: GetterTree<UserState, RootState> = {
-    getAccessToken: (state) => {
+    getAccessToken: state => {
         return state.accessToken;
     }
 };
