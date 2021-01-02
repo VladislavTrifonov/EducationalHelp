@@ -3,6 +3,7 @@ using EducationalHelp.Data;
 using System;
 using System.Linq;
 using EducationalHelp.Services.Exceptions;
+using EducationalHelp.Data.Exceptions;
 
 namespace EducationalHelp.Services.Profile
 {
@@ -35,6 +36,18 @@ namespace EducationalHelp.Services.Profile
             }
 
             return user;
+        }
+
+        public void UpdateUser(User user)
+        {
+            try
+            {
+                _usersRepository.Update(user);
+            }
+            catch (DataException e)
+            {
+                throw new ServiceException("", e);
+            }
         }
 
         public void AddUser(User user)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EducationalHelp.Data.Exceptions
 {
-    internal class DataException : Exception
+    public class DataException : Exception
     {
         public DataException()
         {
