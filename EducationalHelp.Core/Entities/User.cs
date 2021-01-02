@@ -14,5 +14,8 @@ namespace EducationalHelp.Core.Entities
 
         public Guid? AvatarId { get; set; }
         public virtual File Avatar { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<UserFiles> UserFiles { get; set; } = new HashSet<UserFiles>();
     }
 }
