@@ -16,6 +16,7 @@
       <router-link v-if="!isAuthenticated" class="nav-link" tag="li" active-class="active" to="/login">Авторизация</router-link>
       <b-nav-item-dropdown right v-else>
         <template #button-content>
+          <b-icon icon="person"></b-icon>
           {{user.pseudonym}}
         </template>
         <b-dropdown-item><router-link to="/profile">Смотреть профиль</router-link></b-dropdown-item>

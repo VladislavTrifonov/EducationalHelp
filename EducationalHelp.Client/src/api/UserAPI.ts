@@ -37,4 +37,14 @@ export default class UserAPI {
             })
         });
     }
+
+    updateProfile(user: User): Promise<User> {
+        return new Promise((resolve, reject) => {
+            axios.put("api/profile/me", user).then(response => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            })
+        })
+    }
 }

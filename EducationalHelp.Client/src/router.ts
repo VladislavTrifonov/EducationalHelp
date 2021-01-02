@@ -7,6 +7,7 @@ import SubjectViewPageComponent from "@/pages/SubjectsViewPage/index.vue";
 import LessonSinglePage from "@/pages/LessonSinglePage/index.vue";
 import CalendarPage from "@/pages/CalendarPage/index.vue";
 import LoginPage from "@/pages/LoginPage/index.vue";
+import ProfilePage from "@/pages/ProfilePage/index.vue";
 
 Vue.use(VueRouter)
 
@@ -23,7 +24,7 @@ const routes = [
     }},
     { name: 'calendarView', path: '/calendar', component: CalendarPage },
     { name: 'loginView', path: '/login', component: LoginPage, props: true },
-    { name: 'profileView', path: '/profile' }
+    { name: 'profileView', path: '/profile', component: ProfilePage }
 
 ];
 

@@ -33,6 +33,10 @@ const mutations: MutationTree<UserState> = {
 
     setProfileInformation: (state, user: User) => {
         state.user = user;
+    },
+
+    setPseudonym: (state, pseudonym: string) => {
+        state.user.pseudonym = pseudonym;
     }
 };
 
@@ -54,6 +58,12 @@ const actions: ActionTree<UserState, RootState> = {
         return Response.fromPromise(state.state.api.register(credentials), token => {
             state.commit("login", token);
             state.dispatch("loadProfileInformation");
+        });
+    },
+
+    updateProfile: (state, user: User) => {
+        return Response.fromPromise(state.state.api.updateProfile(user), user => {
+            state.commit("setProfileInformation", user);
         });
     }
 };
