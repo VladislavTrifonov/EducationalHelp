@@ -8,14 +8,21 @@ import UserRegisterInfo from "@/api/models/UserRegisterInfo";
 
 
 const getters: GetterTree<UserState, RootState> = {
+
     getAccessToken: state => {
         return state.accessToken;
     },
+
     getProfileInformation: state => {
         return state.user;
     },
+
     isAuthenticated: state => {
         return state.isAuthenticated;
+    },
+
+    getAvatarBlob: state => {
+        return state.userDownloadedAvatar;
     }
 };
 
@@ -37,10 +44,13 @@ const mutations: MutationTree<UserState> = {
 
     setPseudonym: (state, pseudonym: string) => {
         state.user.pseudonym = pseudonym;
+    },
+
+    updateDownloadedAvatar: (state, data) => {
+        state.userDownloadedAvatar = new Blob([data], { type: 'image/png' });
     }
 };
 
-// @ts-ignore
 // @ts-ignore
 const actions: ActionTree<UserState, RootState> = {
     authorize: (state, credentials) => {
@@ -53,6 +63,7 @@ const actions: ActionTree<UserState, RootState> = {
     loadProfileInformation: (state) => {
         return Response.fromPromise(state.state.api.getProfileInformation(), user => {
             state.commit("setProfileInformation", user);
+            state.dispatch("downloadUserAvatar", user);
         });
     },
 
@@ -60,12 +71,22 @@ const actions: ActionTree<UserState, RootState> = {
         return Response.fromPromise(state.state.api.register(credentials), token => {
             state.commit("login", token);
             state.dispatch("loadProfileInformation");
+
         });
     },
-//@ts-ignore
-    updateProfile: (state: any, user: User, avatar: File) => {
-        return Response.fromPromise(state.state.api.updateProfile(user, avatar), user => {
+    updateProfile: (state: any, data: { user: User, avatar: File }) => {
+        return Response.fromPromise(state.state.api.updateProfile(data.user, data.avatar), user => {
             state.commit("setProfileInformation", user);
+            if (data.avatar != null) {
+                state.commit("updateDownloadedAvatar", data.avatar);
+                console.log(data.avatar)
+            }
+        });
+    },
+
+    downloadUserAvatar: (state, user: User) => {
+        return Response.fromPromise(state.state.api.downloadAvatar(user.avatarLink), data => {
+           state.commit("updateDownloadedAvatar", data)
         });
     }
 };

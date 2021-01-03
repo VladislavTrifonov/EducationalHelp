@@ -8,12 +8,14 @@ export default class UserState {
     public isAuthenticated: boolean;
     public accessToken: AccessToken;
     public user: User;
+    public userDownloadedAvatar: Blob;
 
     constructor() {
         this.api = new UserAPI();
         this.accessToken = new AccessToken();
         this.isAuthenticated = false;
         this.user = new User();
+        this.userDownloadedAvatar = new Blob();
     }
 
 }

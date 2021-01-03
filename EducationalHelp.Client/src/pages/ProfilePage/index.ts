@@ -12,7 +12,8 @@ import UserAPI from "@/api/UserAPI";
     },
     computed: {
         ...mapGetters('user', {
-            user: 'getProfileInformation'
+            user: 'getProfileInformation',
+            avatar: 'getAvatarBlob'
         })
     }
 })
@@ -22,40 +23,27 @@ export default class ProfilePage extends Vue {
 
     private isEditPseudonym: boolean;
     private newPseudonym: string;
-    private imageBlob: Blob;
-    private userApi: UserAPI;
+    private avatar!: Blob;
 
     constructor() {
         super();
         this.isEditPseudonym = false;
         this.newPseudonym = "";
-        this.imageBlob = new Blob();
-        this.userApi = new UserAPI();
     }
 
     get urlOfImage(): string {
-        return URL.createObjectURL(this.imageBlob);
-    }
-
-    @Watch("user.avatarLink")
-    whenAvatarFilled(newValue: any, oldValue: any)
-    {
-        if (newValue != null) {
-            this.userApi.downloadAvatar(newValue).then(data => {
-                this.imageBlob = new Blob([data], { type: 'image/png' });
-            })
-        }
+        return URL.createObjectURL(this.avatar);
     }
 
     setAvatar(event: any) {
         let file = event.target.files[0];
         if (file == null)
             return;
-        
-        this.$store.dispatch("user/updateProfile", this.user, file).then(response => {
-            this.imageBlob = new Blob([file], { type: 'image/png' });
 
-        }).catch(error => {
+       this.$store.dispatch("user/updateProfile", {
+           user: this.user,
+           avatar: file
+       }).catch(error => {
             console.log(error);
         });
     }
@@ -75,7 +63,10 @@ export default class ProfilePage extends Vue {
     }
 
     updateAccountData() {
-        this.$store.dispatch("user/updateProfile", this.user).then(response => {
+        this.$store.dispatch("user/updateProfile", {
+            user: this.user,
+            avatar: null
+        }).then(response => {
             console.log("Данные обновлены!", response);
         });
     }
