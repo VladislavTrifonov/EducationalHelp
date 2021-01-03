@@ -12,7 +12,6 @@ namespace EducationalHelp.Data.Mapping.Files
         {
             builder.Property(f => f.FullPath).IsRequired();
             builder.Property(f => f.OriginalName).IsRequired();
-            builder.HasOne(f => f.User).WithMany().HasForeignKey(f => f.UserId).IsRequired().OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.ClientNoAction);
             base.Map(builder);
         }
     }

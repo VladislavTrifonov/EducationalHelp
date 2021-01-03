@@ -19,10 +19,6 @@ namespace EducationalHelp.Core.Entities
         [JsonIgnore]
         public virtual ICollection<UserFiles> UserFiles { get; set; } = new HashSet<UserFiles>();
 
-        public Guid UserId { get; set; }
-        [JsonIgnore]
-        public virtual User User { get; set; }
-
         public File()
         {
             LessonFiles = new HashSet<LessonFiles>();

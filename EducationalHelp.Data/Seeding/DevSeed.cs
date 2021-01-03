@@ -20,7 +20,6 @@ namespace EducationalHelp.Data.Seeding
                 Id = new Guid("ABB1F22F-4046-4088-BF0E-983976EA930F"),
                 OriginalName = "testfile.txt",
                 FullPath = Path.Combine("D:", Path.GetRandomFileName()),
-                UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D")
             };
 
             var lessonFile = new LessonFiles()

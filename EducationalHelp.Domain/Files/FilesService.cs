@@ -15,11 +15,13 @@ namespace EducationalHelp.Services.Files
     {
         private readonly IRepository<File> _files;
         private readonly IRepository<LessonFiles> _lessonFiles;
+        private readonly IRepository<UserFiles> _userFiles;
 
-        public FilesService(IRepository<File> files, IRepository<LessonFiles> lessonFiles)
+        public FilesService(IRepository<File> files, IRepository<LessonFiles> lessonFiles, IRepository<UserFiles> userFiles)
         {
             _files = files;
             _lessonFiles = lessonFiles;
+            _userFiles = userFiles;
         }
 
         public (File, FileStream) CreateNewFile(string fileName, string rootPath, long length)
@@ -72,6 +74,11 @@ namespace EducationalHelp.Services.Files
             return (f, fs);
         }
 
+        public FileStream GetFileStreamByFileModel(File f)
+        {
+            return System.IO.File.Open(f.FullPath, FileMode.Open);
+        }
+
         public File GetFileModelById(Guid fileId)
         {
             var f = _files.GetById(fileId);
@@ -90,6 +97,18 @@ namespace EducationalHelp.Services.Files
             };
 
             _lessonFiles.Insert(model);
+        }
+
+        public void AttachFileToUser(Guid userId, Guid fileId, UserFilesType type)
+        {
+            var model = new UserFiles()
+            {
+                FileId = fileId,
+                UserId = userId,
+                Type = type
+            };
+
+            _userFiles.Insert(model);
         }
 
         public void DeleteFile(Guid fileId)

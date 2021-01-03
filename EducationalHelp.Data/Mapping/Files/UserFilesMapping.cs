@@ -10,7 +10,7 @@ namespace EducationalHelp.Data.Mapping.Files
     {
         public override void Map(EntityTypeBuilder<UserFiles> builder)
         {
-            builder.HasKey(uf => new { uf.UserId, uf.FileId });
+            //builder.HasKey(uf => new { uf.UserId, uf.FileId });
 
             builder.HasOne(uf => uf.User)
                 .WithMany(u => u.UserFiles)
