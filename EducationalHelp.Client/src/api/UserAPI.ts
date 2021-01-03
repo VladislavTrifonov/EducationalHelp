@@ -47,4 +47,16 @@ export default class UserAPI {
             })
         })
     }
+
+    downloadAvatar(downloadLink: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            axios.get(downloadLink, {
+                responseType: "arraybuffer"
+            }).then(response => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
+        })
+    }
 }

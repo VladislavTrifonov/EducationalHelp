@@ -1,9 +1,10 @@
 import Vue from 'vue';
 
-import {Component} from 'vue-property-decorator';
+import {Component, Watch} from 'vue-property-decorator';
 import {mapGetters} from "vuex";
 import User from "@/api/models/User";
 import DateTime from '@/components/system/DateTime.vue'
+import UserAPI from "@/api/UserAPI";
 
 @Component({
     components: {
@@ -21,11 +22,29 @@ export default class ProfilePage extends Vue {
 
     private isEditPseudonym: boolean;
     private newPseudonym: string;
+    private imageBlob: Blob;
+    private userApi: UserAPI;
 
     constructor() {
         super();
         this.isEditPseudonym = false;
         this.newPseudonym = "";
+        this.imageBlob = new Blob();
+        this.userApi = new UserAPI();
+    }
+
+    get urlOfImage(): string {
+        return URL.createObjectURL(this.imageBlob);
+    }
+
+    @Watch("user.avatarLink")
+    whenAvatarFilled(newValue: any, oldValue: any)
+    {
+        if (newValue != null) {
+            this.userApi.downloadAvatar(newValue).then(data => {
+                this.imageBlob = new Blob([data], { type: 'image/png' });
+            })
+        }
     }
 
     onClickSavePseudonym(e: any) {

@@ -3,10 +3,15 @@
     <div class="row">
       <div class="col-md-3">
         <b-card>
-          <b-card-title class="text-center">
-            Аватар
-          </b-card-title>
-          <b-card-sub-title class="text-center">
+          <div v-if="user.avatarLink == null">
+            <b-card-title class="text-center">
+              Аватар
+            </b-card-title>
+          </div>
+          <div v-else>
+            <img :src="urlOfImage" class="img-fluid" />
+          </div>
+          <b-card-sub-title class="text-center pt-2" style="cursor: pointer">
             Загрузить
           </b-card-sub-title>
         </b-card>
