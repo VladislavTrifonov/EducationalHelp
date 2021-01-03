@@ -40,6 +40,8 @@ const mutations: MutationTree<UserState> = {
     }
 };
 
+// @ts-ignore
+// @ts-ignore
 const actions: ActionTree<UserState, RootState> = {
     authorize: (state, credentials) => {
         return Response.fromPromise(state.state.api.getAccessToken(credentials), token => {
@@ -60,9 +62,9 @@ const actions: ActionTree<UserState, RootState> = {
             state.dispatch("loadProfileInformation");
         });
     },
-
-    updateProfile: (state, user: User) => {
-        return Response.fromPromise(state.state.api.updateProfile(user), user => {
+//@ts-ignore
+    updateProfile: (state: any, user: User, avatar: File) => {
+        return Response.fromPromise(state.state.api.updateProfile(user, avatar), user => {
             state.commit("setProfileInformation", user);
         });
     }

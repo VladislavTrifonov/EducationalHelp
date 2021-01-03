@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-3">
         <b-card>
-          <div v-if="user.avatarLink == null">
+          <div v-if="this.imageBlob.size == 0">
             <b-card-title class="text-center">
               Аватар
             </b-card-title>
@@ -11,9 +11,10 @@
           <div v-else>
             <img :src="urlOfImage" class="img-fluid" />
           </div>
-          <b-card-sub-title class="text-center pt-2" style="cursor: pointer">
+          <b-card-sub-title class="text-center pt-2" style="cursor: pointer" @click="$refs.file.click()">
             Загрузить
           </b-card-sub-title>
+          <input type="file" ref="file" style="display: none" @change="setAvatar">
         </b-card>
       </div>
       <div class="col-md-9">

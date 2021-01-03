@@ -73,15 +73,6 @@ namespace EducationalHelp.Web.Controllers
                 var user = _userService.GetUserById(_authService.GetUserIdFromClaims(HttpContext.User.Claims));
 
                 user.Pseudonym = userModel.Pseudonym;
-                Core.Entities.File file = null;
-                FileStream fs;
-                if (userModel.Avatar != null && userModel.Avatar.Length > 0)
-                {
-                    (file, fs) = _filesService.CreateNewFile(userModel.Avatar.FileName, _webHostEnvironment.WebRootPath, userModel.Avatar.Length);
-                    await userModel.Avatar.CopyToAsync(fs);
-                    await fs.DisposeAsync();
-                    _filesService.AttachFileToUser(user.Id, file.Id, Core.Entities.UserFilesType.Avatar);
-                }
 
                 var outputModel = new UserOutputModel
                 {
@@ -91,8 +82,21 @@ namespace EducationalHelp.Web.Controllers
                     DeletedAt = user.DeletedAt,
                     Login = user.Login,
                     Pseudonym = user.Pseudonym,
-                    AvatarLink = this.GetDownloadLink(file.Id)
                 };
+
+                var avatar = _userService.GetUserAvatar(user.Id);
+                if (avatar != null)
+                    outputModel.AvatarLink = this.GetDownloadLink(avatar.Id);
+                                
+                if (userModel.Avatar != null && userModel.Avatar.Length > 0)
+                {
+                    var (file, fs) = _filesService.CreateNewFile(userModel.Avatar.FileName, _webHostEnvironment.WebRootPath, userModel.Avatar.Length);
+                    await userModel.Avatar.CopyToAsync(fs);
+                    await fs.DisposeAsync();
+                    _filesService.AttachFileToUser(user.Id, file.Id, Core.Entities.UserFilesType.Avatar);
+
+                    outputModel.AvatarLink = this.GetDownloadLink(file.Id);
+                }
 
                 _userService.UpdateUser(user);
 

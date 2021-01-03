@@ -47,6 +47,19 @@ export default class ProfilePage extends Vue {
         }
     }
 
+    setAvatar(event: any) {
+        let file = event.target.files[0];
+        if (file == null)
+            return;
+        
+        this.$store.dispatch("user/updateProfile", this.user, file).then(response => {
+            this.imageBlob = new Blob([file], { type: 'image/png' });
+
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
     onClickSavePseudonym(e: any) {
         this.isEditPseudonym = false;
         if (this.newPseudonym == this.user.pseudonym)

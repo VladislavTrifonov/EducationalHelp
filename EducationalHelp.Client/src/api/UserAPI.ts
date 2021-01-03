@@ -38,9 +38,13 @@ export default class UserAPI {
         });
     }
 
-    updateProfile(user: User): Promise<User> {
+    updateProfile(user: User, avatar: File): Promise<User> {
         return new Promise((resolve, reject) => {
-            axios.put("api/profile/me", user).then(response => {
+            let fd = new FormData();
+            fd.append("pseudonym", user.pseudonym);
+            if (avatar != null)
+                fd.append("avatar", avatar);
+            axios.put("api/profile/me", fd).then(response => {
                 resolve(response.data);
             }).catch(error => {
                 reject(error);
