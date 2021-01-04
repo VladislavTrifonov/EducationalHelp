@@ -11,8 +11,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EducationalHelp.Web.Controllers.Extensions;
+using EducationalHelp.Web.Models.User.Statistics;
 using EducationalHelp.Core.Entities;
 using System.IO;
+using EducationalHelp.Services.Subjects;
+using EducationalHelp.Services.Lessons;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -22,14 +25,23 @@ namespace EducationalHelp.Web.Controllers
         private readonly UserService _userService;
         private readonly JwtAuthenticationService _authService;
         private readonly FilesService _filesService;
+        private readonly SubjectsService _subjectsService;
+        private readonly LessonsService _lessonsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UserController(UserService userService, JwtAuthenticationService authService, FilesService filesService, IWebHostEnvironment webHostEnvironment)
+        public UserController(UserService userService,
+            JwtAuthenticationService authService,
+            FilesService filesService,
+            IWebHostEnvironment webHostEnvironment,
+            SubjectsService subjectsService,
+            LessonsService lessonsService)
         {
             _userService = userService;
             _authService = authService;
             _filesService = filesService;
             _webHostEnvironment = webHostEnvironment;
+            _subjectsService = subjectsService;
+            _lessonsService = lessonsService;
         }
 
         [HttpGet("api/profile/me")]
@@ -106,6 +118,38 @@ namespace EducationalHelp.Web.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpGet("api/profile/statistics")]
+        [Authorize]
+        public IActionResult GetUserStatistics()
+        {
+            var userId = _authService.GetUserIdFromClaims(HttpContext.User.Claims);
+            var subjects = _subjectsService.GetAllSubjects(userId);
+
+            var subjectStatistic = new List<UserStatisticsSubject>();
+
+            foreach (var subject in subjects)
+            {
+                var statistic = new UserStatisticsSubject
+                {
+                    SubjectTitle = subject.Name,
+                    AvgLessonsMark = _lessonsService.GetAvgLessonMarkBySubject(subject.Id),
+                    LessonsCount = _lessonsService.GetNumberOfLessonsBySubject(subject.Id),
+                    LessonsMissedCount = _lessonsService.GetMissedLessonsCountBySubject(subject.Id)
+                };
+
+                subjectStatistic.Add(statistic);
+            }
+
+            var outputModel = new UserStatisticsOutputModel
+            {
+                SubjectsCount = subjects.Count,
+                AvgMarkLessonAll = _lessonsService.GetAvgLessonMarkByUser(userId),
+                subjectsStatistics = subjectStatistic
+            };
+
+            return Ok(outputModel);
         }
     }
 }

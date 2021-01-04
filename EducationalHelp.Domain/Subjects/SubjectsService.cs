@@ -61,5 +61,12 @@ namespace EducationalHelp.Services.Subjects
 
             _subjectsRepository.Update(newSubject);
         }
+
+        public int GetSubjectsCountByUser(Guid userId)
+        {
+            return _subjectsRepository.AllData
+                .Where(s => s.UserId == userId)
+                .Count();
+        }
     }
 }

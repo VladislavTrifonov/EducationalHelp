@@ -17,8 +17,8 @@ namespace EducationalHelp.Services.Lessons
             _lessonRepository = lessonRepository;
         }
 
-        public List<Lesson> GetAllLessons()
-            => _lessonRepository.AllData.ToList();
+        public List<Lesson> GetAllLessons(Guid userId)
+            => _lessonRepository.AllData.Where(l => l.UserId == userId).ToList();
 
         public Lesson GetLessonById(Guid id)
         {
@@ -65,6 +65,42 @@ namespace EducationalHelp.Services.Lessons
         public bool IsExist(Guid id)
         {
             return _lessonRepository.AllData.Any(l => l.Id == id);
+        }
+
+        public double GetAvgLessonMarkBySubject(Guid subjectId)
+        {
+            var lessons = this.GetLessonsBySubjectId(subjectId);
+            
+            if (lessons.Count == 0)
+                return 0;
+            
+            return lessons.Average(l => l.SelfMark.GetDigitOfMark());
+        }
+
+        public double GetAvgLessonMarkByUser(Guid userId)
+        {
+            var lessons = _lessonRepository.AllData
+                .Where(l => l.UserId == userId)
+                .AsEnumerable();
+            
+            if (lessons.Count() == 0)
+                return 0;
+
+            return lessons.Average(l => l.SelfMark.GetDigitOfMark());
+        }
+
+        public int GetNumberOfLessonsBySubject(Guid subjectId)
+        {
+            return _lessonRepository.AllData
+                .Where(l => l.SubjectId == subjectId)
+                .Count();
+        }
+
+        public int GetMissedLessonsCountBySubject(Guid subjectId)
+        {
+            return _lessonRepository.AllData
+                .Where(l => l.SubjectId == subjectId && l.IsVisited == false)
+                .Count();
         }
     }
 }
