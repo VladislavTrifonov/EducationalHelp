@@ -96,9 +96,9 @@ namespace EducationalHelp.Web.Controllers
                     Pseudonym = user.Pseudonym,
                 };
 
-                var avatar = _userService.GetUserAvatar(user.Id);
+               /* var avatar = _userService.GetUserAvatar(user.Id);
                 if (avatar != null)
-                    outputModel.AvatarLink = this.GetDownloadLink(avatar.Id);
+                    outputModel.AvatarLink = this.GetDownloadLink(avatar.Id);*/
                                 
                 if (userModel.Avatar != null && userModel.Avatar.Length > 0)
                 {

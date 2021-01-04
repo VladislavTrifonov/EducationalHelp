@@ -46,7 +46,11 @@ namespace EducationalHelp.Services.Profile
 
         public File? GetUserAvatar(Guid userId)
         {
-            var uf =_userFilesRepository.AllData.FirstOrDefault(uf => uf.UserId == userId && uf.Type == UserFilesType.Avatar);
+            var uf =_userFilesRepository.AllData
+                .Where(uf => uf.UserId == userId && uf.Type == UserFilesType.Avatar)
+                .OrderByDescending(uf => uf.CreatedAt)
+                .FirstOrDefault();
+
             if (uf == null)
             {
                 return null;
