@@ -26,9 +26,9 @@ namespace EducationalHelp.Services.Lessons
         /// <param name="startDate">Стартовая дата</param>
         /// <param name="endDate">Конечная дата</param>
         /// <returns></returns>
-        public override IEnumerable<CalendarEvent> GetEventsBetweenDays(DateTime startDate, DateTime endDate)
+        public override IEnumerable<CalendarEvent> GetEventsBetweenDays(Guid userId, DateTime startDate, DateTime endDate)
         {
-            var lessons = _lessonRepository.AllData
+            var lessons = _lessonsService.GetLessonsByUser(userId)
                 .Where(l => l.DateStart <= endDate && l.DateStart >= startDate)
                 .Select(InitalizeCalendarEventFromLesson);
 
@@ -39,9 +39,9 @@ namespace EducationalHelp.Services.Lessons
         /// Получает ВСЕ запланированные занятия (по всем предметам, за все время)
         /// </summary>
         /// <returns></returns>
-        public override IEnumerable<CalendarEvent> GetAllPlannedEvents()
+        public override IEnumerable<CalendarEvent> GetAllPlannedEvents(Guid userId)
         {
-            return _lessonRepository.AllData.Select(InitalizeCalendarEventFromLesson);
+            return _lessonsService.GetLessonsByUser(userId).Select(InitalizeCalendarEventFromLesson);
         }
 
         private CalendarEvent InitalizeCalendarEventFromLesson(Lesson lesson)

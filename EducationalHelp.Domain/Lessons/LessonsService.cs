@@ -37,6 +37,11 @@ namespace EducationalHelp.Services.Lessons
             return lessons; 
         }
 
+        public IEnumerable<Lesson> GetLessonsByUser(Guid userId)
+        {
+            return _lessonRepository.AllData.Where(l => l.UserId == userId);
+        }
+
         public Lesson CreateLesson(Lesson lesson)
         {
             var resultOfValidation = lesson.Validate();
@@ -77,11 +82,10 @@ namespace EducationalHelp.Services.Lessons
             return lessons.Average(l => l.SelfMark.GetDigitOfMark());
         }
 
+
         public double GetAvgLessonMarkByUser(Guid userId)
         {
-            var lessons = _lessonRepository.AllData
-                .Where(l => l.UserId == userId)
-                .AsEnumerable();
+            var lessons = GetLessonsByUser(userId);
             
             if (lessons.Count() == 0)
                 return -1;

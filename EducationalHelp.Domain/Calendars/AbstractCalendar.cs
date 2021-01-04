@@ -13,13 +13,13 @@ namespace EducationalHelp.Services.Calendars
         public const uint CalendarDaysInMonth = 31;
         public const uint CalendarDaysInYear = 366;
 
-        public abstract IEnumerable<CalendarEvent> GetAllPlannedEvents();
-        public abstract IEnumerable<CalendarEvent> GetEventsBetweenDays(DateTime startDate, DateTime endDate);
+        public abstract IEnumerable<CalendarEvent> GetAllPlannedEvents(Guid userId);
+        public abstract IEnumerable<CalendarEvent> GetEventsBetweenDays(Guid userId, DateTime startDate, DateTime endDate);
 
-        public virtual byte[] GetIcalRepresentation()
+        public virtual byte[] GetIcalRepresentation(Guid userId)
         {
             var calendar = new Ical.Net.Calendar();
-            foreach (var e in this.GetAllPlannedEvents())
+            foreach (var e in this.GetAllPlannedEvents(userId))
             {
                 calendar.Events.Add(new Ical.Net.CalendarComponents.CalendarEvent
                 {

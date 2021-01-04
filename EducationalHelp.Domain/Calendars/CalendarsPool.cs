@@ -24,14 +24,14 @@ namespace EducationalHelp.Services.Calendars
             _calendars = calendars; 
         }
 
-        public override IEnumerable<CalendarEvent> GetAllPlannedEvents()
+        public override IEnumerable<CalendarEvent> GetAllPlannedEvents(Guid userId)
         {
-            return _calendars.SelectMany(c => c.GetAllPlannedEvents());
+            return _calendars.SelectMany(c => c.GetAllPlannedEvents(userId));
         }
 
-        public override IEnumerable<CalendarEvent> GetEventsBetweenDays(DateTime startDate, DateTime endDate)
+        public override IEnumerable<CalendarEvent> GetEventsBetweenDays(Guid userId, DateTime startDate, DateTime endDate)
         {
-            return _calendars.SelectMany(c => c.GetEventsBetweenDays(startDate, endDate));
+            return _calendars.SelectMany(c => c.GetEventsBetweenDays(userId, startDate, endDate));
         }
     }
 }

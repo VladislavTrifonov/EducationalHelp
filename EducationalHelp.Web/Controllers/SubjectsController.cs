@@ -138,6 +138,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpGet("subjects/{id}/lessons")]
+        [Authorize]
         public IActionResult GetLessons(Guid id)
         {
             var lessons = _lessonsService.GetLessonsBySubjectId(id);
@@ -148,6 +149,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpGet("subjects/lessons/{lessonId}")]
+        [Authorize]
         public IActionResult GetLessonById(Guid lessonId)
         {
             try
@@ -163,6 +165,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpPost("subjects/{id}/lessons")]
+        [Authorize]
         public IActionResult AddLesson([FromRoute]Guid id, [FromBody]LessonAddModel lesson)
         {
             var lessonEntity = new Lesson
@@ -175,7 +178,8 @@ namespace EducationalHelp.Web.Controllers
                 SelfMark = Mark.None,
                 Homework = lesson.Homework,
                 Notes = lesson.Notes,
-                SubjectId = id
+                SubjectId = id,
+                UserId = _authService.GetUserIdFromClaims(HttpContext.User.Claims)
             };
 
             try
@@ -191,6 +195,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpPut("subjects/lessons/{lessonId}")]
+        [Authorize]
         public IActionResult UpdateLesson([FromRoute]Guid lessonId, [FromBody]LessonAddModel lessonModel)
         {
             try
@@ -218,6 +223,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpDelete("subjects/lessons/{lessonId}")]
+        [Authorize]
         public IActionResult DeleteLesson(Guid lessonId)
         {
             try
@@ -233,6 +239,7 @@ namespace EducationalHelp.Web.Controllers
 
         [DisableRequestSizeLimit]
         [HttpPost("subjects/lessons/{lessonId}/files")]
+        [Authorize]
         public async Task<IActionResult> LoadFiles([FromRoute]Guid lessonId, [FromForm]IFormFileCollection files)
         {
             try
@@ -257,6 +264,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpGet("subjects/lessons/{lessonId}/files")]
+        [Authorize]
         public IActionResult GetAllFilesByLessonId(Guid lessonId)
         {
             try

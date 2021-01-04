@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Services.Files;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -37,6 +38,7 @@ namespace EducationalHelp.Web.Controllers
         }
 
         [HttpDelete("api/files/{id}")]
+        [Authorize]
         public IActionResult DeleteFile(Guid id)
         {
             try
