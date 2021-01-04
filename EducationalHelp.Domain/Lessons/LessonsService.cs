@@ -72,7 +72,7 @@ namespace EducationalHelp.Services.Lessons
             var lessons = this.GetLessonsBySubjectId(subjectId);
             
             if (lessons.Count == 0)
-                return 0;
+                return -1;
             
             return lessons.Average(l => l.SelfMark.GetDigitOfMark());
         }
@@ -84,7 +84,7 @@ namespace EducationalHelp.Services.Lessons
                 .AsEnumerable();
             
             if (lessons.Count() == 0)
-                return 0;
+                return -1;
 
             return lessons.Average(l => l.SelfMark.GetDigitOfMark());
         }

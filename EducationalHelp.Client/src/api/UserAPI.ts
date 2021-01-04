@@ -3,6 +3,7 @@ import axios from '@/axiosconf'
 import UserCredentials from "@/api/models/UserCredentials";
 import User from "@/api/models/User";
 import UserRegisterInfo from "@/api/models/UserRegisterInfo";
+import UserStatistics from "@/api/models/UserStatistics";
 
 export default class UserAPI {
     constructor() {
@@ -62,5 +63,15 @@ export default class UserAPI {
                 reject(error);
             });
         })
+    }
+
+    getStatistics(): Promise<UserStatistics> {
+        return new Promise((resolve, reject) => {
+           axios.get("api/profile/statistics").then(response => {
+               resolve(response.data);
+           }).catch(error => {
+               reject(error);
+           })
+        });
     }
 }

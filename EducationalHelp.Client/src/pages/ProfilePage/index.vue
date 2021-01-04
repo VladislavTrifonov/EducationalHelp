@@ -48,7 +48,7 @@
            Предметов
          </b-td>
          <b-td>
-           23
+           {{userStatistics.subjectsCount}}
          </b-td>
        </b-tr>
        <b-tr>
@@ -56,7 +56,7 @@
            Средняя оценка по занятиям (общее)
          </b-td>
          <b-td>
-           3.56
+           {{userStatistics.avgMarkLessonAll}}
          </b-td>
        </b-tr>
      </b-tbody>
@@ -76,12 +76,14 @@
           <b-th>Средняя оценка (по занятиям)</b-th>
         </b-thead>
         <b-tbody>
-          <b-tr>
-            <b-td>1</b-td>
-            <b-td>Алг. и АЯ</b-td>
-            <b-td>1</b-td>
-            <b-td>0 (0%)</b-td>
-            <b-td>5</b-td>
+          <b-tr v-for="(statistic, i) in userStatistics.subjectsStatistics" :key="i*555">
+            <b-td>{{i + 1}}</b-td>
+            <b-td>{{statistic.subjectTitle}}</b-td>
+            <b-td>{{statistic.lessonsCount}}</b-td>
+            <b-td v-if="statistic.lessonsCount == 0">0 (0%)</b-td>
+            <b-td v-else>{{statistic.lessonsMissedCount}} ({{statistic.lessonsMissedCount / statistic.lessonsCount * 100}}%)</b-td>
+            <b-td v-if="statistic.avgLessonsMark == -1">Н/Д</b-td>
+            <b-td v-else>{{statistic.avgLessonsMark}}</b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>

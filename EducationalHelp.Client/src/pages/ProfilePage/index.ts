@@ -5,6 +5,7 @@ import {mapGetters} from "vuex";
 import User from "@/api/models/User";
 import DateTime from '@/components/system/DateTime.vue'
 import UserAPI from "@/api/UserAPI";
+import UserStatistics from "@/api/models/UserStatistics";
 
 @Component({
     components: {
@@ -13,7 +14,8 @@ import UserAPI from "@/api/UserAPI";
     computed: {
         ...mapGetters('user', {
             user: 'getProfileInformation',
-            avatar: 'getAvatarBlob'
+            avatar: 'getAvatarBlob',
+            userStatistics: 'getUserStatistics'
         })
     }
 })
@@ -24,6 +26,7 @@ export default class ProfilePage extends Vue {
     private isEditPseudonym: boolean;
     private newPseudonym: string;
     private avatar!: Blob;
+    private userStatistics!: UserStatistics;
 
     constructor() {
         super();

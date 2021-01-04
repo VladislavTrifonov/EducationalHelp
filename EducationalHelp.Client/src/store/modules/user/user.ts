@@ -5,6 +5,7 @@ import { Response } from '../ErrorProcessing';
 import AccessToken from "@/api/models/AccessToken";
 import User from "@/api/models/User";
 import UserRegisterInfo from "@/api/models/UserRegisterInfo";
+import UserStatistics from "@/api/models/UserStatistics";
 
 
 const getters: GetterTree<UserState, RootState> = {
@@ -23,6 +24,10 @@ const getters: GetterTree<UserState, RootState> = {
 
     getAvatarBlob: state => {
         return state.userDownloadedAvatar;
+    },
+
+    getUserStatistics: state => {
+        return state.userStatistics;
     }
 };
 
@@ -48,6 +53,10 @@ const mutations: MutationTree<UserState> = {
 
     updateDownloadedAvatar: (state, data) => {
         state.userDownloadedAvatar = new Blob([data], { type: 'image/png' });
+    },
+
+    updateUserStatistics: (state, statistics: UserStatistics) => {
+        state.userStatistics = statistics;
     }
 };
 
@@ -64,6 +73,7 @@ const actions: ActionTree<UserState, RootState> = {
         return Response.fromPromise(state.state.api.getProfileInformation(), user => {
             state.commit("setProfileInformation", user);
             state.dispatch("downloadUserAvatar", user);
+            state.dispatch("getStatistics");
         });
     },
 
@@ -87,6 +97,12 @@ const actions: ActionTree<UserState, RootState> = {
     downloadUserAvatar: (state, user: User) => {
         return Response.fromPromise(state.state.api.downloadAvatar(user.avatarLink), data => {
            state.commit("updateDownloadedAvatar", data)
+        });
+    },
+
+    getStatistics: (state) => {
+        return Response.fromPromise(state.state.api.getStatistics(), statistics => {
+           state.commit("updateUserStatistics", statistics);
         });
     }
 };
