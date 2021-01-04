@@ -43,6 +43,11 @@ instance.interceptors.response.use(response => {
 
 instance.interceptors.response.use(response => response, error => {
     if (error.response.status == 401) {
+
+        if (vue.$store.getters["user/isAuthenticated"]) {
+            vue.$store.commit("user/logout");
+        }
+
         vue.$router.push({
             name: 'loginView',
             params: {
