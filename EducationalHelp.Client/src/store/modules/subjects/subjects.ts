@@ -6,6 +6,7 @@ import { Response } from '../ErrorProcessing';
 import SubjectsState from './state';
 import RootState from '../../rootstate';
 import Subject from '../../../api/models/Subject';
+import SubjectsAPI from "@/api/SubjectsAPI";
 
 
 const getters: GetterTree<SubjectsState, RootState> = {
@@ -36,33 +37,33 @@ const mutations: MutationTree<SubjectsState> = {
 
 const actions: ActionTree<SubjectsState, RootState> = {
     fetchSubjects: (state, rootstate) => {
-        return Response.fromPromise(state.state.api.getAllSubjects(), result => {
+        return Response.fromPromise(SubjectsAPI.getAllSubjects(), result => {
             state.commit("addSubjects", result);
         });
     },
     
     fetchSubject: (state, id) => {
-        return Response.fromPromise(state.state.api.getSubject(id),
+        return Response.fromPromise(SubjectsAPI.getSubject(id),
             response => {
                 state.commit("addSubject", response);
         });
     },
 
     addSubject: (state, subject) => {
-        return Response.fromPromise(state.state.api.addSubject(subject), response => {
+        return Response.fromPromise(SubjectsAPI.addSubject(subject), response => {
             state.commit("addSubject", response);
         });
     },
 
     updateSubject: (state, subject: Subject) => {
-        return Response.fromPromise(state.state.api.updateSubject(subject, subject.id), response => {
+        return Response.fromPromise(SubjectsAPI.updateSubject(subject, subject.id), response => {
             state.commit("deleteSubject", subject);
             state.commit("addSubject", response);
         });
     },
 
     deleteSubject: (state, subject: Subject) => {
-        return Response.fromPromise(state.state.api.deleteSubject(subject.id), response => {
+        return Response.fromPromise(SubjectsAPI.deleteSubject(subject.id), response => {
             state.commit("deleteSubject", subject);
         });
     }

@@ -9,7 +9,7 @@ export default class UserAPI {
     constructor() {
     }
 
-    getAccessToken(credentials: UserCredentials): Promise<AccessToken> {
+    static getAccessToken(credentials: UserCredentials): Promise<AccessToken> {
         return new Promise<AccessToken>((resolve, reject) => {
            axios.post("api/auth/token", credentials).then(response => {
                resolve(response.data);
@@ -19,7 +19,7 @@ export default class UserAPI {
         });
     }
 
-    getProfileInformation(): Promise<User> {
+    static getProfileInformation(): Promise<User> {
         return new Promise<User>((resolve, reject) => {
            axios.get("api/profile/me").then(response => {
                resolve(response.data);
@@ -29,7 +29,7 @@ export default class UserAPI {
         });
     }
 
-    register(credentials: UserRegisterInfo): Promise<AccessToken> {
+    static register(credentials: UserRegisterInfo): Promise<AccessToken> {
         return new Promise((resolve, reject) => {
             axios.post("api/auth/register", credentials).then(response => {
                 resolve(response.data)
@@ -39,7 +39,7 @@ export default class UserAPI {
         });
     }
 
-    updateProfile(user: User, avatar: File): Promise<User> {
+    static updateProfile(user: User, avatar: File): Promise<User> {
         return new Promise((resolve, reject) => {
             let fd = new FormData();
             fd.append("pseudonym", user.pseudonym);
@@ -53,7 +53,7 @@ export default class UserAPI {
         })
     }
 
-    downloadAvatar(downloadLink: string): Promise<any> {
+    static downloadAvatar(downloadLink: string): Promise<any> {
         return new Promise((resolve, reject) => {
             axios.get(downloadLink, {
                 responseType: "arraybuffer"
@@ -65,7 +65,7 @@ export default class UserAPI {
         })
     }
 
-    getStatistics(): Promise<UserStatistics> {
+    static getStatistics(): Promise<UserStatistics> {
         return new Promise((resolve, reject) => {
            axios.get("api/profile/statistics").then(response => {
                resolve(response.data);

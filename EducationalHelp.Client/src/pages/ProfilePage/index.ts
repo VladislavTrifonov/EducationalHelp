@@ -38,6 +38,10 @@ export default class ProfilePage extends Vue {
         return URL.createObjectURL(this.avatar);
     }
 
+    mounted() {
+        this.$store.dispatch("user/loadProfileInformation");
+    }
+
     setAvatar(event: any) {
         let file = event.target.files[0];
         if (file == null)

@@ -6,6 +6,7 @@ import AccessToken from "@/api/models/AccessToken";
 import User from "@/api/models/User";
 import UserRegisterInfo from "@/api/models/UserRegisterInfo";
 import UserStatistics from "@/api/models/UserStatistics";
+import UserAPI from "@/api/UserAPI";
 
 
 const getters: GetterTree<UserState, RootState> = {
@@ -63,14 +64,14 @@ const mutations: MutationTree<UserState> = {
 // @ts-ignore
 const actions: ActionTree<UserState, RootState> = {
     authorize: (state, credentials) => {
-        return Response.fromPromise(state.state.api.getAccessToken(credentials), token => {
+        return Response.fromPromise(UserAPI.getAccessToken(credentials), token => {
             state.commit("login", token);
             state.dispatch("loadProfileInformation");
         });
     },
 
     loadProfileInformation: (state) => {
-        return Response.fromPromise(state.state.api.getProfileInformation(), user => {
+        return Response.fromPromise(UserAPI.getProfileInformation(), user => {
             state.commit("setProfileInformation", user);
             state.dispatch("downloadUserAvatar", user);
             state.dispatch("getStatistics");
@@ -78,14 +79,14 @@ const actions: ActionTree<UserState, RootState> = {
     },
 
     register: (state, credentials: UserRegisterInfo) => {
-        return Response.fromPromise(state.state.api.register(credentials), token => {
+        return Response.fromPromise(UserAPI.register(credentials), token => {
             state.commit("login", token);
             state.dispatch("loadProfileInformation");
 
         });
     },
     updateProfile: (state: any, data: { user: User, avatar: File }) => {
-        return Response.fromPromise(state.state.api.updateProfile(data.user, data.avatar), user => {
+        return Response.fromPromise(UserAPI.updateProfile(data.user, data.avatar), user => {
             state.commit("setProfileInformation", user);
             if (data.avatar != null) {
                 state.commit("updateDownloadedAvatar", data.avatar);
@@ -95,13 +96,13 @@ const actions: ActionTree<UserState, RootState> = {
     },
 
     downloadUserAvatar: (state, user: User) => {
-        return Response.fromPromise(state.state.api.downloadAvatar(user.avatarLink), data => {
+        return Response.fromPromise(UserAPI.downloadAvatar(user.avatarLink), data => {
            state.commit("updateDownloadedAvatar", data)
         });
     },
 
     getStatistics: (state) => {
-        return Response.fromPromise(state.state.api.getStatistics(), statistics => {
+        return Response.fromPromise(UserAPI.getStatistics(), statistics => {
            state.commit("updateUserStatistics", statistics);
         });
     }
