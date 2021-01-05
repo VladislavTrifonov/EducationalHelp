@@ -13,13 +13,15 @@ namespace EducationalHelp.Services.Profile
     {
         private readonly IRepository<User> _usersRepository;
         private readonly IRepository<UserFiles> _userFilesRepository;
+        private readonly IRepository<GroupUsers> _groupUsersRepository;
         private readonly FilesService _filesService;
 
-        public UserService(IRepository<User> usersRepository, IRepository<UserFiles> userFilesRepository, FilesService filesService)
+        public UserService(IRepository<User> usersRepository, IRepository<UserFiles> userFilesRepository, FilesService filesService, IRepository<GroupUsers> groupUsersRepository)
         {
             _usersRepository = usersRepository;
             _userFilesRepository = userFilesRepository;
             _filesService = filesService;
+            _groupUsersRepository = groupUsersRepository;
         }
 
         public User GetUserByName(string login)
@@ -74,6 +76,15 @@ namespace EducationalHelp.Services.Profile
         public void AddUser(User user)
         {
             _usersRepository.Insert(user);
+        }
+
+        public bool IsMemberOfGroup(Guid userId, Guid groupId)
+        {
+            var groupUserRecords = from gu in _groupUsersRepository.AllData
+                        where gu.UserId == userId && gu.GroupId == groupId
+                        select gu;
+
+            return groupUserRecords.Count() != 0;
         }
     }
 }

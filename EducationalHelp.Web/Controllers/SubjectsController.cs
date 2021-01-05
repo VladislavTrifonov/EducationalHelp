@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Authorization;
 using EducationalHelp.Services.Profile;
+using EducationalHelp.Web.Controllers.Extensions;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -27,20 +28,20 @@ namespace EducationalHelp.Web.Controllers
         private readonly SubjectsService _subjectsService;
         private readonly LessonsService _lessonsService;
         private readonly FilesService _filesService;
+        private readonly UserService _userService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly JwtAuthenticationService _authService;
 
         public SubjectsController(SubjectsService subjectsService,
             LessonsService lessonsService,
             FilesService filesService,
             IWebHostEnvironment webHostEnvironment,
-            JwtAuthenticationService authService)
+            UserService userService)
         {
             _subjectsService = subjectsService;
             _lessonsService = lessonsService;
             _filesService = filesService;
             _webHostEnvironment = webHostEnvironment;
-            _authService = authService;
+            _userService = userService;
         }
 
         [HttpGet("subjects/{id}")]
@@ -48,9 +49,10 @@ namespace EducationalHelp.Web.Controllers
         public IActionResult GetSubjectById(Guid id)
         {
             var subject = _subjectsService.GetSubject(id);
-            if (subject.UserId != _authService.GetUserIdFromClaims(HttpContext.User.Claims))
+            
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), subject.GroupId))
             {
-                return Forbid();
+                return this.ForbidGroup();
             }
 
             return Ok(subject);
@@ -60,6 +62,11 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult GetAllSubjects(Guid groupId)
         {
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return this.ForbidGroup();
+            }
+
             var subjects = _subjectsService.GetAllSubjects(groupId);
             return Ok(subjects);
         }
@@ -68,12 +75,18 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult CreateSubject(SubjectAddModel subject)
         {
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), subject.GroupId)) 
+            {
+                return this.ForbidGroup();
+            }
+
             var subjEntity = new Subject
             {
                 Name = subject.Name,
                 Teacher = subject.Teacher,
                 Description = subject.Description,
-                UserId = _authService.GetUserIdFromClaims(HttpContext.User.Claims)
+                UserId = this.GetUserId(),
+                GroupId = subject.GroupId
             };
             
             try
@@ -102,9 +115,9 @@ namespace EducationalHelp.Web.Controllers
                 return NotFound();
             }
 
-            if (resolvedSubject.UserId != _authService.GetUserIdFromClaims(HttpContext.User.Claims))
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), resolvedSubject.GroupId))
             {
-                return Forbid();
+                return this.ForbidGroup();
             }
 
             resolvedSubject.Name = subject.Name;
@@ -123,9 +136,9 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var subject = _subjectsService.GetSubject(id);
-                if (subject.UserId != _authService.GetUserIdFromClaims(HttpContext.User.Claims))
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), subject.GroupId))
                 {
-                    return Forbid();
+                    return this.ForbidGroup();
                 }
                 _subjectsService.DeleteSubject(id);
             }
@@ -141,6 +154,12 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult GetLessons(Guid id)
         {
+            var groupId = _subjectsService.GetGroupIdFromSubjectId(id);
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return this.ForbidGroup();
+            }
+
             var lessons = _lessonsService.GetLessonsBySubjectId(id);
             if (!lessons.Any())
                 return NotFound();
@@ -155,6 +174,12 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
 
                 return Ok(lesson);
             }
@@ -168,6 +193,12 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult AddLesson([FromRoute]Guid id, [FromBody]LessonAddModel lesson)
         {
+            var groupId = _subjectsService.GetGroupIdFromSubjectId(id);
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return this.ForbidGroup();
+            }
+
             var lessonEntity = new Lesson
             {
                 Title = lesson.Title,
@@ -179,7 +210,7 @@ namespace EducationalHelp.Web.Controllers
                 Homework = lesson.Homework,
                 Notes = lesson.Notes,
                 SubjectId = id,
-                UserId = _authService.GetUserIdFromClaims(HttpContext.User.Claims)
+                UserId = this.GetUserId()
             };
 
             try
@@ -201,6 +232,12 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
 
                 lesson.Title = lessonModel.Title;
                 lesson.Label = lessonModel.Label;
@@ -228,6 +265,13 @@ namespace EducationalHelp.Web.Controllers
         {
             try
             {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
                 _lessonsService.DeleteLesson(lessonId);
                 return Ok();
             }
@@ -245,6 +289,12 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
 
                 foreach (var formFile in files)
                 {
@@ -270,6 +320,12 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
                 var files = lesson.LessonFiles.Select(lf => new 
                 {
                     lf.File.Id,

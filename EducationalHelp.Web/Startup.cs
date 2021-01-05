@@ -24,6 +24,8 @@ using EducationalHelp.Services;
 using EducationalHelp.Web.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EducationalHelp.Services.Profile;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
 
 namespace EducationalHelp.Web
 {
@@ -89,6 +91,7 @@ namespace EducationalHelp.Web
             builder.RegisterType<ApplicationContext>().As<DbContext>().InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
             builder.RegisterModule(new ServicesAutofacModule());
+
         }
 
 
@@ -97,6 +100,9 @@ namespace EducationalHelp.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+            var csl = new AutofacServiceLocator(AutofacContainer);
+            ServiceLocator.SetLocatorProvider(() => csl);
+
 
             if (env.IsDevelopment() && Configuration["SeedDatabase"]  == "true")
             {

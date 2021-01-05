@@ -23,21 +23,18 @@ namespace EducationalHelp.Web.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
-        private readonly JwtAuthenticationService _authService;
         private readonly FilesService _filesService;
         private readonly SubjectsService _subjectsService;
         private readonly LessonsService _lessonsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public UserController(UserService userService,
-            JwtAuthenticationService authService,
             FilesService filesService,
             IWebHostEnvironment webHostEnvironment,
             SubjectsService subjectsService,
             LessonsService lessonsService)
         {
             _userService = userService;
-            _authService = authService;
             _filesService = filesService;
             _webHostEnvironment = webHostEnvironment;
             _subjectsService = subjectsService;
@@ -50,7 +47,7 @@ namespace EducationalHelp.Web.Controllers
         {
             try
             {
-                var user = _userService.GetUserById(_authService.GetUserIdFromClaims(HttpContext.User.Claims));
+                var user = _userService.GetUserById(this.GetUserId());
                 var avatar = _userService.GetUserAvatar(user.Id);
 
                 var outputModel = new UserOutputModel
@@ -82,7 +79,7 @@ namespace EducationalHelp.Web.Controllers
         {
             try
             {
-                var user = _userService.GetUserById(_authService.GetUserIdFromClaims(HttpContext.User.Claims));
+                var user = _userService.GetUserById(this.GetUserId());
 
                 user.Pseudonym = userModel.Pseudonym;
 
@@ -124,7 +121,7 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult GetUserStatistics()
         {
-            var userId = _authService.GetUserIdFromClaims(HttpContext.User.Claims);
+            var userId = this.GetUserId();
             var subjects = _subjectsService.GetAllSubjects(userId);
 
             var subjectStatistic = new List<UserStatisticsSubject>();

@@ -68,5 +68,20 @@ namespace EducationalHelp.Services.Subjects
                 .Where(s => s.UserId == userId)
                 .Count();
         }
+
+        public Guid GetGroupIdFromSubjectId(Guid subjectId)
+        {
+            var groupId = (from s in _subjectsRepository.AllData
+                           where s.Id == subjectId
+                           select s.GroupId)
+                           .FirstOrDefault();
+            
+            if (groupId == default)
+            {
+                throw new ResourceNotFoundException($"Subject with id {subjectId} wasn't found");
+            }
+
+            return groupId;
+        }
     }
 }
