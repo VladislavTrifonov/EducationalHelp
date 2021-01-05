@@ -12,6 +12,10 @@ namespace EducationalHelp.Core.Entities
         [JsonIgnore]
         public virtual User User { get; set; }
 
+        public Guid GroupId { get; set; }
+        [JsonIgnore]
+        public virtual Group Group { get; set; }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public string Teacher { get; set; }

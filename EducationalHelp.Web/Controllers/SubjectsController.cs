@@ -58,9 +58,9 @@ namespace EducationalHelp.Web.Controllers
 
         [HttpGet("subjects")]
         [Authorize]
-        public IActionResult GetAllSubjects()
+        public IActionResult GetAllSubjects(Guid groupId)
         {
-            var subjects = _subjectsService.GetAllSubjects(_authService.GetUserIdFromClaims(HttpContext.User.Claims));
+            var subjects = _subjectsService.GetAllSubjects(groupId);
             return Ok(subjects);
         }
 
