@@ -43,12 +43,27 @@ namespace EducationalHelp.Data.Seeding
                 new User() { Id = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"), Pseudonym = "Жмышенко Валерий", Login = "admin", PassHash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3" }
             };
 
+            var group = new Group()
+            {
+                Id = new Guid("B5BF64C2-133C-4F06-9478-60EA97166AF6"),
+                Title = "19ВМ1_ПГУ",
+                Description = "Тестовая группа"
+            };
+
+            var groupUser = new GroupUsers()
+            {
+                Id = Guid.NewGuid(),
+                UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"),
+                GroupId = new Guid("B5BF64C2-133C-4F06-9478-60EA97166AF6")
+            };
+
             builder.Entity<Subject>().HasData(subjects);
             builder.Entity<Lesson>().HasData(testLessons);
             builder.Entity<File>().HasData(testFile);
             builder.Entity<LessonFiles>().HasData(lessonFile);
             builder.Entity<User>().HasData(users);
-
+            builder.Entity<Group>().HasData(group);
+            builder.Entity<GroupUsers>().HasData(groupUser);
 
         }
     }
