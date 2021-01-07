@@ -26,7 +26,5 @@ namespace EducationalHelp.Web.Models.Lessons
         public string Homework { get; set; }
         public string Notes { get; set; }
 
-        public bool IsVisited { get; set; } = false;
-        public Mark SelfMark { get; set; } = Mark.None; 
     }
 }

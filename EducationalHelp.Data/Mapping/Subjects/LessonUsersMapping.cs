@@ -19,6 +19,8 @@ namespace EducationalHelp.Data.Mapping.Subjects
                 .WithMany(u => u.LessonUsers)
                 .HasForeignKey(lu => lu.UserId);
 
+            builder.Property(lu => lu.IsVisited).HasDefaultValue(false);
+            builder.Property(lu => lu.Mark).HasDefaultValue(Mark.None);
 
             base.Map(builder);
         }

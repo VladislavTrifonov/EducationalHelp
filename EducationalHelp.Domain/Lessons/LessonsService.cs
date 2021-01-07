@@ -103,25 +103,30 @@ namespace EducationalHelp.Services.Lessons
             return id;
         }
 
-        public double GetAvgLessonMarkBySubject(Guid subjectId)
+        public double GetAvgLessonMarkBySubject(Guid subjectId, Guid userId)
         {
-            var lessons = this.GetLessonsBySubjectId(subjectId);
+            var lessons = (from lu in _lessonUsersRepository.AllData
+                           where lu.UserId == userId
+                           join l in _lessonRepository.AllData on lu.LessonId equals l.Id
+                           where l.SubjectId == subjectId
+                           select lu)
+                          .AsEnumerable();
             
-            if (lessons.Count == 0)
+            if (lessons.Count() == 0)
                 return -1;
             
-            return lessons.Average(l => l.SelfMark.GetDigitOfMark());
+            return lessons.Average(lu => lu.Mark.GetDigitOfMark());
         }
 
 
         public double GetAvgLessonMarkByUser(Guid userId)
         {
-            var lessons = GetLessonsByUser(userId);
+            var lessons = _lessonUsersRepository.AllData.Where(lu => lu.UserId == userId).AsEnumerable();
             
             if (lessons.Count() == 0)
                 return -1;
 
-            return lessons.Average(l => l.SelfMark.GetDigitOfMark());
+            return lessons.Average(lu => lu.Mark.GetDigitOfMark());
         }
 
         public int GetNumberOfLessonsBySubject(Guid subjectId)
@@ -131,11 +136,15 @@ namespace EducationalHelp.Services.Lessons
                 .Count();
         }
 
-        public int GetMissedLessonsCountBySubject(Guid subjectId)
+        public int GetMissedLessonsCountBySubject(Guid subjectId, Guid userId)
         {
-            return _lessonRepository.AllData
-                .Where(l => l.SubjectId == subjectId && l.IsVisited == false)
-                .Count();
+            var missedLessons = from lu in _lessonUsersRepository.AllData
+                    where lu.UserId == userId
+                    join l in _lessonRepository.AllData on lu.LessonId equals l.Id
+                    where l.SubjectId == subjectId && lu.IsVisited == false
+                    select lu.Id;
+
+            return missedLessons.Count();
         }
 
         public void AddParticipant(Guid lessonId, Guid userId)
@@ -161,14 +170,24 @@ namespace EducationalHelp.Services.Lessons
             return _lessonUsersRepository.AllData.Any(lu => lu.LessonId == lessonId && lu.UserId == userId);
         }
 
-        public IEnumerable<User> GetLessonParticipants(Guid lessonId)
+        public IEnumerable<LessonUsers> GetLessonParticipants(Guid lessonId)
         {
             var users = from lu in _lessonUsersRepository.AllData
                         where lu.LessonId == lessonId
                         join u in _usersRepository.AllData on lu.UserId equals u.Id
-                        select u;
+                        select lu;
 
             return users.AsEnumerable();
+        }
+
+        public void UpdateParticipant(LessonUsers lessonUser)
+        {
+            if (lessonUser == null)
+            {
+                throw new ArgumentNullException(nameof(lessonUser));
+            }
+
+            _lessonUsersRepository.Update(lessonUser);
         }
     }
 }

@@ -131,9 +131,9 @@ namespace EducationalHelp.Web.Controllers
                 var statistic = new UserStatisticsSubject
                 {
                     SubjectTitle = subject.Name,
-                    AvgLessonsMark = _lessonsService.GetAvgLessonMarkBySubject(subject.Id),
+                    AvgLessonsMark = _lessonsService.GetAvgLessonMarkBySubject(subject.Id, this.GetUserId()),
                     LessonsCount = _lessonsService.GetNumberOfLessonsBySubject(subject.Id),
-                    LessonsMissedCount = _lessonsService.GetMissedLessonsCountBySubject(subject.Id)
+                    LessonsMissedCount = _lessonsService.GetMissedLessonsCountBySubject(subject.Id, this.GetUserId())
                 };
 
                 subjectStatistic.Add(statistic);

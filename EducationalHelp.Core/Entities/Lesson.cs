@@ -13,10 +13,7 @@ namespace EducationalHelp.Core.Entities
 
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
-
-        public bool IsVisited { get; set; }
-        public Mark SelfMark { get; set; }
-
+            
         public string Homework { get; set; }
 
         public string Notes { get; set; }

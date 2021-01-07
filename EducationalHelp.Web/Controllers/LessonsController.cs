@@ -81,7 +81,6 @@ namespace EducationalHelp.Web.Controllers
                 Description = lesson.Description,
                 DateStart = lesson.DateStart,
                 DateEnd = lesson.DateEnd,
-                SelfMark = Mark.None,
                 Homework = lesson.Homework,
                 Notes = lesson.Notes,
                 SubjectId = id
@@ -120,8 +119,6 @@ namespace EducationalHelp.Web.Controllers
                 lesson.DateStart = lessonModel.DateStart;
                 lesson.Homework = lessonModel.Homework;
                 lesson.Notes = lessonModel.Notes;
-                lesson.SelfMark = lessonModel.SelfMark;
-                lesson.IsVisited = lessonModel.IsVisited;
 
                 _lessonsService.UpdateLesson(lesson);
                 return Ok(lesson);
@@ -239,7 +236,12 @@ namespace EducationalHelp.Web.Controllers
                 return this.ForbidGroup();
             }
 
-            var participants = _lessonsService.GetLessonParticipants(lessonId);
+            var participants = _lessonsService.GetLessonParticipants(lessonId).Select(l => new ParticipantModel()
+            {
+                UserId = l.UserId,
+                IsVisited = l.IsVisited,
+                Mark = l.Mark
+            });
 
             return new ObjectResult(participants);
         }
@@ -283,6 +285,38 @@ namespace EducationalHelp.Web.Controllers
             }
 
             _lessonsService.RemoveParticipant(lessonId, userId);
+
+            return Ok();
+        }
+
+        [HttpPut("subjects/lessons/{lessonId}/participants/{userId}")]
+        [Authorize]
+        public IActionResult UpdateParticipant([FromRoute] Guid lessonId, [FromBody] ParticipantModel participant)
+        {
+            if (!_lessonsService.IsExist(lessonId))
+            {
+                return NotFound(lessonId);
+            }
+
+            if (!_lessonsService.IsUserParticipate(lessonId, participant.UserId))
+            {
+                return BadRequest(participant.UserId);
+            }
+
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
+            {
+                return this.ForbidGroup();
+            }
+
+            var lessonUser = new LessonUsers()
+            {
+                UserId = participant.UserId,
+                LessonId = lessonId,
+                IsVisited = participant.IsVisited,
+                Mark = participant.Mark
+            };
+
+            _lessonsService.UpdateParticipant(lessonUser);
 
             return Ok();
         }

@@ -15,8 +15,6 @@ namespace EducationalHelp.Data.Mapping.Subjects
             builder.Property(l => l.Description);
             builder.Property(l => l.DateStart).IsRequired();
             builder.Property(l => l.DateEnd).IsRequired();
-            builder.Property(l => l.IsVisited);
-            builder.Property(l => l.SelfMark);
             builder.Property(l => l.Homework);
             builder.Property(l => l.Notes);
             builder.HasOne(l => l.Subject).WithMany(s => s.Lessons).HasForeignKey(l => l.SubjectId);
