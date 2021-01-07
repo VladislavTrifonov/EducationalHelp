@@ -7,10 +7,6 @@ namespace EducationalHelp.Core.Entities
 {
     public class Lesson : BaseEntity
     {
-        public Guid UserId { get; set; }
-        [JsonIgnore]
-        public virtual User User { get; set; }
-
         public string Title { get; set; }
         public string Label { get; set; }
         public string Description { get; set; }
@@ -33,9 +29,13 @@ namespace EducationalHelp.Core.Entities
         [JsonIgnore]
         public virtual ICollection<LessonFiles> LessonFiles { get; set; }
 
+        [JsonIgnore]
+        public virtual ICollection<LessonUsers> LessonUsers { get; set; }
+
         public Lesson()
         {
             LessonFiles = new HashSet<LessonFiles>();
+            LessonUsers = new HashSet<LessonUsers>();
         }
     }
 }

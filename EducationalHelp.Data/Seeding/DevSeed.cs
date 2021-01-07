@@ -13,7 +13,7 @@ namespace EducationalHelp.Data.Seeding
         public static void Seed(ModelBuilder builder)
         {
             var testLessons = new List<Lesson>();
-            testLessons.Add(new Lesson() { Id = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE"), UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"), SubjectId = new Guid("FE3E3D54-E538-47AF-914B-F7B621F395F5"), DateStart = DateTime.Now, DateEnd = DateTime.Now.AddDays(3), Description = "Test", Homework = "nichego", IsVisited = false, Label = "edu", Notes = "nothing", SelfMark = Mark.Satisfactory, Title = "test lesson"});
+            testLessons.Add(new Lesson() { Id = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE"), SubjectId = new Guid("FE3E3D54-E538-47AF-914B-F7B621F395F5"), DateStart = DateTime.Now, DateEnd = DateTime.Now.AddDays(3), Description = "Test", Homework = "nichego", IsVisited = false, Label = "edu", Notes = "nothing", SelfMark = Mark.Satisfactory, Title = "test lesson"});
 
             var testFile = new File()
             {
@@ -55,6 +55,13 @@ namespace EducationalHelp.Data.Seeding
                 Id = Guid.NewGuid(),
                 UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"),
                 GroupId = new Guid("B5BF64C2-133C-4F06-9478-60EA97166AF6")
+            };
+
+            var lessonUser = new LessonUsers()
+            {
+                Id = Guid.NewGuid(),
+                UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"),
+                LessonId = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE")
             };
 
             builder.Entity<Subject>().HasData(subjects);

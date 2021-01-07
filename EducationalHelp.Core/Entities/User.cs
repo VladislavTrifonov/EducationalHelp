@@ -17,5 +17,8 @@ namespace EducationalHelp.Core.Entities
 
         [JsonIgnore]
         public virtual ICollection<GroupUsers> GroupUsers { get; set; } = new HashSet<GroupUsers>();
+
+        [JsonIgnore]
+        public virtual ICollection<LessonUsers> LessonUsers { get; set; } = new HashSet<LessonUsers>();
     }
 }

@@ -209,8 +209,7 @@ namespace EducationalHelp.Web.Controllers
                 SelfMark = Mark.None,
                 Homework = lesson.Homework,
                 Notes = lesson.Notes,
-                SubjectId = id,
-                UserId = this.GetUserId()
+                SubjectId = id
             };
 
             try

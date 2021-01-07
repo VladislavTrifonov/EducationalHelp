@@ -17,8 +17,8 @@ namespace EducationalHelp.Services.Lessons
             _lessonRepository = lessonRepository;
         }
 
-        public List<Lesson> GetAllLessons(Guid userId)
-            => _lessonRepository.AllData.Where(l => l.UserId == userId).ToList();
+        public List<Lesson> GetAllLessons(Guid groupId)
+            => _lessonRepository.AllData.ToList();
 
         public Lesson GetLessonById(Guid id)
         {
@@ -32,14 +32,12 @@ namespace EducationalHelp.Services.Lessons
 
         public ICollection<Lesson> GetLessonsBySubjectId(Guid id)
         {
-            var lessons = _lessonRepository.AllData.Where(l => l.SubjectId == id).ToHashSet();
-            
-            return lessons; 
+            throw new NotImplementedException("Method has been removed :("); 
         }
 
         public IEnumerable<Lesson> GetLessonsByUser(Guid userId)
         {
-            return _lessonRepository.AllData.Where(l => l.UserId == userId);
+            throw new NotImplementedException("Method has been removed :(");
         }
 
         public Lesson CreateLesson(Lesson lesson)
