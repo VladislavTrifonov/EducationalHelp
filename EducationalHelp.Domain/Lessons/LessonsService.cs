@@ -11,14 +11,26 @@ namespace EducationalHelp.Services.Lessons
     public class LessonsService
     {
         private readonly IRepository<Lesson> _lessonRepository;
+        private readonly IRepository<LessonUsers> _lessonUsersRepository;
+        private readonly IRepository<Subject> _subjectsRepository;
 
-        public LessonsService(IRepository<Lesson> lessonRepository)
+        public LessonsService(IRepository<Lesson> lessonRepository, IRepository<LessonUsers> lessonUsersRepository, IRepository<Subject> subjectRepository)
         {
             _lessonRepository = lessonRepository;
+            _lessonUsersRepository = lessonUsersRepository;
+            _subjectsRepository = subjectRepository;
         }
 
-        public List<Lesson> GetAllLessons(Guid groupId)
-            => _lessonRepository.AllData.ToList();
+       public List<Lesson> GetLessonsByGroup(Guid groupId)
+        {
+            var lessons = (from subjects in _subjectsRepository.AllData
+                          where subjects.GroupId == groupId
+                          join l in _lessonRepository.AllData on subjects.Id equals l.SubjectId
+                          select l)
+                          .ToList();
+
+            return lessons;
+        }
 
         public Lesson GetLessonById(Guid id)
         {
@@ -32,12 +44,20 @@ namespace EducationalHelp.Services.Lessons
 
         public ICollection<Lesson> GetLessonsBySubjectId(Guid id)
         {
-            throw new NotImplementedException("Method has been removed :("); 
+            var lessons = _lessonRepository.AllData.Where(l => l.SubjectId == id).ToHashSet();
+            
+            return lessons; 
         }
 
         public IEnumerable<Lesson> GetLessonsByUser(Guid userId)
         {
-            throw new NotImplementedException("Method has been removed :(");
+            var lessons = (from lu in _lessonUsersRepository.AllData
+                          where lu.UserId == userId
+                          join l in _lessonRepository.AllData on lu.LessonId equals l.Id
+                          select l)
+                          .AsEnumerable();
+
+            return lessons;
         }
 
         public Lesson CreateLesson(Lesson lesson)

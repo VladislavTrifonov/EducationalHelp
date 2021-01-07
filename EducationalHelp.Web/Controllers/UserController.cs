@@ -119,10 +119,10 @@ namespace EducationalHelp.Web.Controllers
 
         [HttpGet("api/profile/statistics")]
         [Authorize]
-        public IActionResult GetUserStatistics()
+        public IActionResult GetUserStatistics(Guid groupId)
         {
             var userId = this.GetUserId();
-            var subjects = _subjectsService.GetAllSubjects(userId);
+            var subjects = _subjectsService.GetAllSubjects(groupId);
 
             var subjectStatistic = new List<UserStatisticsSubject>();
 
