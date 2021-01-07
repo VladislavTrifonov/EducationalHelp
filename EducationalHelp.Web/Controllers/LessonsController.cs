@@ -1,0 +1,290 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using EducationalHelp.Core.Entities;
+using EducationalHelp.Services.Exceptions;
+using EducationalHelp.Services.Files;
+using EducationalHelp.Services.Lessons;
+using EducationalHelp.Services.Profile;
+using EducationalHelp.Services.Subjects;
+using EducationalHelp.Web.Controllers.Extensions;
+using EducationalHelp.Web.Models.Lessons;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EducationalHelp.Web.Controllers
+{
+    [Route("api")]
+    [ApiController]
+    public class LessonsController : ControllerBase
+    {
+        private readonly SubjectsService _subjectsService;
+        private readonly LessonsService _lessonsService;
+        private readonly FilesService _filesService;
+        private readonly UserService _userService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+        public LessonsController(SubjectsService subjectsService,
+            LessonsService lessonsService,
+            FilesService filesService,
+            IWebHostEnvironment webHostEnvironment,
+            UserService userService)
+        {
+            _subjectsService = subjectsService;
+            _lessonsService = lessonsService;
+            _filesService = filesService;
+            _webHostEnvironment = webHostEnvironment;
+            _userService = userService;
+        }
+    
+
+        [HttpGet("subjects/lessons/{lessonId}")]
+        [Authorize]
+        public IActionResult GetLessonById(Guid lessonId)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
+
+                return Ok(lesson);
+            }
+            catch (ServiceException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpPost("subjects/{id}/lessons")]
+        [Authorize]
+        public IActionResult AddLesson([FromRoute] Guid id, [FromBody] LessonAddModel lesson)
+        {
+            var groupId = _subjectsService.GetGroupIdFromSubjectId(id);
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return this.ForbidGroup();
+            }
+
+            var lessonEntity = new Lesson
+            {
+                Title = lesson.Title,
+                Label = lesson.Label,
+                Description = lesson.Description,
+                DateStart = lesson.DateStart,
+                DateEnd = lesson.DateEnd,
+                SelfMark = Mark.None,
+                Homework = lesson.Homework,
+                Notes = lesson.Notes,
+                SubjectId = id
+            };
+
+            try
+            {
+                _lessonsService.CreateLesson(lessonEntity);
+            }
+            catch (ValidationException exp)
+            {
+                return new ObjectResult(exp.ValidationResult);
+            }
+
+            return Ok(lessonEntity);
+        }
+
+        [HttpPut("subjects/lessons/{lessonId}")]
+        [Authorize]
+        public IActionResult UpdateLesson([FromRoute] Guid lessonId, [FromBody] LessonAddModel lessonModel)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
+
+                lesson.Title = lessonModel.Title;
+                lesson.Label = lessonModel.Label;
+                lesson.Description = lessonModel.Description;
+                lesson.DateEnd = lessonModel.DateEnd;
+                lesson.DateStart = lessonModel.DateStart;
+                lesson.Homework = lessonModel.Homework;
+                lesson.Notes = lessonModel.Notes;
+                lesson.SelfMark = lessonModel.SelfMark;
+                lesson.IsVisited = lessonModel.IsVisited;
+
+                _lessonsService.UpdateLesson(lesson);
+                return Ok(lesson);
+            }
+            catch (ServiceException e)
+            {
+                return NotFound(e.Message);
+            }
+
+        }
+
+        [HttpDelete("subjects/lessons/{lessonId}")]
+        [Authorize]
+        public IActionResult DeleteLesson(Guid lessonId)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
+                _lessonsService.DeleteLesson(lessonId);
+                return Ok();
+            }
+            catch (ServiceException)
+            {
+                return NotFound($"Lesson with id {lessonId} wasn't found");
+            }
+        }
+
+        [DisableRequestSizeLimit]
+        [HttpPost("subjects/lessons/{lessonId}/files")]
+        [Authorize]
+        public async Task<IActionResult> LoadFiles([FromRoute] Guid lessonId, [FromForm] IFormFileCollection files)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
+
+                foreach (var formFile in files)
+                {
+                    var (file, fs) = _filesService.CreateNewFile(formFile.FileName, _webHostEnvironment.WebRootPath, formFile.Length);
+                    await formFile.CopyToAsync(fs);
+                    await fs.DisposeAsync();
+                    _filesService.AttachFileToLesson(lesson.Id, file.Id);
+
+                }
+
+                return Ok();
+            }
+            catch (ServiceException)
+            {
+                return NotFound($"Lesson with id {lessonId} wasn't found");
+            }
+        }
+
+        [HttpGet("subjects/lessons/{lessonId}/files")]
+        [Authorize]
+        public IActionResult GetAllFilesByLessonId(Guid lessonId)
+        {
+            try
+            {
+                var lesson = _lessonsService.GetLessonById(lessonId);
+                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
+                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                {
+                    return this.ForbidGroup();
+                }
+
+                var files = lesson.LessonFiles.Select(lf => new
+                {
+                    lf.File.Id,
+                    lf.File.OriginalName,
+                    lf.File.Length,
+                    lf.File.CreatedAt,
+                    lf.File.UpdatedAt,
+                    lf.File.DeletedAt,
+                    LinkToDownload = this.GetDownloadLink(lf.File.Id)
+                }).ToArray();
+
+
+                if (files.Length == 0)
+                {
+                    return NoContent();
+                }
+
+                return new OkObjectResult(files);
+            }
+            catch (ServiceException)
+            {
+                return NotFound(lessonId);
+            }
+        }
+
+        [HttpGet("subjects/lessons/{lessonId}/participants")]
+        [Authorize]
+        public IActionResult GetAllParticipants(Guid lessonId)
+        {
+            if (!_lessonsService.IsExist(lessonId))
+            {
+                return NotFound(lessonId);
+            }
+
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
+            {
+                return this.ForbidGroup();
+            }
+
+            var participants = _lessonsService.GetLessonParticipants(lessonId);
+
+            return new ObjectResult(participants);
+        }
+
+        [HttpPost("subjects/lessons/{lessonId}/participants")]
+        [Authorize]
+        public IActionResult AddParticipant(Guid lessonId, [FromBody]Guid userId)
+        {
+            if (!_lessonsService.IsExist(lessonId))
+            {
+                return NotFound(lessonId);
+            }
+
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
+            {
+                return this.ForbidGroup();
+            }
+
+            _lessonsService.AddParticipant(lessonId, userId);
+
+            return Ok();
+        }
+
+        [HttpDelete("subjects/lessons/{lessonId}/participants/{userId}")]
+        [Authorize]
+        public IActionResult RemoveParticipant(Guid lessonId, Guid userId)
+        {
+            if (!_lessonsService.IsExist(lessonId))
+            {
+                return NotFound(lessonId);
+            }
+
+            if (!_lessonsService.IsUserParticipate(lessonId, userId))
+            {
+                return BadRequest(userId);
+            }
+
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
+            {
+                return this.ForbidGroup();
+            }
+
+            _lessonsService.RemoveParticipant(lessonId, userId);
+
+            return Ok();
+        }
+    }
+}

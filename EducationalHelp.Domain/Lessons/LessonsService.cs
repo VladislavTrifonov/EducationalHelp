@@ -13,12 +13,14 @@ namespace EducationalHelp.Services.Lessons
         private readonly IRepository<Lesson> _lessonRepository;
         private readonly IRepository<LessonUsers> _lessonUsersRepository;
         private readonly IRepository<Subject> _subjectsRepository;
+        private readonly IRepository<User> _usersRepository;
 
-        public LessonsService(IRepository<Lesson> lessonRepository, IRepository<LessonUsers> lessonUsersRepository, IRepository<Subject> subjectRepository)
+        public LessonsService(IRepository<Lesson> lessonRepository, IRepository<LessonUsers> lessonUsersRepository, IRepository<Subject> subjectRepository, IRepository<User> usersRepository)
         {
             _lessonRepository = lessonRepository;
             _lessonUsersRepository = lessonUsersRepository;
             _subjectsRepository = subjectRepository;
+            _usersRepository = usersRepository;
         }
 
        public List<Lesson> GetLessonsByGroup(Guid groupId)
@@ -90,6 +92,17 @@ namespace EducationalHelp.Services.Lessons
             return _lessonRepository.AllData.Any(l => l.Id == id);
         }
 
+        public Guid GetGroupId(Guid lessonId)
+        {
+            var id = (from l in _lessonRepository.AllData
+                      where l.Id == lessonId
+                      join s in _subjectsRepository.AllData on l.SubjectId equals s.Id
+                      select s.GroupId)
+                     .First();
+
+            return id;
+        }
+
         public double GetAvgLessonMarkBySubject(Guid subjectId)
         {
             var lessons = this.GetLessonsBySubjectId(subjectId);
@@ -123,6 +136,39 @@ namespace EducationalHelp.Services.Lessons
             return _lessonRepository.AllData
                 .Where(l => l.SubjectId == subjectId && l.IsVisited == false)
                 .Count();
+        }
+
+        public void AddParticipant(Guid lessonId, Guid userId)
+        {
+            var lessonUser = new LessonUsers()
+            {
+                LessonId = lessonId,
+                UserId = userId
+            };
+
+            _lessonUsersRepository.Insert(lessonUser);
+        }
+
+        public void RemoveParticipant(Guid lessonId, Guid userId)
+        {
+            var lessonUser = _lessonUsersRepository.AllData.First(lu => lu.LessonId == lessonId && lu.UserId == userId);
+
+            _lessonUsersRepository.Delete(lessonUser);
+        }
+
+        public bool IsUserParticipate(Guid lessonId, Guid userId)
+        {
+            return _lessonUsersRepository.AllData.Any(lu => lu.LessonId == lessonId && lu.UserId == userId);
+        }
+
+        public IEnumerable<User> GetLessonParticipants(Guid lessonId)
+        {
+            var users = from lu in _lessonUsersRepository.AllData
+                        where lu.LessonId == lessonId
+                        join u in _usersRepository.AllData on lu.UserId equals u.Id
+                        select u;
+
+            return users.AsEnumerable();
         }
     }
 }
