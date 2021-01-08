@@ -8,7 +8,6 @@ import LessonSinglePage from "@/pages/LessonSinglePage/index.vue";
 import CalendarPage from "@/pages/CalendarPage/index.vue";
 import LoginPage from "@/pages/LoginPage/index.vue";
 import ProfilePage from "@/pages/ProfilePage/index.vue";
-
 Vue.use(VueRouter)
 
 const routes = [

@@ -4,6 +4,7 @@ import UserCredentials from "@/api/models/UserCredentials";
 import User from "@/api/models/User";
 import UserRegisterInfo from "@/api/models/UserRegisterInfo";
 import UserStatistics from "@/api/models/UserStatistics";
+import Group from "@/api/models/Group";
 
 export default class UserAPI {
     constructor() {
@@ -65,9 +66,23 @@ export default class UserAPI {
         })
     }
 
-    static getStatistics(): Promise<UserStatistics> {
+    static getStatistics(groupId: string): Promise<UserStatistics> {
         return new Promise((resolve, reject) => {
-           axios.get("api/profile/statistics").then(response => {
+           axios.get("api/profile/statistics", {
+               params: {
+                   groupId: groupId
+               }
+           }).then(response => {
+               resolve(response.data);
+           }).catch(error => {
+               reject(error);
+           })
+        });
+    }
+
+    static getUserGroups(): Promise<Array<Group>> {
+        return new Promise((resolve, reject) => {
+           axios.get("api/profile/groups").then(response => {
                resolve(response.data);
            }).catch(error => {
                reject(error);

@@ -1,22 +1,24 @@
 import Vue from 'vue';
-
 import {Component, Watch} from 'vue-property-decorator';
 import {mapGetters} from "vuex";
 import User from "@/api/models/User";
-import DateTime from '@/components/system/DateTime.vue'
-import UserAPI from "@/api/UserAPI";
+import DateTime from '@/components/system/DateTime.vue';
 import UserStatistics from "@/api/models/UserStatistics";
+import GroupViewInfoComponent from "@/components/GroupViewInfo/index.vue";
+import Group from "@/api/models/Group";
 
 @Component({
     components: {
-      'date-time': DateTime
+      'date-time': DateTime,
+      'group-view': GroupViewInfoComponent
     },
     computed: {
         ...mapGetters('user', {
             user: 'getProfileInformation',
             avatar: 'getAvatarBlob',
             userStatistics: 'getUserStatistics',
-            avatarSet: 'isAvatarSet'
+            avatarSet: 'isAvatarSet',
+            currentGroup: 'getCurrentGroup'
         })
     }
 })
@@ -79,5 +81,14 @@ export default class ProfilePage extends Vue {
             console.log("Данные обновлены!", response);
         });
     }
+
+    @Watch("currentGroup")
+    onCurrentGroupUpdated(newValue: Group, oldValue: Group) {
+        if (newValue != null)
+        {
+            this.$store.dispatch("user/getStatistics");
+        }
+    }
+
 
 }

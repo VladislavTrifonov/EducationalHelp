@@ -148,5 +148,14 @@ namespace EducationalHelp.Web.Controllers
 
             return Ok(outputModel);
         }
+
+        [HttpGet("api/profile/groups")]
+        [Authorize]
+        public IActionResult GetUserGroups()
+        {
+            var groups = _userService.GetMemberGroups(this.GetUserId());
+
+            return Ok(groups);
+        }
     }
 }

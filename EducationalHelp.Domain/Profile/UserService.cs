@@ -6,6 +6,7 @@ using System.Linq;
 using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Data.Exceptions;
 using EducationalHelp.Services.Files;
+using System.Collections.Generic;
 
 namespace EducationalHelp.Services.Profile
 {
@@ -14,14 +15,21 @@ namespace EducationalHelp.Services.Profile
         private readonly IRepository<User> _usersRepository;
         private readonly IRepository<UserFiles> _userFilesRepository;
         private readonly IRepository<GroupUsers> _groupUsersRepository;
+        private readonly IRepository<Group> _groupsRepository;
         private readonly FilesService _filesService;
 
-        public UserService(IRepository<User> usersRepository, IRepository<UserFiles> userFilesRepository, FilesService filesService, IRepository<GroupUsers> groupUsersRepository)
+        public UserService(
+            IRepository<User> usersRepository,
+            IRepository<UserFiles> userFilesRepository,
+            FilesService filesService,
+            IRepository<GroupUsers> groupUsersRepository,
+            IRepository<Group> groupsRepository)
         {
             _usersRepository = usersRepository;
             _userFilesRepository = userFilesRepository;
             _filesService = filesService;
             _groupUsersRepository = groupUsersRepository;
+            _groupsRepository = groupsRepository;
         }
 
         public User GetUserByName(string login)
@@ -85,6 +93,16 @@ namespace EducationalHelp.Services.Profile
                         select gu;
 
             return groupUserRecords.Count() != 0;
+        }
+
+        public IEnumerable<Group> GetMemberGroups(Guid userId)
+        {
+            var groups = from gu in _groupUsersRepository.AllData
+                                   where gu.UserId == userId
+                                   join g in _groupsRepository.AllData on gu.GroupId equals g.Id
+                                   select g;
+
+            return groups.AsEnumerable();
         }
     }
 }

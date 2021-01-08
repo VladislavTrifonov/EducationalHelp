@@ -7,6 +7,7 @@ import User from "@/api/models/User";
 import UserRegisterInfo from "@/api/models/UserRegisterInfo";
 import UserStatistics from "@/api/models/UserStatistics";
 import UserAPI from "@/api/UserAPI";
+import Group from "@/api/models/Group";
 
 
 const getters: GetterTree<UserState, RootState> = {
@@ -33,6 +34,14 @@ const getters: GetterTree<UserState, RootState> = {
 
     isAvatarSet: state => {
         return !(state.user.avatarLink == null || state.userDownloadedAvatar.size == 0);
+    },
+
+    getCurrentGroup: state => {
+        return state.currentGroup;
+    },
+
+    getListOfGroups: state => {
+        return state.groups;
     }
 };
 
@@ -62,6 +71,15 @@ const mutations: MutationTree<UserState> = {
 
     updateUserStatistics: (state, statistics: UserStatistics) => {
         state.userStatistics = statistics;
+    },
+
+    updateGroupInfo: (state, groups: Array<Group>) => {
+        state.groups = groups;
+        state.currentGroup = groups[0];
+    },
+
+    setCurrentGroup: (state, group: Group) => {
+        state.currentGroup = group;
     }
 };
 
@@ -79,6 +97,7 @@ const actions: ActionTree<UserState, RootState> = {
             state.commit("setProfileInformation", user);
             state.dispatch("downloadUserAvatar", user);
             state.dispatch("getStatistics");
+            state.dispatch("getGroupInformation");
         });
     },
 
@@ -94,21 +113,27 @@ const actions: ActionTree<UserState, RootState> = {
             state.commit("setProfileInformation", user);
             if (data.avatar != null) {
                 state.commit("updateDownloadedAvatar", data.avatar);
-                console.log(data.avatar)
+                console.log(data.avatar);
             }
         });
     },
 
     downloadUserAvatar: (state, user: User) => {
         return Response.fromPromise(UserAPI.downloadAvatar(user.avatarLink), data => {
-           state.commit("updateDownloadedAvatar", data)
+           state.commit("updateDownloadedAvatar", data);
         });
     },
 
     getStatistics: (state) => {
-        return Response.fromPromise(UserAPI.getStatistics(), statistics => {
+        return Response.fromPromise(UserAPI.getStatistics(state.state.currentGroup.id), statistics => {
            state.commit("updateUserStatistics", statistics);
         });
+    },
+
+    getGroupInformation: state => {
+        return Response.fromPromise(UserAPI.getUserGroups(), groups => {
+            state.commit("updateGroupInfo", groups);
+        })
     }
 };
 

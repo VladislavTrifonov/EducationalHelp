@@ -36,8 +36,8 @@
         <p v-if="user.createdAt != null" class="lead">Присоединился: <date-time :date-time-string="user.createdAt"></date-time> </p>
       </div>
     </div>
-
     <h2 class="text-capitalize">Статистика</h2>
+    <group-view></group-view>
     <!-- TODO: Вернуть после реализации блока "социальных" функций приложения
     <b-form-checkbox inline>Я не хочу, чтобы мою статистику видел кто-то, кроме меня</b-form-checkbox>
     !-->
