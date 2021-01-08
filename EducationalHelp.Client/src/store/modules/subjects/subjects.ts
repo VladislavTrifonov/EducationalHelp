@@ -37,7 +37,7 @@ const mutations: MutationTree<SubjectsState> = {
 
 const actions: ActionTree<SubjectsState, RootState> = {
     fetchSubjects: (state, rootstate) => {
-        return Response.fromPromise(SubjectsAPI.getAllSubjects(), result => {
+        return Response.fromPromise(SubjectsAPI.getAllSubjects(state.rootGetters['user/getCurrentGroup'].id), result => {
             state.commit("addSubjects", result);
         });
     },

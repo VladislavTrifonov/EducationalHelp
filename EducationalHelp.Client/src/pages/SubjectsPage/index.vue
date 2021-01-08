@@ -1,6 +1,7 @@
 ﻿<template>
     <div class="col-12">
       <breadcrumbs :breadcrumbs="breadcrumbs"></breadcrumbs>
+      <group-view></group-view>
         <table-grid :keys="keys" :items="subjects" header="Список предметов" :isAddPossible="true" v-on:add-trigger="onTableAdd" v-on:update-trigger="onTableUpdate">
             <template v-slot:rowContent="props">
                 <b-td>{{props.index + 1}}</b-td>

@@ -6,9 +6,13 @@ export default class SubjectsAPI {
             
     }
 
-    static async getAllSubjects(): Promise<Array<Subject>> {
+    static async getAllSubjects(groupId: string): Promise<Array<Subject>> {
         var subjects = new Array<Subject>();
-        await axios.get("api/subjects")
+        await axios.get("api/subjects", {
+            params: {
+                groupId: groupId
+            }
+        })
             .then(response => {
                 subjects = response.data;
             })

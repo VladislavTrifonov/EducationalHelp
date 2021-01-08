@@ -8,12 +8,14 @@ import AddSubjectComponent from '../AddSubjectPage/index.vue';
 import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
 import { IBreadcrumb } from "@/components/Breadcrumbs/index.ts";
 import {bc_subjectsList} from "@/breadcrumbs";
+import GroupViewInfoComponent from "@/components/GroupViewInfo/index.vue";
 
 @Component({
     components: {
         'table-grid': TableGrid,
         'add-subject': AddSubjectComponent,
-        'breadcrumbs': BreadcrumbsComponent
+        'breadcrumbs': BreadcrumbsComponent,
+        'group-view': GroupViewInfoComponent
     }
 
 })
@@ -66,7 +68,8 @@ export default class SubjectsPageComponent extends Vue {
     }
 
     fetchSubjects() {
-        this.$store.dispatch("subjects/fetchSubjects").then((error: Response) => {
+        this.$store.dispatch("subjects/fetchSubjects").catch((error: Response) => {
+            console.log(error);
         });
     }
 
