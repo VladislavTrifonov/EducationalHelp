@@ -9,6 +9,9 @@
         <b-form-group label="Описание">
             <b-form-textarea :state="getValidationState('description')" v-model="model.description"></b-form-textarea>
         </b-form-group>
+      <b-form-group label="Группа">
+        <group-select></group-select>
+      </b-form-group>
     </b-container>
 </template>
 

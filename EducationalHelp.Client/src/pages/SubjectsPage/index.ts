@@ -1,6 +1,6 @@
 import 'bootstrap-vue'
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import {Component, Watch} from 'vue-property-decorator';
 import Subject from '@/api/models/Subject';
 import TableGrid from '../../components/system/TableGrid.vue';
 import { Response, IErrorDetails, IValidationDetails, IValidationError } from '@/store/modules/ErrorProcessing';
@@ -9,6 +9,8 @@ import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
 import { IBreadcrumb } from "@/components/Breadcrumbs/index.ts";
 import {bc_subjectsList} from "@/breadcrumbs";
 import GroupViewInfoComponent from "@/components/GroupViewInfo/index.vue";
+import {mapGetters} from "vuex";
+import Group from "@/api/models/Group";
 
 @Component({
     components: {
@@ -16,12 +18,18 @@ import GroupViewInfoComponent from "@/components/GroupViewInfo/index.vue";
         'add-subject': AddSubjectComponent,
         'breadcrumbs': BreadcrumbsComponent,
         'group-view': GroupViewInfoComponent
+    },
+    computed: {
+        ...mapGetters("user", {
+            userGroup: "getCurrentGroup"
+        })
     }
 
 })
 export default class SubjectsPageComponent extends Vue {
     public addModel: Subject;
     private validationState: Array<IValidationError>;
+    private userGroup!: Group;
 
     constructor() {
         super();
@@ -100,6 +108,13 @@ export default class SubjectsPageComponent extends Vue {
     onAddModalCancel() {
         this.addModel = new Subject();
         this.validationState = new Array<IValidationError>();
+    }
+
+    @Watch("userGroup")
+    onUserGroupUpdated(newValue: Group, oldValue: Group) {
+        if (newValue != null) {
+            this.fetchSubjects()
+        }
     }
 
 }

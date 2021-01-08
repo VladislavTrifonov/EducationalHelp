@@ -50,6 +50,7 @@ const actions: ActionTree<SubjectsState, RootState> = {
     },
 
     addSubject: (state, subject) => {
+        subject.groupId = state.rootGetters["user/getCurrentGroup"].id;
         return Response.fromPromise(SubjectsAPI.addSubject(subject), response => {
             state.commit("addSubject", response);
         });
