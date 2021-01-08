@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-3">
         <b-card>
-          <div v-if="this.avatar.size == 0">
+          <div v-if="!this.avatarSet">
             <b-card-title class="text-center">
               Аватар
             </b-card-title>

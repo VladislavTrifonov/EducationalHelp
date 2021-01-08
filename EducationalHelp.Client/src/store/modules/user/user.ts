@@ -29,6 +29,10 @@ const getters: GetterTree<UserState, RootState> = {
 
     getUserStatistics: state => {
         return state.userStatistics;
+    },
+
+    isAvatarSet: state => {
+        return !(state.user.avatarLink == null || state.userDownloadedAvatar.size == 0);
     }
 };
 

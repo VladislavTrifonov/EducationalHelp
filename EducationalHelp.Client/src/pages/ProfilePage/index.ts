@@ -15,7 +15,8 @@ import UserStatistics from "@/api/models/UserStatistics";
         ...mapGetters('user', {
             user: 'getProfileInformation',
             avatar: 'getAvatarBlob',
-            userStatistics: 'getUserStatistics'
+            userStatistics: 'getUserStatistics',
+            avatarSet: 'isAvatarSet'
         })
     }
 })
@@ -26,6 +27,7 @@ export default class ProfilePage extends Vue {
     private isEditPseudonym: boolean;
     private newPseudonym: string;
     private avatar!: Blob;
+    private avatarSet!: boolean;
     private userStatistics!: UserStatistics;
 
     constructor() {
