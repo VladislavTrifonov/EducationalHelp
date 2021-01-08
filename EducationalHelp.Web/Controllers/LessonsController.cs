@@ -248,11 +248,16 @@ namespace EducationalHelp.Web.Controllers
 
         [HttpPost("subjects/lessons/{lessonId}/participants")]
         [Authorize]
-        public IActionResult AddParticipant(Guid lessonId, [FromBody]Guid userId)
+        public IActionResult AddParticipant(Guid lessonId, [FromBody] ParticipantAddModel participant)
         {
             if (!_lessonsService.IsExist(lessonId))
             {
                 return NotFound(lessonId);
+            }
+
+            if (_lessonsService.IsUserParticipate(lessonId, participant.UserId))
+            {
+                return BadRequest($"User with id {participant.UserId} already participant of lesson {lessonId}");
             }
 
             if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
@@ -260,7 +265,7 @@ namespace EducationalHelp.Web.Controllers
                 return this.ForbidGroup();
             }
 
-            _lessonsService.AddParticipant(lessonId, userId);
+            _lessonsService.AddParticipant(lessonId, participant.UserId);
 
             return Ok();
         }
@@ -289,7 +294,7 @@ namespace EducationalHelp.Web.Controllers
             return Ok();
         }
 
-        [HttpPut("subjects/lessons/{lessonId}/participants/{userId}")]
+        [HttpPut("subjects/lessons/{lessonId}/participants")]
         [Authorize]
         public IActionResult UpdateParticipant([FromRoute] Guid lessonId, [FromBody] ParticipantModel participant)
         {
@@ -308,13 +313,10 @@ namespace EducationalHelp.Web.Controllers
                 return this.ForbidGroup();
             }
 
-            var lessonUser = new LessonUsers()
-            {
-                UserId = participant.UserId,
-                LessonId = lessonId,
-                IsVisited = participant.IsVisited,
-                Mark = participant.Mark
-            };
+            var lessonUser = _lessonsService.GetLessonParticipant(lessonId, participant.UserId);
+
+            lessonUser.IsVisited = participant.IsVisited;
+            lessonUser.Mark = participant.Mark;
 
             _lessonsService.UpdateParticipant(lessonUser);
 

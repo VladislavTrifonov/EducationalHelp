@@ -189,5 +189,16 @@ namespace EducationalHelp.Services.Lessons
 
             _lessonUsersRepository.Update(lessonUser);
         }
+
+        public LessonUsers GetLessonParticipant(Guid lessonId, Guid userId)
+        {
+            var user = _lessonUsersRepository.AllData.FirstOrDefault(lu => lu.LessonId == lessonId && lu.UserId == userId);
+            if (user == null)
+            {
+                throw new ResourceNotFoundException($"User with id {userId} not a participant of lesson with id {lessonId}");
+            }
+
+            return user;
+        }
     }
 }
