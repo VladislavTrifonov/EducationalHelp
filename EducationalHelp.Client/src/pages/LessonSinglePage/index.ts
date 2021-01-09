@@ -15,6 +15,7 @@ import {bc_lessonView} from "@/breadcrumbs";
 import User from "@/api/models/User";
 import LessonParticipant from "@/api/models/LessonParticipant";
 import UserAPI from "@/api/UserAPI";
+import Participants from "@/pages/LessonSinglePage/components/Participants/index.vue";
 
 @Component({
     components: {
@@ -23,6 +24,7 @@ import UserAPI from "@/api/UserAPI";
         'grading': Grading,
         'contents': Contents,
         'homework': Homework,
+        'participants': Participants,
         'breadcrumbs': BreadcrumbsComponent
     }
 })

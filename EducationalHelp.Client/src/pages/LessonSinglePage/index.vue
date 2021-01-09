@@ -19,6 +19,9 @@
       <b-tab title="Оценивание (итоги)">
         <grading :lesson="lesson" :editing="isCreationMode" :gradingParticipants="lessonParticipantsGrading" :participants="lessonParticipants"></grading>
       </b-tab>
+      <b-tab title="Участники">
+        <participants :participants="lessonParticipants"></participants>
+      </b-tab>
     </b-tabs>
     <hr>
     <div class="pt-3">
