@@ -20,7 +20,7 @@
         <grading :lesson="lesson" :editing="isCreationMode" :gradingParticipants="lessonParticipantsGrading" :participants="lessonParticipants"></grading>
       </b-tab>
       <b-tab title="Участники">
-        <participants :participants="lessonParticipants"></participants>
+        <participants :participants="lessonParticipants" :lesson="lesson"></participants>
       </b-tab>
     </b-tabs>
     <hr>

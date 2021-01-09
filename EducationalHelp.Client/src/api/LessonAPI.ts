@@ -1,7 +1,7 @@
-import Lesson from './models/Lesson';
+import Lesson, {Marks} from './models/Lesson';
 import axios from '@/axiosconf';
-import Subject from "@/api/models/Subject";
 import LessonParticipant from "@/api/models/LessonParticipant";
+import User from "@/api/models/User";
 
 export default class LessonAPI {
     constructor() {
@@ -101,6 +101,42 @@ export default class LessonAPI {
            }).catch(error => {
                reject(error);
            });
+        });
+    }
+
+    removeParticipant(lessonId: string, userId: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+           axios.delete("api/subjects/lessons/" + lessonId + "/participants/" + userId).then(response => {
+               resolve(response.data);
+           }).catch(error => {
+               reject(error);
+           });
+        });
+    }
+
+    addParticipant(lessonId: string, user: User): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let participant = {
+                userId: user.id,
+                isVisited: "false",
+                mark: Marks.None
+            } as LessonParticipant;
+
+            axios.post("api/subjects/lessons/" + lessonId + "/participants", participant).then(response => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    getPossibleParticipants(lessonId: string): Promise<Array<User>> {
+        return new Promise((resolve, reject) => {
+            axios.get("api/subjects/lessons/" + lessonId + "/participants/possible").then(response => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
         });
     }
 }
