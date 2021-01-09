@@ -12,6 +12,9 @@ import FileModel from "@/api/models/FileModel";
 import BreadcrumbsComponent from "@/components/Breadcrumbs/index.vue";
 import {IBreadcrumb} from "@/components/Breadcrumbs/index.ts";
 import {bc_lessonView} from "@/breadcrumbs";
+import User from "@/api/models/User";
+import LessonParticipant from "@/api/models/LessonParticipant";
+import UserAPI from "@/api/UserAPI";
 
 @Component({
     components: {
@@ -25,6 +28,8 @@ import {bc_lessonView} from "@/breadcrumbs";
 })
 export default class LessonSinglePage extends Vue {
     public lesson: Lesson;
+    public lessonParticipants: Array<User>;
+    public lessonParticipantsGrading: Array<LessonParticipant>;
     public files: Array<FileModel>;
     public notesEditing: boolean;
     private lessonApi: LessonAPI;
@@ -42,6 +47,8 @@ export default class LessonSinglePage extends Vue {
         this.lesson = Lesson.Empty;
         this.lessonApi = new LessonAPI();
         this.files = new Array<FileModel>();
+        this.lessonParticipants = new Array<User>();
+        this.lessonParticipantsGrading = new Array<LessonParticipant>();
     }
 
     mounted() {
@@ -63,7 +70,8 @@ export default class LessonSinglePage extends Vue {
            this.lesson = response;
            this.breadcrumbs = bc_lessonView({id: this.lesson.subjectId, name: response.subject.name}, {id: this.lesson.id, name: this.lesson.title});
            this.breadcrumbs[this.breadcrumbs.length - 1].link = false
-           this.loadFiles()
+           this.loadFiles();
+           this.loadParticipants();
         }).catch((error: Response) => {
            error.process(() => {
                alert("Упс, что-то пошло не так... Информация для разработчиков в консоли.");
@@ -77,6 +85,23 @@ export default class LessonSinglePage extends Vue {
             this.files = response;
         }).catch((error: Response) => {
 
+        });
+    }
+
+    loadParticipants() {
+        Response.fromPromise(this.lessonApi.getLessonParticipants(this.lesson.id), response => {
+           this.lessonParticipantsGrading = response;
+           this.lessonParticipantsGrading.forEach((value) => {
+               this.loadParticipant(value.userId);
+           });
+           console.log(this.lessonParticipantsGrading);
+           console.log(this.lessonParticipants);
+        });
+    }
+
+    loadParticipant(userId: string) {
+        Response.fromPromise(UserAPI.getAnotherProfileInformation(userId), user => {
+           this.lessonParticipants.push(user);
         });
     }
 

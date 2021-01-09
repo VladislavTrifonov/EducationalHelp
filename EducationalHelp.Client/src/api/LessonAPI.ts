@@ -1,6 +1,7 @@
 import Lesson from './models/Lesson';
 import axios from '@/axiosconf';
 import Subject from "@/api/models/Subject";
+import LessonParticipant from "@/api/models/LessonParticipant";
 
 export default class LessonAPI {
     constructor() {
@@ -80,6 +81,26 @@ export default class LessonAPI {
                reject(error)
            })
 
+        });
+    }
+
+    getLessonParticipants(lessonId: string): Promise<Array<LessonParticipant>> {
+        return new Promise((resolve, reject) => {
+            axios.get("api/subjects/lessons/" + lessonId + "/participants").then(response => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    updateParticipant(lessonId: string, participant: LessonParticipant): Promise<any> {
+        return new Promise((resolve, reject) => {
+           axios.put("api/subjects/lessons/" + lessonId + "/participants", participant).then(response => {
+               resolve(response.data);
+           }).catch(error => {
+               reject(error);
+           });
         });
     }
 }

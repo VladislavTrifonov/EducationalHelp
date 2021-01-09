@@ -92,10 +92,6 @@ namespace EducationalHelp.Web.Controllers
                     Login = user.Login,
                     Pseudonym = user.Pseudonym,
                 };
-
-               /* var avatar = _userService.GetUserAvatar(user.Id);
-                if (avatar != null)
-                    outputModel.AvatarLink = this.GetDownloadLink(avatar.Id);*/
                                 
                 if (userModel.Avatar != null && userModel.Avatar.Length > 0)
                 {
@@ -156,6 +152,29 @@ namespace EducationalHelp.Web.Controllers
             var groups = _userService.GetMemberGroups(this.GetUserId());
 
             return Ok(groups);
+        }
+
+        [HttpGet("api/profile/{userId}")]
+        [Authorize]
+        public IActionResult GetUserInfo(Guid userId)
+        {
+            var user = _userService.GetUserById(userId);
+
+            var outputModel = new UserOutputModel
+            {
+                Id = user.Id,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt,
+                DeletedAt = user.DeletedAt,
+                Login = user.Login,
+                Pseudonym = user.Pseudonym,
+            };
+
+             var avatar = _userService.GetUserAvatar(user.Id);
+             if (avatar != null)
+                 outputModel.AvatarLink = this.GetDownloadLink(avatar.Id);
+
+            return Ok(outputModel);
         }
     }
 }

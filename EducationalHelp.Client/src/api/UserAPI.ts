@@ -89,4 +89,15 @@ export default class UserAPI {
            })
         });
     }
+
+    static getAnotherProfileInformation(userId: string): Promise<User> {
+        return new Promise((resolve, reject) => {
+           axios.get("api/profile/" + userId).then(response => {
+               resolve(response.data);
+           }).catch(error => {
+               reject(error);
+           })
+        });
+
+    }
 }

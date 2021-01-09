@@ -17,7 +17,7 @@
         <homework :lesson="lesson" :lesson_files="files" v-on:reload-files-needed="loadFiles"></homework>
       </b-tab>
       <b-tab title="Оценивание (итоги)">
-        <grading :lesson="lesson" :editing="isCreationMode"></grading>
+        <grading :lesson="lesson" :editing="isCreationMode" :gradingParticipants="lessonParticipantsGrading" :participants="lessonParticipants"></grading>
       </b-tab>
     </b-tabs>
     <hr>
