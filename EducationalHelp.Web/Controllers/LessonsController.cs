@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Services.Files;
+using EducationalHelp.Services.Groups;
 using EducationalHelp.Services.Lessons;
 using EducationalHelp.Services.Profile;
 using EducationalHelp.Services.Subjects;
@@ -25,6 +26,7 @@ namespace EducationalHelp.Web.Controllers
         private readonly LessonsService _lessonsService;
         private readonly FilesService _filesService;
         private readonly UserService _userService;
+        private readonly GroupService _groupsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
@@ -32,13 +34,15 @@ namespace EducationalHelp.Web.Controllers
             LessonsService lessonsService,
             FilesService filesService,
             IWebHostEnvironment webHostEnvironment,
-            UserService userService)
+            UserService userService,
+            GroupService groupsService)
         {
             _subjectsService = subjectsService;
             _lessonsService = lessonsService;
             _filesService = filesService;
             _webHostEnvironment = webHostEnvironment;
             _userService = userService;
+            _groupsService = groupsService;
         }
     
 
@@ -321,6 +325,21 @@ namespace EducationalHelp.Web.Controllers
             _lessonsService.UpdateParticipant(lessonUser);
 
             return Ok();
+        }
+
+        [HttpGet("subjects/lessons/{lessonId}/participants/possible")]
+        [Authorize]
+        public IActionResult GetPossibleParticipants([FromRoute] Guid lessonId)
+        {
+            var groupId = _lessonsService.GetGroupId(lessonId);
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return this.ForbidGroup();
+            }
+
+            var users = _lessonsService.GetPossibleParticipants(lessonId);
+
+            return Ok(users);
         }
     }
 }

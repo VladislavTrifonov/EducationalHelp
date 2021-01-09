@@ -50,7 +50,28 @@ namespace EducationalHelp.Data.Seeding
 
             var users = new List<User>()
             {
-                new User() { Id = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"), Pseudonym = "Жмышенко Валерий", Login = "admin", PassHash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3" }
+                new User() 
+                { 
+                    Id = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"),
+                    Pseudonym = "Жмышенко Валерий",
+                    Login = "admin",
+                    PassHash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+                },
+                new User()
+                {
+                    Id = new Guid("3EBFBF90-5644-42FE-9CB6-1D0F0ED668BF"),
+                    Pseudonym = "Жмышенко Альберт",
+                    Login = "batya_admina",
+                    PassHash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+                },
+                new User()
+                {
+                    Id = new Guid("E22975CA-C262-48A9-8474-E3D0811FA027"),
+                    Pseudonym = "Богданов Евгений",
+                    Login = "bogdanov",
+                    PassHash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+                }
+                
             };
 
             var groups = new List<Group>()
@@ -83,7 +104,19 @@ namespace EducationalHelp.Data.Seeding
                     Id = Guid.NewGuid(),
                     UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D"),
                     GroupId = new Guid("7B6B70CB-72B4-4508-8978-B8DD2391404F")
-                }
+                },
+                new GroupUsers()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = new Guid("3EBFBF90-5644-42FE-9CB6-1D0F0ED668BF"),
+                    GroupId = new Guid("B5BF64C2-133C-4F06-9478-60EA97166AF6")
+                },
+                new GroupUsers()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = new Guid("E22975CA-C262-48A9-8474-E3D0811FA027"),
+                    GroupId = new Guid("B5BF64C2-133C-4F06-9478-60EA97166AF6")
+                },
 
             };
                         

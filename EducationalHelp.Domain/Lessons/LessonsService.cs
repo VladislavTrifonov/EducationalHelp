@@ -4,6 +4,7 @@ using System.Linq;
 using EducationalHelp.Core.Entities;
 using EducationalHelp.Data;
 using EducationalHelp.Services.Exceptions;
+using EducationalHelp.Services.Groups;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationalHelp.Services.Lessons
@@ -14,13 +15,19 @@ namespace EducationalHelp.Services.Lessons
         private readonly IRepository<LessonUsers> _lessonUsersRepository;
         private readonly IRepository<Subject> _subjectsRepository;
         private readonly IRepository<User> _usersRepository;
+        private readonly GroupService _groupsService;
 
-        public LessonsService(IRepository<Lesson> lessonRepository, IRepository<LessonUsers> lessonUsersRepository, IRepository<Subject> subjectRepository, IRepository<User> usersRepository)
+        public LessonsService(IRepository<Lesson> lessonRepository,
+            IRepository<LessonUsers> lessonUsersRepository
+            , IRepository<Subject> subjectRepository,
+            IRepository<User> usersRepository,
+            GroupService groupsService)
         {
             _lessonRepository = lessonRepository;
             _lessonUsersRepository = lessonUsersRepository;
             _subjectsRepository = subjectRepository;
             _usersRepository = usersRepository;
+            _groupsService = groupsService;
         }
 
        public List<Lesson> GetLessonsByGroup(Guid groupId)
@@ -199,6 +206,35 @@ namespace EducationalHelp.Services.Lessons
             }
 
             return user;
+        }
+
+        public User GetLessonParticipant(LessonUsers lessonUsers)
+        {
+            return lessonUsers.User;
+        }
+
+        public IEnumerable<User> GetPossibleParticipants(Guid lessonId)
+        {
+            if (!IsExist(lessonId))
+            {
+                throw new ResourceNotFoundException($"Lesson with id {lessonId} wasn't found");
+            }
+
+            var groupId = GetGroupId(lessonId);
+            var groupUsers = _groupsService.GetGroupUsers(groupId);
+            if (groupUsers.Count() == 0)
+            {
+                return new List<User>();
+            }
+
+            var lessonUsers = GetLessonParticipants(lessonId);
+            var users = lessonUsers.Select(lu => GetLessonParticipant(lu));
+            if (users.Count() == 0)
+            {
+                return groupUsers;
+            }
+
+            return groupUsers.Except(users);
         }
     }
 }
