@@ -8,10 +8,10 @@
       </div>
     </div>
     <ul class="lessons">
-      <li class="lesson" v-if="lessons.length == 0">
+      <li class="lesson" v-if="lessons == null">
         <i>Нет занятий для отображения. Нажмите на кнопку <b-icon-plus-circle></b-icon-plus-circle> Добавить, чтобы создать новое занятие.</i>
       </li>
-      <li class="lesson" v-for="lesson in lessons" :key="lesson.id">
+      <li class="lesson" v-for="lesson in lessons" :key="lesson.id" v-else>
       <b-overlay :show="!lesson.canAccess" opacity="0.75" variant="white">
         <div class="lesson__block p-2">
           <div class="lesson__left">

@@ -7,6 +7,7 @@ import SubjectsState from './state';
 import RootState from '../../rootstate';
 import Subject from '../../../api/models/Subject';
 import SubjectsAPI from "@/api/SubjectsAPI";
+import Lesson from "@/api/models/Lesson";
 
 
 const getters: GetterTree<SubjectsState, RootState> = {
@@ -16,7 +17,10 @@ const getters: GetterTree<SubjectsState, RootState> = {
             return undefined;
         else
             return subject[0];
-        
+    },
+    getLessons: (state) => (subjectId: string) => {
+        // @ts-ignore
+        return state.all.filter(s => s.id == subjectId).pop().lessons;
     }
 };
 
@@ -27,7 +31,7 @@ const mutations: MutationTree<SubjectsState> = {
 
     addSubject: (state, subject: Subject) => {
         state.all.push(subject);
-    }, 
+    },
 
     deleteSubject: (state, subject: Subject) => {
         let idx = state.all.findIndex(i => i.id == subject.id);
@@ -46,6 +50,15 @@ const actions: ActionTree<SubjectsState, RootState> = {
         return Response.fromPromise(SubjectsAPI.getSubject(id),
             response => {
                 state.commit("addSubject", response);
+                state.dispatch("loadLessons", response);
+        });
+    },
+
+    loadLessons: (state, subject: Subject) => {
+        return Response.fromPromise(SubjectsAPI.getLessonsBySubjectId(subject.id), response => {
+            subject.lessons = response;
+            state.commit("deleteSubject", subject);
+            state.commit("addSubject", subject);
         });
     },
 

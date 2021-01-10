@@ -5,7 +5,6 @@ using EducationalHelp.Core.Entities;
 using EducationalHelp.Services.Subjects;
 using EducationalHelp.Web.Models.Subjects;
 using EducationalHelp.Services.Exceptions;
-using EducationalHelp.Services.Lessons;
 using Microsoft.AspNetCore.Authorization;
 using EducationalHelp.Services.Profile;
 using EducationalHelp.Web.Controllers.Extensions;
@@ -17,15 +16,12 @@ namespace EducationalHelp.Web.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly SubjectsService _subjectsService;
-        private readonly LessonsService _lessonsService;
         private readonly UserService _userService;
 
         public SubjectsController(SubjectsService subjectsService,
-            LessonsService lessonsService,
             UserService userService)
         {
             _subjectsService = subjectsService;
-            _lessonsService = lessonsService;
             _userService = userService;
         }
 

@@ -1,19 +1,15 @@
 import {Component} from "vue-property-decorator";
 import Vue from "vue";
 import Lesson from "@/api/models/Lesson";
+import {mapGetters} from "vuex";
+import Subject from "@/api/models/Subject";
 
 @Component({
-    components: {
 
-    },
-    props: {
-        p_lessons: Array
-    }
 })
 export default class LessonsListComponent extends Vue {
-    get lessons(): Array<Lesson>
-    {
-        return this.$props.p_lessons
+    get lessons(): Array<Lesson> {
+        return this.$store.getters['subjects/getLessons'](this.$route.params.id);
     }
 
     constructor() {

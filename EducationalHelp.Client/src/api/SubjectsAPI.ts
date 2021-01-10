@@ -1,5 +1,6 @@
 import Subject from './models/Subject';
 import axios from '@/axiosconf';
+import Lesson from "@/api/models/Lesson";
 
 export default class SubjectsAPI {
     constructor() {
@@ -67,6 +68,16 @@ export default class SubjectsAPI {
                 resolve();
             })
             .catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    static getLessonsBySubjectId(id: string): Promise<Array<Lesson>> {
+        return new Promise((resolve, reject) => {
+            axios.get("api/subjects/" + id + "/lessons").then(response => {
+                resolve(response.data);
+            }).catch(error => {
                 reject(error);
             });
         });

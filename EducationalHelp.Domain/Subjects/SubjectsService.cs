@@ -12,12 +12,10 @@ namespace EducationalHelp.Services.Subjects
     public class SubjectsService
     {
         private readonly IRepository<Subject> _subjectsRepository;
-        private readonly LessonsService _lessonsService;
 
-        public SubjectsService(IRepository<Subject> subjectsRepository, LessonsService lessonsService)
+        public SubjectsService(IRepository<Subject> subjectsRepository)
         {
             _subjectsRepository = subjectsRepository;
-            _lessonsService = lessonsService;
         }
 
         public List<Subject> GetAllSubjects(Guid groupId)
@@ -26,11 +24,7 @@ namespace EducationalHelp.Services.Subjects
         public Subject GetSubject(Guid id)
         {
             var subject = _subjectsRepository.GetById(id);
-            var lessons = _lessonsService.GetLessonsBySubjectId(id);
-
-            if (lessons.Count() != 0)
-                subject.Lessons = lessons;
-
+                       
             if (subject == null)
                 throw new ServiceException($"Subject with id {id} was not found");
 
