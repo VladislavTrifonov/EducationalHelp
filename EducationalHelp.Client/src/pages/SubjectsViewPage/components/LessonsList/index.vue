@@ -12,9 +12,10 @@
         <i>Нет занятий для отображения. Нажмите на кнопку <b-icon-plus-circle></b-icon-plus-circle> Добавить, чтобы создать новое занятие.</i>
       </li>
       <li class="lesson" v-for="lesson in lessons" :key="lesson.id">
-        <div class="lesson__block">
+      <b-overlay :show="!lesson.canAccess" opacity="0.75" variant="white">
+        <div class="lesson__block p-2">
           <div class="lesson__left">
-            <router-link  :to="{name: 'lessonView', params: { subjectId: lesson.subjectId, lessonId: lesson.id }}" class="lesson__header">
+            <router-link  :to="{name: 'lessonView', params: { lessonId: lesson.id }}" class="lesson__header">
               <h4 class="lesson__header-h4">
                 {{lesson.title}}
               </h4>
@@ -33,6 +34,12 @@
               </span>
           </div>
         </div>
+        <template #overlay>
+          <div class="text-center">
+            <h4><b-icon-lock></b-icon-lock> Вы не можете просматривать данный контент!</h4>
+          </div>
+        </template>
+      </b-overlay>
         <hr>
       </li>
     </ul>

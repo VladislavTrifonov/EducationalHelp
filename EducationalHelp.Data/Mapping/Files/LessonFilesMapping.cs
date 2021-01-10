@@ -20,6 +20,10 @@ namespace EducationalHelp.Data.Mapping.Files
                 .WithMany(f => f.LessonFiles)
                 .HasForeignKey(lf => lf.FileId);
 
+            builder.HasOne(lf => lf.User)
+                .WithMany()
+                .HasForeignKey(lf => lf.UserId);
+
             base.Map(builder);
         }
     }

@@ -44,7 +44,26 @@ namespace EducationalHelp.Web.Controllers
             _userService = userService;
             _groupsService = groupsService;
         }
-    
+
+
+        [HttpGet("subjects/{id}/lessons")]
+        [Authorize]
+        public IActionResult GetLessons(Guid id)
+        {
+            var groupId = _subjectsService.GetGroupIdFromSubjectId(id);
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return this.ForbidGroup();
+            }
+
+            var lessons = _lessonsService.GetLessonsBySubjectId(id);
+            if (!lessons.Any())
+                return NotFound();
+
+            var outputLessons = lessons.Select(l => new ShortLessonModel(l, _lessonsService.CanUserAccessToLesson(this.GetUserId(), l.Id)));
+
+            return Ok(outputLessons);
+        }
 
         [HttpGet("subjects/lessons/{lessonId}")]
         [Authorize]
@@ -52,14 +71,12 @@ namespace EducationalHelp.Web.Controllers
         {
             try
             {
-                var lesson = _lessonsService.GetLessonById(lessonId);
-                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
-                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
                 {
-                    return this.ForbidGroup();
+                    return Forbid();
                 }
 
-
+                var lesson = _lessonsService.GetLessonById(lessonId);
                 return Ok(lesson);
             }
             catch (ServiceException e)
@@ -109,10 +126,9 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
-                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
-                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
                 {
-                    return this.ForbidGroup();
+                    return Forbid();
                 }
 
 
@@ -141,10 +157,9 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
-                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
-                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
                 {
-                    return this.ForbidGroup();
+                    return Forbid();
                 }
 
                 _lessonsService.DeleteLesson(lessonId);
@@ -164,10 +179,9 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
-                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
-                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
                 {
-                    return this.ForbidGroup();
+                    return Forbid();
                 }
 
 
@@ -195,13 +209,12 @@ namespace EducationalHelp.Web.Controllers
             try
             {
                 var lesson = _lessonsService.GetLessonById(lessonId);
-                var groupId = _subjectsService.GetGroupIdFromSubjectId(lesson.SubjectId);
-                if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+                if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
                 {
-                    return this.ForbidGroup();
+                    return Forbid();
                 }
 
-                var files = lesson.LessonFiles.Select(lf => new
+                var files = lesson.LessonFiles.Where(lf => lf.UserId == this.GetUserId()).Select(lf => new
                 {
                     lf.File.Id,
                     lf.File.OriginalName,
@@ -235,9 +248,9 @@ namespace EducationalHelp.Web.Controllers
                 return NotFound(lessonId);
             }
 
-            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
+            if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
             {
-                return this.ForbidGroup();
+                return Forbid();
             }
 
             var participants = _lessonsService.GetLessonParticipants(lessonId).Select(l => new ParticipantModel()
@@ -259,14 +272,14 @@ namespace EducationalHelp.Web.Controllers
                 return NotFound(lessonId);
             }
 
+            if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
+            {
+                return Forbid();
+            }
+
             if (_lessonsService.IsUserParticipate(lessonId, participant.UserId))
             {
                 return BadRequest($"User with id {participant.UserId} already participant of lesson {lessonId}");
-            }
-
-            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
-            {
-                return this.ForbidGroup();
             }
 
             _lessonsService.AddParticipant(lessonId, participant.UserId);
@@ -283,14 +296,14 @@ namespace EducationalHelp.Web.Controllers
                 return NotFound(lessonId);
             }
 
+            if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
+            {
+                return Forbid();
+            }
+
             if (!_lessonsService.IsUserParticipate(lessonId, userId))
             {
                 return BadRequest(userId);
-            }
-
-            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
-            {
-                return this.ForbidGroup();
             }
 
             _lessonsService.RemoveParticipant(lessonId, userId);
@@ -307,14 +320,14 @@ namespace EducationalHelp.Web.Controllers
                 return NotFound(lessonId);
             }
 
+            if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
+            {
+                return Forbid();
+            }
+
             if (!_lessonsService.IsUserParticipate(lessonId, participant.UserId))
             {
                 return BadRequest(participant.UserId);
-            }
-
-            if (!_userService.IsMemberOfGroup(this.GetUserId(), _lessonsService.GetGroupId(lessonId)))
-            {
-                return this.ForbidGroup();
             }
 
             var lessonUser = _lessonsService.GetLessonParticipant(lessonId, participant.UserId);
@@ -331,10 +344,9 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult GetPossibleParticipants([FromRoute] Guid lessonId)
         {
-            var groupId = _lessonsService.GetGroupId(lessonId);
-            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            if (!_lessonsService.CanUserAccessToLesson(this.GetUserId(), lessonId))
             {
-                return this.ForbidGroup();
+                return Forbid();
             }
 
             var users = _lessonsService.GetPossibleParticipants(lessonId);

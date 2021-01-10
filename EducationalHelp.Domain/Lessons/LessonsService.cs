@@ -5,6 +5,7 @@ using EducationalHelp.Core.Entities;
 using EducationalHelp.Data;
 using EducationalHelp.Services.Exceptions;
 using EducationalHelp.Services.Groups;
+using EducationalHelp.Services.Profile;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationalHelp.Services.Lessons
@@ -16,18 +17,21 @@ namespace EducationalHelp.Services.Lessons
         private readonly IRepository<Subject> _subjectsRepository;
         private readonly IRepository<User> _usersRepository;
         private readonly GroupService _groupsService;
+        private readonly UserService _usersService;
 
         public LessonsService(IRepository<Lesson> lessonRepository,
             IRepository<LessonUsers> lessonUsersRepository
             , IRepository<Subject> subjectRepository,
             IRepository<User> usersRepository,
-            GroupService groupsService)
+            GroupService groupsService,
+            UserService usersService)
         {
             _lessonRepository = lessonRepository;
             _lessonUsersRepository = lessonUsersRepository;
             _subjectsRepository = subjectRepository;
             _usersRepository = usersRepository;
             _groupsService = groupsService;
+            _usersService = usersService;
         }
 
        public List<Lesson> GetLessonsByGroup(Guid groupId)
@@ -235,6 +239,22 @@ namespace EducationalHelp.Services.Lessons
             }
 
             return groupUsers.Except(users);
+        }
+
+        public bool CanUserAccessToLesson(Guid userId, Guid lessonId)
+        {
+            var lessonGroupId = GetGroupId(lessonId);
+            if (!_usersService.IsMemberOfGroup(userId, lessonGroupId))
+            {
+                return false;
+            }
+
+            if (!IsUserParticipate(lessonId, userId))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

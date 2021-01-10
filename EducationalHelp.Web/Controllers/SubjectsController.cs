@@ -133,25 +133,6 @@ namespace EducationalHelp.Web.Controllers
             }
 
             return Ok();
-        }
-
-        [HttpGet("subjects/{id}/lessons")]
-        [Authorize]
-        public IActionResult GetLessons(Guid id)
-        {
-            var groupId = _subjectsService.GetGroupIdFromSubjectId(id);
-            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
-            {
-                return this.ForbidGroup();
-            }
-
-            var lessons = _lessonsService.GetLessonsBySubjectId(id);
-            if (!lessons.Any())
-                return NotFound();
-
-            return Ok(lessons);
-        }
-
-        
+        }       
     }
 }

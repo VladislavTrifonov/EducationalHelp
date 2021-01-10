@@ -36,7 +36,8 @@ namespace EducationalHelp.Data.Seeding
             {
                 Id = new Guid("70EBE8AF-7070-40A3-9CEA-01F0F2219752"),
                 FileId = new Guid("ABB1F22F-4046-4088-BF0E-983976EA930F"),
-                LessonId = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE")
+                LessonId = new Guid("0B5A3D64-394F-4EB0-BD82-D6C9F068BADE"),
+                UserId = new Guid("331DF5C7-9FBE-45E4-AF6D-02AFCFCB9C1D")
             };
 
             var subjects = new List<Subject>()
