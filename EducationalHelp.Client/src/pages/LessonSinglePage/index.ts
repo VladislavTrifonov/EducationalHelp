@@ -150,10 +150,9 @@ export default class LessonSinglePage extends Vue {
     createLesson() {
         let response = Response.fromPromise(this.lessonApi.createLesson(this.$route.params.subjectId, this.lesson), (response) => {
             this.$router.push({
-                name: 'lessonView',
+                name: 'subjectView',
                 params: {
-                    subjectId: this.$route.params.subjectId,
-                    lessonId: response.id
+                    id: this.$route.params.subjectId
                 }
             })
         }).catch((error: Response) => {

@@ -73,13 +73,14 @@ namespace EducationalHelp.Services.Lessons
             return lessons;
         }
 
-        public Lesson CreateLesson(Lesson lesson)
+        public Lesson CreateLesson(Lesson lesson, Guid userId)
         {
             var resultOfValidation = lesson.Validate();
             if (!resultOfValidation.Success)
                 throw new ValidationException("Lesson entity is invalid!") { ValidationResult = resultOfValidation };
 
             _lessonRepository.Insert(lesson);
+            AddParticipant(lesson.Id, userId);
 
             return lesson;
         }

@@ -88,14 +88,8 @@ namespace EducationalHelp.Services.Files
             return f;
         }
 
-        public void AttachFileToLesson(Guid lessonId, Guid fileId)
+        public void AttachFileToLesson(LessonFiles model)
         {
-            var model = new LessonFiles()
-            {
-                FileId = fileId,
-                LessonId = lessonId
-            };
-
             _lessonFiles.Insert(model);
         }
 

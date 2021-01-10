@@ -109,7 +109,7 @@ namespace EducationalHelp.Web.Controllers
 
             try
             {
-                _lessonsService.CreateLesson(lessonEntity);
+                _lessonsService.CreateLesson(lessonEntity, this.GetUserId());
             }
             catch (ValidationException exp)
             {
@@ -190,7 +190,12 @@ namespace EducationalHelp.Web.Controllers
                     var (file, fs) = _filesService.CreateNewFile(formFile.FileName, _webHostEnvironment.WebRootPath, formFile.Length);
                     await formFile.CopyToAsync(fs);
                     await fs.DisposeAsync();
-                    _filesService.AttachFileToLesson(lesson.Id, file.Id);
+                    _filesService.AttachFileToLesson(new LessonFiles()
+                    {
+                        LessonId = lesson.Id,
+                        FileId = file.Id,
+                        UserId = this.GetUserId()
+                    });
 
                 }
 
