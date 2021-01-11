@@ -2,6 +2,7 @@ import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import {mapGetters} from "vuex";
 import Group from "@/api/models/Group";
+import GroupsAPI from "@/api/GroupsAPI";
 
 @Component({
     computed: {
@@ -12,9 +13,11 @@ import Group from "@/api/models/Group";
 })
 export default class GroupsPage extends Vue {
     private userGroups!: Array<Group>;
+    private allGroups: Array<Group>;
 
     constructor() {
         super();
+        this.allGroups = new Array<Group>();
     }
 
     leave(idx: number) {
@@ -23,9 +26,16 @@ export default class GroupsPage extends Vue {
         });
     }
 
+    enter(idx: number) {
+
+    }
+
     mounted()
     {
         this.$store.dispatch("user/getGroupInformation");
+        GroupsAPI.getAllGroups().then(groups => {
+           this.allGroups = groups;
+        });
     }
 
 }
