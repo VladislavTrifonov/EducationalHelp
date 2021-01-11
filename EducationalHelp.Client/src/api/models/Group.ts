@@ -3,6 +3,7 @@ export default class Group {
 
     public title!: string;
     public description!: string;
+    public membersCount!: number;
 
     public createdAt!: string;
     public deletedAt!: string;

@@ -98,6 +98,15 @@ export default class UserAPI {
                reject(error);
            })
         });
+    }
 
+    static leaveFromGroup(userId: string, groupId: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+           axios.delete("api/profile/groups/" + groupId).then(response => {
+               resolve(response);
+           }).catch(error => {
+               reject(error);
+           })
+        });
     }
 }

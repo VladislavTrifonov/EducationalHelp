@@ -16,6 +16,8 @@ using EducationalHelp.Core.Entities;
 using System.IO;
 using EducationalHelp.Services.Subjects;
 using EducationalHelp.Services.Lessons;
+using EducationalHelp.Web.Models.Groups;
+using EducationalHelp.Services.Groups;
 
 namespace EducationalHelp.Web.Controllers
 {
@@ -27,18 +29,21 @@ namespace EducationalHelp.Web.Controllers
         private readonly SubjectsService _subjectsService;
         private readonly LessonsService _lessonsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly GroupService _groupsService;
 
         public UserController(UserService userService,
             FilesService filesService,
             IWebHostEnvironment webHostEnvironment,
             SubjectsService subjectsService,
-            LessonsService lessonsService)
+            LessonsService lessonsService,
+            GroupService groupsService)
         {
             _userService = userService;
             _filesService = filesService;
             _webHostEnvironment = webHostEnvironment;
             _subjectsService = subjectsService;
             _lessonsService = lessonsService;
+            _groupsService = groupsService;
         }
 
         [HttpGet("api/profile/me")]
@@ -149,7 +154,7 @@ namespace EducationalHelp.Web.Controllers
         [Authorize]
         public IActionResult GetUserGroups()
         {
-            var groups = _userService.GetMemberGroups(this.GetUserId());
+            var groups = _userService.GetMemberGroups(this.GetUserId()).Select(g => new GroupsListItemOutputModel(g, _groupsService.GetGroupUsers(g.Id).Count()));
 
             return Ok(groups);
         }
@@ -175,6 +180,26 @@ namespace EducationalHelp.Web.Controllers
                  outputModel.AvatarLink = this.GetDownloadLink(avatar.Id);
 
             return Ok(outputModel);
+        }
+
+        [HttpDelete("api/profile/groups/{groupId}")]
+        [Authorize]
+        public IActionResult LeaveGroup(Guid groupId)
+        {
+            if (!_userService.IsMemberOfGroup(this.GetUserId(), groupId))
+            {
+                return BadRequest("User not a member of group");
+            }
+            try
+            {
+                _userService.LeaveFromGroup(this.GetUserId(), groupId);
+
+                return Ok();
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

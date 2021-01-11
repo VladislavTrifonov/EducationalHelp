@@ -80,6 +80,11 @@ const mutations: MutationTree<UserState> = {
 
     setCurrentGroup: (state, group: Group) => {
         state.currentGroup = group;
+    },
+
+    leaveGroup: (state, groupId) => {
+        let idx = state.groups.findIndex(i => i.id == groupId);
+        state.groups.splice(idx, 1);
     }
 };
 
@@ -134,6 +139,12 @@ const actions: ActionTree<UserState, RootState> = {
         return Response.fromPromise(UserAPI.getUserGroups(), groups => {
             state.commit("updateGroupInfo", groups);
         })
+    },
+
+    leaveFromGroup: (state, groupId: string) => {
+        return Response.fromPromise(UserAPI.leaveFromGroup(state.state.user.id, groupId), r => {
+            state.commit("leaveGroup", groupId);
+        });
     }
 };
 

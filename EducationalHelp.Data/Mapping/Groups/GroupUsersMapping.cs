@@ -17,7 +17,7 @@ namespace EducationalHelp.Data.Mapping.Groups
                 .HasForeignKey(gu => gu.UserId);
 
             builder.HasOne(gu => gu.Group)
-                .WithMany(g => g.GroupUsers)
+                .WithMany()
                 .HasForeignKey(gu => gu.GroupId);
 
             base.Map(builder);

@@ -9,8 +9,6 @@ namespace EducationalHelp.Core.Entities
     {
         public string Title { get; set; }
         public string Description { get; set; }
-
-        [JsonIgnore]
-        public virtual ICollection<GroupUsers> GroupUsers { get; set; } = new HashSet<GroupUsers>();
+        
     }
 }

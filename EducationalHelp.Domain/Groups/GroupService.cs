@@ -21,6 +21,11 @@ namespace EducationalHelp.Services.Groups
             _usersRepository = usersRepository;
         }
 
+        public IEnumerable<Group> GetAllGroups()
+        {
+            return _groupsRepository.AllData.AsEnumerable();
+        }
+
         public Group GetGroupById(Guid groupId)
         {
             var group = _groupsRepository.AllData.FirstOrDefault(g => g.Id == groupId);
@@ -40,6 +45,56 @@ namespace EducationalHelp.Services.Groups
                         select u;
 
             return users.AsEnumerable();
+        }
+
+        public Group CreateGroup(Group group, User user)
+        {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+            try
+            {
+                _groupsRepository.Insert(group);
+                AddUserToGroup(user, group);
+                return group;
+            }
+            catch (Exception e)
+            {
+                throw new ServiceException("Some error has occured", e);
+            }
+        }
+
+        public Group CreateLocalUserGroup(User user)
+        {
+            var group = new Group()
+            {
+                Title = "Локальная группа ",
+                Description = "Данная группа создана автоматически. В ней нет никого, кроме Вас."
+            };
+
+            return CreateGroup(group, user);
+        }
+
+        public void AddUserToGroup(User user, Group group)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+
+            var groupUsers = new GroupUsers()
+            {
+                GroupId = group.Id,
+                UserId = user.Id
+            };
+
+            _groupUsersRepository.Insert(groupUsers);
         }
     }
 }
