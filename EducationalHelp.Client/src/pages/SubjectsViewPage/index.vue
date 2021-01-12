@@ -33,9 +33,6 @@
                     </div>
                 </div>
             </b-tab>
-            <b-tab title="Учебная литература">
-
-            </b-tab>
             <b-tab title="Занятия">
               <lessons-list :p_lessons="Model.lessons">
               </lessons-list>
